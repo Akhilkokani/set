@@ -10,4 +10,5 @@
  */
 ?>
 
+<link rel="icon" href="./images/favicon.jpg">
 <link rel="stylesheet" href="./styles/prix.css">

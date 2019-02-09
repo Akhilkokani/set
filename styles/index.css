@@ -8,3 +8,201 @@
  * @package SET
  */
 
+body {
+  background-color: #fbfbfb;
+}
+
+.header {
+  padding: 1em;
+  height: 60px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.header .nav-menu-logo-wrap {
+  display: inline-block;
+}
+
+.header #nav-menu-header-logo {
+  width: 110px;
+}
+
+.header svg#nav-menu-header-logo {
+  cursor: pointer;
+}
+
+.header .search-box-wrap {
+  cursor: text;
+  display: inline-block;
+  width: 500px;
+  margin-left: 2em;
+}
+
+.header .search-box-contents-splitter {
+  height: 100%;
+}
+
+.header .search-box {
+  height: 100%;
+  width: inherit;
+  background-color: #f7f7f7;
+  border: 1px solid #e2e2e2;
+  border-radius: 100px;
+}
+
+.header .search-icon {
+  padding-left: 1em;
+  margin-right: 1em;
+}
+
+.header #search-icon {
+  fill: #929292;
+}
+
+.header .search-text-box-wrap {
+  flex: 1;
+}
+
+.header .search-tbox {
+  height: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.header .header-actions-wrap {
+  flex: 1;
+}
+
+.header .header-actions-wrap .header-action:not(:last-child) {
+  margin-right: 1em;
+}
+/** Header END */
+
+
+.hero {
+  width: 100%;
+  height: 250px;
+  padding: 5em;
+  background: url( "../images/hero_background.png" );
+  background-size: cover;
+  background-position: center;
+  background-color: silver;
+}
+
+.hero .hero-text-wrap {
+  color: #f3f3f3;
+}
+
+.hero h1 {
+  margin-top: 0;
+}
+
+.hero .hero-brief-wrap {
+  max-width: 650px;
+}
+
+.hero .hero-brief-wrap p {
+  color: #dadada;
+  line-height: 1.6;
+  font-weight: 100;
+}
+/** Hero END */
+
+.startups {
+  padding: 10em;
+}
+
+.startups .startups-grid-wrap {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-column-gap: 1.9em;
+  grid-row-gap: 3em;
+  width: auto;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.a-startup {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  width: 240px;
+  height: 240px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0px 7px 10px #ececec;
+  transition: border .15s linear, box-shadow .30s linear;
+}
+
+.a-startup:hover {
+  box-shadow: 0px 10px 30px #d6d6d6;
+}
+
+.a-startup .a-startup-content-wrap {
+  height: inherit;
+  position: relative;
+  padding: 3.5em 1em 2em 1em;
+}
+
+.a-startup .a-startup-logo-wrap {
+  margin-bottom: 1.2em;
+}
+
+.a-startup .a-startup-logo-wrap img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.a-startup .a-startup-name-wrap {
+  text-align: center;
+  margin-bottom: 1.1em;
+}
+
+.a-startup .a-startup-name-wrap span {
+  font-family: sans-serif;
+  font-size: 1.6em;
+}
+
+.a-startup .a-startup-desc-wrap {
+  padding-left: 1em;
+  padding-right: 1em;
+  text-align: center;
+  max-height: 36px;
+  margin-bottom: 3em;
+}
+
+.a-startup .a-startup-desc-wrap span {
+  color: #9c9c9c;
+  font-weight: 100;
+  font-size: 1.1em;
+  font-family: sans-serif;
+  line-height: 1.7;
+}
+
+.a-startup .a-startup-link-wrap {
+  text-align: center;
+}
+
+.a-startup .a-startup-link-wrap a {
+  font-size: 1.1em;
+}
+/** Startups END */
+
+footer {
+  display: flex;
+  border-top: 1px solid #e2e2e2;
+  padding: 1em;
+  background-color: #ffffff;
+}
+
+footer .creators-info {
+  height: 38px;
+  flex: 1;
+}
+
+footer .creators-info span {
+  color: #acacac;
+}
