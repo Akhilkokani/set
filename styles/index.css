@@ -109,6 +109,7 @@ body {
 }
 /** Hero END */
 
+
 .startups {
   padding: 10em;
 }
@@ -191,6 +192,7 @@ body {
 }
 /** Startups END */
 
+
 footer {
   display: flex;
   border-top: 1px solid #e2e2e2;
@@ -206,3 +208,4 @@ footer .creators-info {
 footer .creators-info span {
   color: #acacac;
 }
+/** Footer END */
