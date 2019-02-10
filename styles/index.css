@@ -192,6 +192,7 @@ a.search-result:hover .startup-name-wrap {
 }
 /** Hero END */
 
+
 .startups {
   padding: 10em;
 }
@@ -274,6 +275,7 @@ a.search-result:hover .startup-name-wrap {
 }
 /** Startups END */
 
+
 footer {
   display: flex;
   border-top: 1px solid #e2e2e2;
@@ -289,6 +291,7 @@ footer .creators-info {
 footer .creators-info span {
   color: #acacac;
 }
+<<<<<<< HEAD
 /** Footer END */
 
 
@@ -332,3 +335,6 @@ footer .creators-info span {
   font-size: 1.1em;
 }
 /** Sign Up Modal END */
+=======
+/** Footer END */
+>>>>>>> 003f403412e20d03a923a5a170d00b282b11695d
