@@ -7,8 +7,11 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Startup Ecosystem Tracker - CodeManiacs</title>
 
-  <?php include_once "./includes/header_info.php"; ?>
+  <link rel="icon" href="./images/favicon.jpg">
+  <link rel="stylesheet" href="./styles/prix.css">
   <link rel="stylesheet" href="./styles/index.css">
+  
+  <script src="./scripts/jquery.js"></script>
 
 </head>
 <body>
@@ -16,7 +19,7 @@
   <div class="header disp-flex">
     <div class="nav-menu-logo-wrap">
       <div class="nav-menu-logo">
-        <svg version="1.1" id="nav-menu-header-logo" onclick="document.location.href = './';" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 643.7 209.3" xml:space="preserve">
+        <svg version="1.1" id="nav-menu-header-logo" onclick="document.location.href = './';" xmlns="http:www.w3.org/2000/svg" xmlns:xlink="http:www.w3.org/1999/xlink" viewBox="0 0 643.7 209.3" xml:space="preserve">
           <style type="text/css">
             .st0{fill:#006BFD;}
             .st1{fill:#79B2FE;}
@@ -132,7 +135,7 @@
       <div class="search-box">
         <div class="search-box-contents-splitter disp-flex">
           <div class="search-icon vert-center">
-            <svg version="1.1" id="search-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            <svg version="1.1" id="search-icon" xmlns="http:www.w3.org/2000/svg" xmlns:xlink="http:www.w3.org/1999/xlink" x="0px" y="0px"
               width="15px" viewBox="0 0 512 512" xml:space="preserve">
             <path d="M344.5,298c15-23.6,23.8-51.6,23.8-81.7c0-84.1-68.1-152.3-152.1-152.3C132.1,64,64,132.2,64,216.3
               c0,84.1,68.1,152.3,152.1,152.3c30.5,0,58.9-9,82.7-24.4l6.9-4.8L414.3,448l33.7-34.3L339.5,305.1L344.5,298z M301.4,131.2
@@ -144,10 +147,62 @@
             <input type="text" title="Search Startups..." placeholder="Search..." name="search-tbox" class="search-tbox">
           </div>
         </div>
+
+        <?php // Search Results Panel ==> ?>
+        <div class="search-results-wrap" style="display:none;">
+          <div class="search-results">
+            <a class="search-result" href="./view?sid=asdasdads123ASD">
+              <div class="disp-flex search-result-container">
+                <div class="startup-logo-wrap">
+                  <img src="./images/default_startup_icon.png" width="32" height="32">
+                </div>
+                <div class="startup-name-wrap">
+                  <span class="vert-center">CodeManiacs</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="search-result" href="./view?sid=asdasdads123ASD">
+              <div class="disp-flex search-result-container">
+                <div class="startup-logo-wrap">
+                  <img src="./images/default_startup_icon.png" width="32" height="32">
+                </div>
+                <div class="startup-name-wrap">
+                  <span class="vert-center">Jshta</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="search-result" href="./view?sid=asdasdads123ASD">
+              <div class="disp-flex search-result-container">
+                <div class="startup-logo-wrap">
+                  <img src="./images/default_startup_icon.png" width="32" height="32">
+                </div>
+                <div class="startup-name-wrap">
+                  <span class="vert-center">Cool Startup</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="search-result" href="./view?sid=asdasdads123ASD">
+              <div class="disp-flex search-result-container">
+                <div class="startup-logo-wrap">
+                  <img src="./images/default_startup_icon.png" width="32" height="32">
+                </div>
+                <div class="startup-name-wrap">
+                  <span class="vert-center">OYO Rooms</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <?php // <== Search Results Panel ?>
       </div>
     </div>
     <div class="header-actions-wrap">
       <div class="header-actions">
+
+        <?php // When user is not signed in ==> ?>
         <div class="disp-flex">
           <span style="flex:1;"></span>
           <div class="header-action signin-action-wrap">
@@ -157,6 +212,26 @@
             <button title="Sign Up">Sign Up</button>
           </div>
         </div>
+        <?php // <== When user is not signed in ?>
+
+        <?php // When user is already signed in ==> ?>
+        <!-- <div class="already-signed-in-wrap">
+          <div class="user-profile-pic-wrap vert-center">
+            <img src="./images/default_user_profile_picture.png" width="32" height="32" class="user-profile-pic">
+          </div>
+
+          <div class="user-signed-in-actions-wrap">
+            <div class="user-signed-in-actions">
+              <a href="./dashboard/" class="user-signed-in-action">
+                Dashboard
+              </a>
+              <a href="./signout" class="user-signed-in-action">
+                Sign Out
+              </a>
+            </div>
+          </div>
+        </div> -->
+        <?php // <== When user is already signed in ?>
       </div>
     </div>
   </div>
@@ -312,7 +387,7 @@
       <span class="vert-center">Designed & Developed by CodeManiacs for SIH 2019</span>
     </div>
     <div class="footer-set-logo">
-      <svg version="1.1" style="width: 110px; cursor:pointer;" onclick="document.location.href = './';" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 643.7 209.3" xml:space="preserve">
+      <svg version="1.1" style="width: 110px; cursor:pointer;" onclick="document.location.href = './';" xmlns="http:www.w3.org/2000/svg" xmlns:xlink="http:www.w3.org/1999/xlink" viewBox="0 0 643.7 209.3" xml:space="preserve">
         <style type="text/css">
           .st00{fill:#a9a9a9;}
           .st01{fill:#9c9c9c;}
@@ -425,5 +500,109 @@
     </div>
   </footer>
 
+  <div class="page-modals">
+    <div class="signin-modal-wrapper modal-wrapper" style="display: none;">
+     <div class="signin-modal modal">
+       <div class="signin-modal-body modal-body">
+         <div class="modal-title">
+           <h1>Sign In</h1>
+         </div>
+         <form method="POST">
+           <div class="signin-ip-block">
+             <label for="uname">
+               Username
+             </label>
+             <input type="text" class="signin-ip" name="uname" placeholder="Username">
+           </div>
+
+           <div class="signin-ip-block">
+             <label for="pwd">
+               Password
+             </label>
+             <input type="password" class="signin-ip" name="pwd" placeholder="Password">
+           </div>
+
+           <a class="signin-modal-link" title="Sign Up">
+             Don't have an account? Create One.
+           </a>
+          
+           <div class="disp-flex" style="margin-top: 4em;">
+             <input type="submit" value="Sign In" title="Sign In">
+             <button type="button" style="width: 90px; margin-left: auto;" data-secondary title="Cancel">Cancel</button>
+           </div>
+         </form>
+       </div>
+     </div>
+    </div>
+
+    <div class="signup-modal-wrapper modal-wrapper" style="display: none;">
+      <div class="signup-modal modal">
+        <div class="signup-modal-body modal-body">
+          <div class="modal-title">
+            <h1>Sign Up</h1>
+          </div>
+          <form method="POST">
+            <div class="signup-ip-block">
+              <label for="uname">
+                Email
+              </label>
+              <input type="email" class="signup-ip" name="email" placeholder="Email" autocomplete="off">
+            </div>
+
+            <div class="signup-ip-block">
+              <label for="uname">
+                Username
+              </label>
+              <input type="text" class="signup-ip" name="uname" placeholder="Username" autocomplete="off">
+            </div>
+
+            <div class="signup-ip-block">
+              <label for="pwd">
+                Password
+              </label>
+              <input type="password" class="signup-ip" name="pwd" placeholder="Password">
+            </div>
+
+            <a class="signup-modal-link" title="Sign In">
+              Have an account? Sign In.
+            </a>
+          
+            <div class="disp-flex" style="margin-top: 4em;">
+              <input type="submit" value="Sign Up" title="Sign Up">
+              <button type="button" style="width: 90px; margin-left: auto;" data-secondary title="Cancel">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="user-signed-in-hidden-agent"></div>
+
+  <script src="./scripts/home.js"></script>
+  <script>
+
+    // User Signed In Action Elements
+    var user_signed_in_hidden_agent = document.querySelector ( ".user-signed-in-hidden-agent" ),
+        user_profile_picture = document.querySelector ( ".user-profile-pic-wrap > img" );
+        user_signed_in_actions = document.querySelector ( ".user-signed-in-actions-wrap" );
+
+    // When clicked on profile picture, showing signed in actions
+    if ( user_profile_picture ) {
+      user_profile_picture.onclick = function() {
+        if ( user_signed_in_actions )
+          user_signed_in_actions.style.display = "block";
+          user_signed_in_hidden_agent.style.display = "block";
+      };
+    }
+    
+    // When clicked on hidden layer which is activated when signed in actions are shown
+    if ( user_signed_in_hidden_agent ) {
+      user_signed_in_hidden_agent.onclick = function () {
+        user_signed_in_actions.style.display = "none";
+        user_signed_in_hidden_agent.style.display = "none";
+      }
+    }
+  </script>
 </body>
 </html>
