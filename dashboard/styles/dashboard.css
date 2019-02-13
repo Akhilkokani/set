@@ -8,3 +8,137 @@
  * @package SET
  */
 
+.dashboard-sidebar-wrap {
+  width: 350px;
+  height: 100%;
+  position: fixed;
+  border-right: 1px solid #dddddd;
+  /* background-color: #f3f3f3; */
+}
+
+.dashboard-logo-wrap {
+  margin: 1.5em 1em 5em 1em;
+}
+
+.dashboard-logo {
+  cursor: pointer;
+  width: 150px;
+  margin: auto;
+}
+
+a.tab {
+  color: #515151;
+  fill: #515151;
+  padding: 1.5em 1em 1.5em 3em;
+  transition: fill .25s linear, color .25s linear, background-color .25s linear;
+}
+
+a.tab:hover {
+  text-decoration: none;
+  background-color: #daeaff;
+  color: #006cfe;
+  fill: #006cfe;
+}
+
+a.tab.active {
+  text-decoration: none;
+  background-color: #daeaff;
+  color: #006cfe;
+  fill: #006cfe;
+}
+
+.dashboard-tab-icon, .dashboard-tab-name {
+  height: 23px;
+}
+
+.dashboard-tab-name-wrap {
+  margin-left: 1.2em;
+  font-size: 1em;
+  font-family: sans-serif;
+}
+/** Dashboard Sidebar END */
+
+
+.dashboard-tab-content-wrap {
+  width: calc( 100% - 350px );
+  height: 100%;
+  background-color: #fbfbfb;
+  position: fixed;
+  left: 350px;
+}
+
+.dashboard-tab-content-wrap .dashboard-tab-header-wrap {
+  width: 100%;
+  height: 8em;
+  background: #003c8c;
+  box-shadow: 0px 3px 5px #8a8a8a;
+}
+
+.dashboard-tab-content-wrap .tab-header {
+  flex: 1;
+  height: inherit;
+}
+
+.dashboard-tab-content-wrap .tab-title-wrap {
+  fill: #f3f3f3;
+  color: #f3f3f3;
+  margin-left: 3em;
+}
+
+.dashboard-tab-content-wrap .tab-title-icon {
+  margin-right: 1.2em;
+}
+
+.dashboard-tab-content-wrap .tab-title {
+  font-size: 2em;
+  font-family: sans-serif;
+}
+
+.tab-user-actions-wrap {
+  margin-right: 2em;
+}
+
+.tab-user-actions-wrap img.user-profile-pic {
+  cursor: pointer;
+}
+
+.user-signed-in-hidden-agent {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.user-signed-in-actions-wrap {
+  display: none;
+}
+
+.user-signed-in-actions {
+  padding: 1em 0 1em 0;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #dedede;
+  box-shadow: 0px 1px 3px #8e8e8e;
+  border-radius: 2px;
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  z-index: 2;
+}
+
+.user-signed-in-action {
+  display: block;
+  color: #535353;
+  font-size: 1.3em;
+  font-family: sans-serif;
+  padding: 14px 5em 14px 2em;
+  transition: color .25s linear, background-color .25s linear !important;
+  text-decoration: none !important;
+}
+
+.user-signed-in-action:hover {
+  color: #006cfe;
+  background-color: #ecf6ff;
+}

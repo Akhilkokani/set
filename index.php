@@ -582,27 +582,31 @@
   <script src="./scripts/home.js"></script>
   <script>
 
-    // User Signed In Action Elements
-    var user_signed_in_hidden_agent = document.querySelector ( ".user-signed-in-hidden-agent" ),
-        user_profile_picture = document.querySelector ( ".user-profile-pic-wrap > img" );
-        user_signed_in_actions = document.querySelector ( ".user-signed-in-actions-wrap" );
+    // Initiating and adding event listeners for signed in actions
+    (function() {
 
-    // When clicked on profile picture, showing signed in actions
-    if ( user_profile_picture ) {
-      user_profile_picture.onclick = function() {
-        if ( user_signed_in_actions )
-          user_signed_in_actions.style.display = "block";
-          user_signed_in_hidden_agent.style.display = "block";
-      };
-    }
-    
-    // When clicked on hidden layer which is activated when signed in actions are shown
-    if ( user_signed_in_hidden_agent ) {
-      user_signed_in_hidden_agent.onclick = function () {
-        user_signed_in_actions.style.display = "none";
-        user_signed_in_hidden_agent.style.display = "none";
+      // User Signed In Action Elements
+      var user_signed_in_hidden_agent = document.querySelector ( ".user-signed-in-hidden-agent" ),
+          user_profile_picture = document.querySelector ( ".user-profile-pic-wrap > img" );
+          user_signed_in_actions = document.querySelector ( ".user-signed-in-actions-wrap" );
+
+      // When clicked on profile picture, showing signed in actions
+      if ( user_profile_picture ) {
+        user_profile_picture.onclick = function() {
+          if ( user_signed_in_actions )
+            user_signed_in_actions.style.display = "block";
+            user_signed_in_hidden_agent.style.display = "block";
+        };
       }
-    }
+      
+      // When clicked on hidden layer which is activated when signed in actions are shown
+      if ( user_signed_in_hidden_agent ) {
+        user_signed_in_hidden_agent.onclick = function () {
+          user_signed_in_actions.style.display = "none";
+          user_signed_in_hidden_agent.style.display = "none";
+        }
+      }
+    })();
   </script>
 </body>
 </html>
