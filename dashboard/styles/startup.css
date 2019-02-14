@@ -139,3 +139,102 @@
 .next-phase-action-wrap button.prix-primary:hover {
   background: #414141;
 }
+/** List My Startup Modal END */
+
+
+.job-applications-wrap .application {
+  padding: 1em;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+.job-applications-wrap .application:last-child {
+  border-bottom: none;
+}
+
+.job-applications-wrap .application:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.job-applications-wrap .applicator-actions-wrap a {
+  font-family: sans-serif;
+  font-size: 11px;
+  margin-right: 5px;
+}
+/** Job Applications END */
+
+
+.team-details-wrap .team-member,
+.investor-details-wrap .investor {
+  margin-right: 2.2em;
+}
+
+.team-details-wrap .team-member .name-wrap,
+.investor-details-wrap .investor .name-wrap {
+  margin-top: 5px;
+}
+
+.team-details-wrap .team-member .name-wrap > span,
+.investor-details-wrap .investor .name-wrap > span {
+  margin: 5px auto;
+  font-size: 12px;
+  color: #636363;
+  text-align: center;
+  display: block;
+}
+/** Team Member and Investor Details END */
+
+
+#edit_profile_floor {
+  transition: height .50s ease-in;
+  overflow: hidden;
+}
+
+#edit_profile_floor * {
+  font-family: sans-serif;
+}
+
+#edit_profile_floor .edit-profile-pic-wrap {
+  width: 331.42px;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #c5c5c5;
+  border-radius: 4px;
+  margin-bottom: 1em;
+}
+
+#edit_profile_floor #change_startup_profile_picture {
+  font-size: 12px;
+  color: #717171;
+}
+
+.edit-group-title-wrap {
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 1.5em;
+}
+
+.edit-group-title {
+  padding: 1em 0;
+}
+
+.edit-group-body {
+  padding-right: 2em;
+}
+
+.edit-group-title h3 {
+  color: #6f6f6f;
+  margin: 0;
+}
+
+.group-action-input {
+  margin-bottom: 1.2em;
+}
+
+.group-action-input label {
+  display: block;
+  font-size: 11px;
+  color: #545454;
+}
+
+.group-action-input input {
+  margin-top: 4px;
+}

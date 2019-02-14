@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="../styles/startup.css">
   
   <script src="../../scripts/jquery.js"></script>
+  <script src="../../scripts/chart.js"></script>
 
 </head>
 <body>
@@ -387,10 +388,9 @@
         </div>
 
         <div class="dashboard-content startup-tab-content">
-          <div class="dashboard-floor startup-floor">
-
-            <!-- If User has not listed his/her startup -->
-            <!-- <div class="no-startup-wrap">
+          <!-- If User has not listed his/her startup -->
+          <!-- <div class="dashboard-floor startup-floor">
+            <div class="no-startup-wrap">
               <div class="no-startup">
                 <div class="no-startup-image-wrap">
                   <div class="no-startup-image">
@@ -418,16 +418,547 @@
                   </div>
                 </div>
               </div>
-            </div> -->
+            </div>
+          </div> -->
 
-            <!-- If User has listed his/her startup -->
-            <div class="startup-wrap">
-              
+          <!-- Profile Visits -->
+          <div class="dashboard-floor startup-floor">
+            <div class="startup-profile-visits-wrap">
+              <div class="startup-profile-visits">
+                <div class="dboard-title-wrap">
+                  <div class="dboard-title">
+                    <span>Profile Visits</span>
+                  </div>
+                </div>
+
+                <div class="profile-visits-graph-wrap">
+                  <div class="profile-visits">
+                    <div class="graph-container" style="width:100%; height:350px; position: relative;">
+                      <canvas id="myChart" width="100%" height="100%"></canvas>
+                      <script>
+                        var ctx = document.getElementById("myChart").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                                datasets: [{
+                                    label: 'Profile Visits',
+                                    data: [99, 78, 90, 98, 45, 98],
+                                    backgroundColor: '#ffe7c6',
+                                    borderColor: '#fe9000'
+                                }]
+                            },
+                            options: {
+                              legend: {
+                                display: false
+                              },
+                              scales: {
+                                  yAxes: [{
+                                      ticks: {
+                                          beginAtZero:true
+                                      },
+                                      gridLines: {
+                                        display:false
+                                      }
+                                  }],
+                                  xAxes: [{
+                                    gridLines: {
+                                      display:false
+                                    }
+                                  }]
+                              },
+                              responsive: true,
+                              maintainAspectRatio: false
+                            }
+                        });
+                      </script>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Top Locations and Job Applications Received -->
+          <div class="floor-row-wrap disp-flex">
+            <!-- Top Locations -->
+            <div class="dashboard-floor startup-floor" style="width:50%; margin-right:5px;">
+              <div class="startup-top-locations-wrap">
+                <div class="startup-top-locations-visits">
+                  <div class="dboard-title-wrap">
+                    <div class="dboard-title">
+                      <span>Top Locations</span>
+                    </div>
+                  </div>
+                  <div class="top-locations-graph-wrap">
+                    <div class="profile-visits">
+                      <div class="graph-container" style="width:100%; height:350px; position: relative;">
+                        <canvas id="myChart2" width="100%" height="100%"></canvas>
+                        <script>
+                          var ctx = document.getElementById("myChart2").getContext('2d');
+                          var myChart = new Chart(ctx, {
+                              type: 'radar',
+                              data: {
+                                  labels: ["Belgaum", "Delhi", "Kolkata", "Mumbai", "Bangalore", "Prayaraj"],
+                                  datasets: [{
+                                      label: 'Profile Visits',
+                                      data: [2, 25, 12, 47, 25, 30],
+                                      backgroundColor: '#ffe7c6',
+                                      borderColor: '#fe9000'
+                                  }]
+                              },
+                              options: {
+                                legend: {
+                                  display: false
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        display: false,
+                                        ticks: {
+                                            beginAtZero:true
+                                        },
+                                        gridLines: {
+                                          display:false
+                                        }
+                                    }],
+                                    xAxes: [{
+                                      display: false,
+                                      gridLines: {
+                                        display:false
+                                      }
+                                    }]
+                                },
+                                responsive: true,
+                                maintainAspectRatio: false
+                              }
+                          });
+                        </script>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-floor startup-floor" style="margin-left:5px; width:50%;">
+              <div class="job-applications-wrap">
+                <div class="job-applications">
+                  <div class="dboard-title-wrap disp-flex">
+                    <div class="dboard-title" style="flex:1;">
+                      <span>Job Applications Received</span>
+                    </div>
+                    <div class="job-application-action-wrap">
+                      <div class="job-application-action vert-center">
+                        <a style="font-size:11px; font-family:sans-serif; color:#9a9a9a;" title="Stop Hiring">Stop Hiring</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- No Applications Received -->
+                  <!-- <div class="no-data-job-applications-wrap" style="height:370px;">
+                    <div class="no-data vert-center">
+                      <div style="margin:auto;">
+                        <div style="margin-top:-15px;">
+                          <svg version="1.1" style="fill:#bdbdbd;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                            width="202px" height="202px" viewBox="0 0 512 512" xml:space="preserve">
+                            <g>
+                              <path d="M202.4,201.7L202.4,201.7L202.4,201.7z"/>
+                              <path d="M363.3,363.9c-12.9-4.6-31.4-6.2-43.2-8.8c-6.8-1.5-16.7-5.3-20-9.2c-3.3-4-1.3-40.9-1.3-40.9s6.1-9.6,9.4-18
+                                s6.9-31.4,6.9-31.4s6.8,0,9.2-11.9c2.6-13,6.6-18.4,6.1-28.1c-0.5-9-5.2-9.5-5.7-9.5l0,0c0,0,4.9-13.6,5.6-42.4
+                                C331.1,129.6,305,96,256,96s-75,33.5-74.3,67.6c0.6,28.7,5.6,42.4,5.6,42.4l0,0c-0.5,0-5.2,0.5-5.7,9.5c-0.5,9.7,3.6,14.9,6.1,27.9
+                                c2.4,11.9,9.2,12,9.2,12s3.6,23.1,6.9,31.5c3.3,8.5,9.4,18,9.4,18s2,36.9-1.3,40.9c-3.3,4-13.2,7.7-20,9.2
+                                c-11.9,2.6-30.3,4.3-43.2,8.9C135.8,368.5,96,384,96,416h160h160C416,384,376.2,368.5,363.3,363.9z M256,400H118.7
+                                c2-3,4.7-5.1,8.2-7.6c7-5.1,16.1-9.8,27.1-13.6c6.8-2.4,16.7-4,25.4-5.3c5.7-0.9,11.1-1.7,15.9-2.8c3.4-0.8,20.8-5,28.8-14.6
+                                c4.5-5.4,5.8-12.7,5.6-32.3c-0.1-10-0.6-19.3-0.6-19.7l-0.2-4.2l-2.3-3.5c-1.5-2.3-5.8-9.5-8-15.3c-1.8-4.7-4.6-19.2-6-28.1
+                                c0,0,0.4,1-0.5-3.7c-0.9-4.7-8.4-4.3-9.4-8c-0.9-3.6-1.8-6.9-4.3-18.2c-2.5-11.3,2.8-11.2,3.9-16.2c0.6-3.1,0-5.7,0-5.8l0,0
+                                c-0.3-1-4.1-13.4-4.7-37.7c-0.3-13.2,4.6-25.6,13.8-34.9c10.6-10.8,26-16.5,44.5-16.5c19,0,34,5.7,44.6,16.5
+                                c9.2,9.3,14.1,21.7,13.8,34.9c-0.5,24.2-4.3,36.6-4.7,37.7l0,0c0,0.1-0.6,1.7-0.4,5.2c0.2,5.4,6.8,5.5,4.3,16.8
+                                c-2.5,11.3-3.4,14.6-4.3,18.2c-0.9,3.6-8.5,3.3-9.4,8c-0.9,4.7-0.5,3.7-0.5,3.7c-1.4,8.9-4.2,23.4-6,28.1c-2.3,5.8-6.6,13-8,15.3
+                                l-2.3,3.5l-0.2,4.2c0,0.4-0.5,9.7-0.6,19.7c-0.2,19.6,1.1,26.9,5.6,32.3c8,9.5,25.4,13.8,28.8,14.6c4.8,1.1,10.2,1.9,15.9,2.8
+                                c8.7,1.3,18.6,2.9,25.4,5.3c11,3.9,20.2,8.6,27.1,13.7c3.5,2.5,6.2,4.6,8.2,7.6L256,400L256,400z"/>
+                            </g>
+                          </svg>
+                        </div>
+                        <div class="">
+                          <span style="display: block; margin-top: -10px; text-align:center; font-size: 15px; font-family: sans-serif; color:#bdbdbd;">No data to display</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <div class="applications-list">
+                    <div class="application">
+                      <div class="disp-flex">
+                        <div class="applicator-profile-pic-wrap">
+                          <div class="applicator-profile-pic">
+                            <img src="../../images/default_user_profile_picture.png" width="25" height="25" />
+                          </div>
+                        </div>
+                        <div class="applicator-name" style="height: 25px; flex:1;">
+                          <p class="vert-center" style="margin: 0 0 0 8px; font-family: sans-serif; font-size: 12px;">Akhil Kokani</p>
+                        </div>
+                        <div class="applicator-actions-wrap" style="height:25px;">
+                          <div class="applicator-actions disp-flex vert-center">
+                            <div class="applicator-view-cv-action-wrap">
+                              <a title="View CV">View CV</a>
+                            </div>
+                            <div class="applicator-add-as-team-member-action-wrap">
+                              <a title="Add to team">Add to team</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Application list end -->
+                  
+                </div>
+              </div>
+            </div>
+          </div>   
+          
+          <!-- Team Details -->
+          <div class="dashboard-floor startup-floor">
+            <div class="dboard-title-wrap disp-flex">
+              <div class="dboard-title" style="flex:1;">
+                <span>Team</span>
+              </div>
+              <div class="add-new-member-action-wrap" style="height:21px;">
+                <div class="add-new-member vert-center">
+                  <a style="font-size:12px;" id="add_new_team_member_action" title="Add New Team Member">Add New</a>
+                </div>
+              </div>
+            </div>
+            <div class="team-details-wrap">
+              <div class="team-details">
+                <div class="team-members-wrap">
+                  <div class="team-member-wrap disp-flex">
+                    <div class="team-member">
+                      <div class="profile-picture-wrap">
+                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
+                      </div>
+                      <div class="name-wrap">
+                        <span>Akhil Kokani</span>
+                      </div>
+                    </div>
+                    <div class="team-member">
+                      <div class="profile-picture-wrap">
+                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
+                      </div>
+                      <div class="name-wrap">
+                        <span>Akhil Kokani</span>
+                      </div>
+                    </div>
+                    <div class="team-member">
+                      <div class="profile-picture-wrap">
+                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
+                      </div>
+                      <div class="name-wrap">
+                        <span>Akhil Kokani</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Investor/Director Details -->
+          <div class="dashboard-floor startup-floor">
+            <div class="dboard-title-wrap disp-flex">
+              <div class="dboard-title" style="flex:1;">
+                <span>Investor/Directors</span>
+              </div>
+              <div class="add-new-investor-action-wrap" style="height:21px;">
+                <div class="add-new-investor vert-center">
+                  <a style="font-size:12px;" id="add_new_investor_member_action" title="Add New Investor/Director">Add New</a>
+                </div>
+              </div>
+            </div>
+            <div class="investor-details-wrap">
+              <div class="investor-details">
+                <div class="investors-collection-wrap">
+                  <div class="investor-wrap disp-flex">
+                    <div class="investor">
+                      <div class="profile-picture-wrap">
+                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
+                      </div>
+                      <div class="name-wrap">
+                        <span>Akhil Kokani</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Startup Profile -->
+          <div class="dashboard-floor startup-floor" id="edit_profile_floor" style="height:81px;">
+            <div class="dboard-title-wrap disp-flex">
+              <div class="dboard-title" id="edit_profile_title" style="flex:1;">
+                <span>Edit Profile</span>
+              </div>
+              <div class="edit-startup-profile-action-wrap" style="height:21px;">
+                <div class="add-new-investor vert-center">
+                  <a style="font-size:12px;" id="expand_collapse_action" title="Expand">Expand</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="edit-startup-wrap" style="display:none;">
+              <div class="edit-startup">
+                <div class="disp-flex">
+                  <div class="left-side" style="width: 50%; border-right: 1px solid #eaeaea;">
+                    <div class="edit-profile-pic-wrap disp-flex">
+                      <div class="edit-profile-pic" style="margin-right:1em;">
+                        <img src="../../images/default_startup_icon_dark.png" width="44" height="44">
+                      </div>
+                      <div class="edit-profile-pic-message-wrap" style="margin-right:12em; height:44px;">
+                        <p class="vert-center" style="margin:0;">Profile Picture</p>
+                      </div>
+                      <div class="edit-profile-pic-change-wrap" style="height:44px;">
+                        <a class="vert-center" id="change_startup_profile_picture" title="Click to change your Startup Profile Picture">Change</a>
+                      </div>
+                    </div>
+
+                    <!-- Edit General Information -->
+                    <div class="edit-group-wrap edit-general-info-wrap">
+                      <div class="edit-group-title-wrap">
+                        <div class="edit-group-title">
+                          <h3>General Information</h3>
+                        </div>
+                      </div>
+
+                      <div class="edit-group-body" style="padding-left:10px;">
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Name</label>
+                            <input id="edit_stup_name" type="text" value="" placeholder="Startup Name" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Vision</label>
+                            <input id="edit_stup_vison" type="text" value="" placeholder="Vision" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Description</label>
+                            <input id="edit_stup_desc" type="text" value="" placeholder="Description" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Category</label>
+                            <select id="edit_stup_cat" style="width: 100%;">
+                              <option value="" selected disabled>Select Startup Category</option>
+                              <option value="">Technology</option>
+                              <option value="">Food</option>
+                              <option value="">Education</option>
+                              <option value="">Entertainment</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Edit Address and Contact -->
+                    <div class="edit-group-wrap edit-general-info-wrap">
+                      <div class="edit-group-title-wrap">
+                        <div class="edit-group-title">
+                          <h3>Address &amp; Contact</h3>
+                        </div>
+                      </div>
+
+                      <div class="edit-group-body" style="padding-left:10px;">
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>State</label>
+                            <select id="edit_stup_state" style="display: block;" title="State in which your Startup resides">
+                              <option value="" selected disabled>Startup State</option>
+                              <option value="">Karnataka</option>
+                              <option value="">Maharashtra</option>
+                              <option value="">Gujrat</option>
+                              <option value="">Haryana</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>City</label>
+                            <select id="edit_stup_city" style="display: block;" title="City in which your Startup resides">
+                              <option value="" selected disabled>Startup City</option>
+                              <option value="">Karnataka</option>
+                              <option value="">Maharashtra</option>
+                              <option value="">Gujrat</option>
+                              <option value="">Haryana</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Pincode</label>
+                            <input id="edit_stup_pcode" type="text" value="" placeholder="Address" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Address</label>
+                            <input id="edit_stup_addr" type="text" value="" placeholder="Address" style="width:100%;">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="right-side" style="width: 50%;">
+
+                    <!-- Edit Incubation and Hiring Information -->
+                    <div class="edit-group-wrap edit-general-info-wrap">
+                      <div class="edit-group-title-wrap">
+                        <div class="edit-group-title" style="margin-left:1em;">
+                          <h3>Incubation and Hiring</h3>
+                        </div>
+                      </div>
+
+                      <div class="edit-group-body" style="padding-left: 20px;">
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Email ID</label>
+                            <input id="edit_stup_incbn_eml" type="text" value="" placeholder="Incubation Center Email ID" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Are your Hiring?</label>
+                            <div class="disp-flex" style="height: 39px;">
+                              <div class="vert-center">
+                                <input type="radio" name="edit_hiring" style="margin-right: 8px; margin-left: 8px; margin-top: -1px; width: 13px; height: 13px;">
+                                <label style="font-size: 12px;">Yes</label>
+                              </div>
+                              <div class="vert-center" style="padding-left: 2em;">
+                                <input type="radio" name="edit_hiring" style="margin-right: 8px; margin-top: -1px; width: 13px; height: 13px;" checked> 
+                                <label style="font-size: 12px;">No</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Edit Legal Information -->
+                    <div class="edit-group-wrap edit-general-info-wrap">
+                      <div class="edit-group-title-wrap">
+                        <div class="edit-group-title" style="margin-left:1em;">
+                          <h3>Legal</h3>
+                        </div>
+                      </div>
+
+                      <div class="edit-group-body" style="padding-left: 20px;">
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Startup Class</label>
+                            <select id="edit_stup_class" style="display: block;" title="Type of your Startup Registration">
+                              <option value="" selected disabled>Select Class</option>
+                              <option value="">Private Limited</option>
+                              <option value="">Proprietary</option>
+                              <option value="">Partnership</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>CIN/PAN</label>
+                            <input id="edit_stup_cin_or_pan" type="text" value="" placeholder="Startup CIN or PAN" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Date of Registration</label>
+                            <div class="disp-flex">
+                              <select id="edit_stup_day" style="display: block; width: 39%; margin-right: 5px;">
+                                <option value="" selected disabled>Day</option>
+                                <option value="">10</option>
+                                <option value="">11</option>
+                                <option value="">12</option>
+                                <option value="">13</option>
+                              </select>
+                              <select id="edit_stup_month" style="display: block; width: 39%; margin-right: 5px;">
+                                <option value="" selected disabled>Month</option>
+                                <option value="">09</option>
+                                <option value="">10</option>
+                                <option value="">11</option>
+                                <option value="">12</option>
+                              </select>
+                              <select id="edit_stup_year" style="display: block; width: 22%;">
+                                <option value="" selected disabled>Year</option>
+                                <option value="">2000</option>
+                                <option value="">2001</option>
+                                <option value="">2002</option>
+                                <option value="">2003</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Edit Social Links Information -->
+                    <div class="edit-group-wrap edit-general-info-wrap">
+                      <div class="edit-group-title-wrap">
+                        <div class="edit-group-title" style="margin-left:1em;">
+                          <h3>Social Links</h3>
+                        </div>
+                      </div>
+
+                      <div class="edit-group-body" style="padding-left: 20px;">
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>LinkedIn</label>
+                            <input id="edit_stup_lkdin" type="text" value="" placeholder="LinkedIn URL" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Twitter</label>
+                            <input id="edit_stup_titter" type="text" value="" placeholder="Twitter URL" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Facebook</label>
+                            <input id="edit_stup_fb" type="text" value="" placeholder="Facebook URL" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Instagram</label>
+                            <input id="edit_stup_ig" type="text" value="" placeholder="Instagram URL" style="width:100%;">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -683,7 +1214,7 @@
 
                   <div class="phase-text-input-wrap" style="width: 50%;">
                     <label>Startup Class</label>
-                    <select id="stup-class" style="display: block;" title="State in which your Startup resides">
+                    <select id="stup-class" style="display: block;" title="Type of your Startup Registration">
                       <option value="" selected disabled>Select Class</option>
                       <option value="">Private Limited</option>
                       <option value="">Proprietary</option>
@@ -879,5 +1410,6 @@
     })();
   </script>
   <script src="../scripts/create_startup.js"></script>
+  <script src="../scripts/startup.js"></script>
 </body>
 </html>

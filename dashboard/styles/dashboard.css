@@ -9,6 +9,15 @@
  */
 
 
+p {
+  font-family: sans-serif;
+}
+
+a {
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
 select {
   color: #7c7c7c;
   height: 38px;
@@ -76,9 +85,9 @@ a.tab.active {
 
 .dashboard-tab-content-wrap {
   width: calc( 100% - 300px );
-  height: 100%;
+  height: auto;
   background-color: #f9f9f9;
-  position: fixed;
+  position: absolute;
   left: 300px;
 }
 
@@ -123,7 +132,8 @@ a.tab.active {
 }
 
 .dashboard-floor {
-  padding: 1em;
+  padding: 2em;
+  margin-bottom: 2em;
   border-radius: 6px;
   background-color: #ffffff;
   box-shadow: 0 1px 3px #b7b7b7;
@@ -172,3 +182,13 @@ a.tab.active {
   background-color: #ecf6ff;
 }
 /** Dashboard User Signed In Actions END */
+
+.dboard-title-wrap {
+  margin-bottom: 2em;
+}
+
+.dboard-title-wrap > .dboard-title * {
+  font-size: 1.5em;
+  font-family: sans-serif;
+  color: #333;
+}
