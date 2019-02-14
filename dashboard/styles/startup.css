@@ -1,0 +1,141 @@
+/**
+ * Stylesheet to Startup Tab inside of /dashaboard/ folder
+ *
+ *
+ *
+ * @author Akhil Kokani
+ * @package SET
+ */
+
+.no-startup-wrap svg {
+  display: block;
+  margin: auto;
+  fill: #c4c4c4;
+}
+
+.no-startup-content {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.no-startup-title-wrap h2 {
+  color: #525252;
+  font-family: sans-serif;
+  margin: 0;
+}
+
+.no-startup-para-wrap {
+  margin-top: 1.1em;
+  margin-bottom: 2.2em;
+}
+
+.no-startup-para-wrap span {
+  color: #636363;
+  font-size: 1.4em;
+  font-family: sans-serif;
+}
+
+.no-startup-action-wrap button {
+  box-shadow: 0px 2px 1px #adadad;
+  background: #195fd4;
+  font-family: sans-serif;
+  transition: box-shadow .25s ease-in-out;
+}
+
+.no-startup-action-wrap button:hover {
+  box-shadow: 0px 0px 1px #adadad;
+}
+/** No Startup END */
+
+
+.list-startup-modal {
+  max-width: 750px;
+}
+
+.modal-title {
+  margin-bottom: 1em;
+}
+
+.modal-title h2 {
+  font-family: sans-serif;
+  margin-bottom: 0;
+}
+
+.modal-close {
+  height: 32px;
+  cursor: pointer;
+  fill: #acacac;
+  transition: background 0.25s ease-in, fill 0.25s ease-in;
+}
+
+.modal-close:hover {
+  background: #fff0f0;
+  fill: rgb(218, 16, 16);
+}
+
+.modal-sub-title {
+  font-family: sans-serif;
+  color: #585858;
+  margin: 0 0 1em 0;
+}
+
+.modal-sub-title h3 {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.gen-info-left-side,
+.gen-info-right-side {
+  flex: 1;
+}
+
+.gen-info-left-side {
+  margin-right: 5px;
+}
+
+.gen-info-right-side {
+  margin-left: 5px;
+}
+
+.phase-text-input-wrap {
+  margin-bottom: 2em;
+}
+
+.phase-text-input-wrap * {
+  font-family: sans-serif !important;
+}
+
+.phase-text-input-wrap label {
+  color: #717171;
+}
+
+.phase-text-input-wrap input, select {
+  margin-top: 3px;
+}
+
+.gen-info-profile-pic-actions-wrap .change-pic {
+  margin: 9px auto;
+}
+
+.gen-info-profile-pic-actions-wrap .change-pic > a {
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 11px;
+}
+
+.next-prev-phase-action-wrap {
+  margin-top: 2em;
+}
+
+.previous-phase-action-wrap,
+.next-phase-action-wrap {
+  margin: auto;
+}
+
+.next-phase-action-wrap button.prix-primary {
+  background: #5a5a5a;
+  transition: background .25s ease;
+}
+.next-phase-action-wrap button.prix-primary:hover {
+  background: #414141;
+}
