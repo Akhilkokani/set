@@ -1,9 +1,8 @@
 <?php
 /**
  * INCLUDE FILE FOR DASHBOARD SIDEBAR
- * 
  * This file acts as content includer inside dashboard page files.
- *
+ * DO NOT USE IT ANYWHERE ELSE.
  *
  *
  *
