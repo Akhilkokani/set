@@ -131,7 +131,7 @@
     <div class="dashboard-tabs">
 
       <!-- Startup Tab -->
-      <a class="tab startup active disp-flex" href="./" title="My Startup">
+      <a class="tab startup disp-flex" href="../startup" title="My Startup">
         <div class="dashboard-tab-icon-wrap">
           <div class="dashboard-tab-icon">
             <svg version="1.1" class="vert-center" id="dashboard-tab-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"

@@ -34,6 +34,11 @@
 
       <?php include_once "../_includes/dashboard_sidebar.php"; ?>
 
+      <script>
+        // Activating startup tab
+        document.querySelector ( ".startup" ).className += " active";
+      </script>
+
       <div class="dashboard-tab-content-wrap startup-tab-content-wrap">
         
         <div class="dashboard-tab-header-wrap disp-flex">
@@ -97,7 +102,9 @@
 
         <div class="dashboard-content startup-tab-content">
           <!-- If User has not listed his/her startup -->
-          <!-- <div class="dashboard-floor startup-floor">
+          <?php $showOrNot = true; ?>
+          <?php if ( $showOrNot ) { ?>
+          <div class="dashboard-floor startup-floor">
             <div class="no-startup-wrap">
               <div class="no-startup">
                 <div class="no-startup-image-wrap">
@@ -127,7 +134,8 @@
                 </div>
               </div>
             </div>
-          </div> -->
+          </div>
+          <?php } else { ?>
 
           <!-- Profile Visits -->
           <div class="dashboard-floor startup-floor">
@@ -665,6 +673,7 @@
               </div>
             </div>
           </div>
+          <?php } ?>
         </div>
 
         <footer style="padding:2em; text-align:center;">
@@ -1010,22 +1019,22 @@
               <div class="disp-flex">
                 <div class="gen-info-left-side">
 
-                  <div class="phase-text-input-wrap" style="width: 80%;" title="Corporate Identification Number">
+                  <div class="phase-text-input-wrap" style="width: 80%;" title="Startup's LinkedIn Profile">
                     <label>LinkedIn</label>
                     <input type="text" id="stup-lkdin" placeholder="LinkedIn URL">
                   </div>
 
-                  <div class="phase-text-input-wrap" style="width: 76%;" title="Corporate Identification Number">
+                  <div class="phase-text-input-wrap" style="width: 76%;" title="Startup's Twitter Profile">
                     <label>Twitter</label>
                     <input type="text" id="stup-twtr" placeholder="Twitter URL">
                   </div>
 
-                  <div class="phase-text-input-wrap" style="width: 72%;" title="Corporate Identification Number">
+                  <div class="phase-text-input-wrap" style="width: 72%;" title="Startup's Facebook Profile">
                     <label>Facebook</label>
                     <input type="text" id="stup-fb" placeholder="Facebook URL">
                   </div>
 
-                  <div class="phase-text-input-wrap" style="width: 68%;" title="Corporate Identification Number">
+                  <div class="phase-text-input-wrap" style="width: 68%;" title="Startup's Intsagram Profile">
                     <label>Instagram</label>
                     <input type="text" id="stup-gram" placeholder="Instagram URL">
                   </div>
@@ -1078,49 +1087,7 @@
     </div>
   </div>
 
-  <div class="user-signed-in-actions-wrap">
-    <div class="user-signed-in-actions">
-      <a href="../job/" class="user-signed-in-action">
-        Find a Job
-      </a>
-      <a href="../settings/" class="user-signed-in-action">
-        Settings
-      </a>
-      <a href="../../signout" class="user-signed-in-action">
-        Sign Out
-      </a>
-    </div>
-  </div>
-  <div class="user-signed-in-hidden-agent"></div>
-  
-  <script>
-
-    // Initiating and adding event listeners for signed in actions
-    (function() {
-
-      // User Signed In Action Elements
-      var user_signed_in_hidden_agent = document.querySelector ( ".user-signed-in-hidden-agent" ),
-          user_profile_picture = document.querySelector ( "img.user-profile-pic" ),
-          user_signed_in_actions = document.querySelector ( ".user-signed-in-actions-wrap" );
-
-      // When clicked on profile picture, showing signed in actions
-      if ( user_profile_picture ) {
-        user_profile_picture.onclick = function() {
-          if ( user_signed_in_actions )
-            user_signed_in_actions.style.display = "block";
-            user_signed_in_hidden_agent.style.display = "block";
-        };
-      }
-      
-      // When clicked on hidden layer which is activated when signed in actions are shown
-      if ( user_signed_in_hidden_agent ) {
-        user_signed_in_hidden_agent.onclick = function () {
-          user_signed_in_actions.style.display = "none";
-          user_signed_in_hidden_agent.style.display = "none";
-        }
-      }
-    })();
-  </script>
+  <?php include_once "../_includes/user_signed_in_actions.php"; ?>
   <script src="../scripts/create_startup.js"></script>
   <script src="../scripts/startup.js"></script>
 </body>

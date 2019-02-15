@@ -9,6 +9,10 @@
  */
 
 
+body {
+  background: #f9f9f9;
+}
+
 p {
   font-family: sans-serif;
 }
