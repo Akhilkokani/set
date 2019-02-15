@@ -324,6 +324,10 @@
 
           </div>
         </div>
+
+        <footer style="min-height: 42%; display: flex; flex-direction: column; padding: 1em; text-align: center;">
+          <span style="margin-top: auto; font-size: 12px; color: #cccccc; font-family: sans-serif;">Designed &amp; Developed By CodeManiacs</span>
+        </footer>
       </div>
 
       <div class="dashboard-tab-content-wrap startup-tab-content-wrap">
@@ -805,7 +809,7 @@
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Pincode</label>
-                            <input id="edit_stup_pcode" type="text" value="" placeholder="Address" style="width:100%;">
+                            <input id="edit_stup_pcode" type="text" value="" placeholder="Pincode" style="width:100%;">
                           </div>
                         </div>
 
@@ -958,6 +962,10 @@
             </div>
           </div>
         </div>
+
+        <footer style="padding:2em; text-align:center;">
+          <span style="font-size:12px; color:#9a9a9a; font-family:sans-serif;">Made Possible By CodeManiacs</span>
+        </footer>
       </div>
     </div>
   </div>
