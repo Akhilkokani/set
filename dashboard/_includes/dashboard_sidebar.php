@@ -274,7 +274,7 @@
       </a>
 
       <!-- Settings Tab -->
-      <a class="tab job disp-flex" href="../settings" title="Settings">
+      <a class="tab settings disp-flex" href="../settings" title="Settings">
         <div class="dashboard-tab-icon-wrap">
           <div class="dashboard-tab-icon">
             <svg version="1.1" class="vert-center" id="dashboard-tab-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -303,8 +303,4 @@
 
     </div>
   </div>
-
-  <footer style="min-height: 42%; display: flex; flex-direction: column; padding: 1em; text-align: center;">
-    <span style="margin-top: auto; font-size: 12px; color: #cccccc; font-family: sans-serif;">Designed &amp; Developed By CodeManiacs</span>
-  </footer>
 </div>

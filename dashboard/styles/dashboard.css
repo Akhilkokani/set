@@ -22,6 +22,28 @@ a {
   cursor: pointer;
 }
 
+textarea {
+  width: 100%;
+  outline: none;
+  color: var(--prix-default-color);
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 1.3em;
+  padding: .75em 1.5em;
+  overflow: scroll;
+  -webkit-transition: border-color .50s;
+  -moz-transition: border-color .50s;
+  -o-transition: border-color .50s;
+  transition: border-color .50s;
+}
+textarea:hover {
+  border-color: rgb( 22, 142, 255);
+}
+textarea:focus {
+  border-color: rgb( 22, 142, 255);
+}
+
 select {
   color: #7c7c7c;
   height: 38px;

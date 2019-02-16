@@ -102,7 +102,7 @@
 
         <div class="dashboard-content startup-tab-content">
           <!-- If User has not listed his/her startup -->
-          <?php $showOrNot = true; ?>
+          <?php $showOrNot = false; ?>
           <?php if ( $showOrNot ) { ?>
           <div class="dashboard-floor startup-floor">
             <div class="no-startup-wrap">
@@ -255,7 +255,8 @@
                 </div>
               </div>
             </div>
-
+            
+            <!-- Job Applications Received -->
             <div class="dashboard-floor startup-floor" style="margin-left:5px; width:50%;">
               <div class="job-applications-wrap">
                 <div class="job-applications">
@@ -423,7 +424,7 @@
             </div>
 
             <div class="edit-startup-wrap" style="display:none;">
-              <div class="edit-startup">
+              <div class="edit-startup" style="overflow:scroll;">
                 <div class="disp-flex">
                   <div class="left-side" style="width: 50%; border-right: 1px solid #eaeaea;">
                     <div class="edit-profile-pic-wrap disp-flex">
@@ -470,6 +471,13 @@
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
+                            <label>Story</label>
+                            <textarea id="edit_stup_stry" cols="30" rows="10" placeholder="Your Startup Story" style="width:100%; overflow:scroll; resize:vertical;"></textarea>
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
                             <label>Category</label>
                             <select id="edit_stup_cat" style="width: 100%;">
                               <option value="" selected disabled>Select Startup Category</option>
@@ -478,6 +486,13 @@
                               <option value="">Education</option>
                               <option value="">Entertainment</option>
                             </select>
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Link</label>
+                            <input id="edit_stup_link" type="text" value="" placeholder="Website/App Link" style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -722,6 +737,11 @@
                     <input type="text" id="stup-desc" placeholder="Describe your startup in few lines">
                   </div>
 
+                  <div class="phase-text-input-wrap">
+                    <label>Story</label>
+                    <textarea id="stup-complete-story" style="resize:vertical; overflow:scroll;" cols="30" rows="2" placeholder="Tell your story"></textarea>
+                  </div>
+
                   <div class="phase-text-input-wrap" style="width:90%;">
                     <label>Link</label>
                     <input type="text" id="stup-link" placeholder="Add link to your Startup Website/App/Video">
@@ -802,6 +822,11 @@
                   <div class="phase-text-input-wrap">
                     <label>Address</label>
                     <input type="text" id="stup-addr" placeholder="Office Address">
+                  </div>
+
+                  <div class="phase-text-input-wrap" style="width: 50%;">
+                    <label>Contact Number</label>
+                    <input type="text" id="stup-cnct-num" placeholder="Number">
                   </div>
                 </div>
 

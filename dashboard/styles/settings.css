@@ -1,0 +1,73 @@
+/**
+ * Stylesheet for Settings Dashboard file.
+ *
+ *
+ *
+ * @author Akhil Kokani
+ * @package SET
+ */
+
+#edit_profile_floor {
+  transition: height .50s ease-in;
+  overflow: scroll;
+}
+
+#edit_profile_floor * {
+  font-family: sans-serif;
+}
+
+#edit_profile_floor .edit-profile-pic-wrap {
+  width: 331.42px;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #c5c5c5;
+  border-radius: 4px;
+  margin-bottom: 1em;
+}
+
+#edit_profile_floor #change_startup_profile_picture {
+  font-size: 12px;
+  color: #717171;
+}
+
+.edit-group-title-wrap {
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 1.5em;
+}
+
+.edit-group-title {
+  padding: 1em 0;
+}
+
+.edit-group-body {
+  padding-right: 2em;
+}
+
+.edit-group-title h3 {
+  color: #6f6f6f;
+  margin: 0;
+}
+
+.group-action-input {
+  margin-bottom: 1.2em;
+}
+
+.group-action-input label {
+  display: block;
+  font-size: 11px;
+  color: #545454;
+}
+
+.group-action-input input {
+  margin-top: 4px;
+}
+
+.danger-btn {
+  text-align: left;
+  width: fit-content;
+}
+.danger-btn:hover {
+  background: #fff1f1;
+  color: #bf1010;
+}
+/** Edit Profile Floor END */
