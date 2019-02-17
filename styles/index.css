@@ -138,21 +138,24 @@ a.search-result:hover .startup-name-wrap {
 }
 
 .user-signed-in-actions {
+  font-family: sans-serif;
   padding: 1em 0 1em 0;
   background-color: rgb(255, 255, 255);
   border: 1px solid #dedede;
-  box-shadow: 0px 5px 3px #8e8e8e;
-  border-radius: 6px;
+  box-shadow: 0px 1px 1px #8e8e8e;
+  border-radius: 2px;
   position: absolute;
-  right: 10px;
+  top: 54px;
+  right: 137px;
   z-index: 2;
 }
 
 .user-signed-in-action {
+  font-family: sans-serif;
+  padding: 14px 5em 14px 1.3em;
   display: block;
   color: #535353;
-  font-size: 1.2em;
-  padding: 10px 5em 10px 1em;
+  font-size: 1.3em;
   transition: color .25s linear, background-color .25s linear !important;
   text-decoration: none !important;
 }
