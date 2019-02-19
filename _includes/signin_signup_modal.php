@@ -79,7 +79,7 @@
         </a>
       
         <div class="disp-flex" style="margin-top: 4em;">
-          <input type="submit" value="Sign Up" title="Sign Up">
+          <input type="button" name="submit" value="Sign Up" title="Sign Up">
           <button type="button" style="width: 90px; margin-left: auto;" data-secondary title="Cancel">Cancel</button>
         </div>
       </form>

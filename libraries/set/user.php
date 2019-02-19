@@ -54,7 +54,7 @@ class user {
    *
    * @return boolean
    */
-  function check_if_is_logged_in () {
+  function check_if_user_is_logged_in () {
 
     if ( 
       isset($_SESSION['logged_in']) &&
@@ -67,6 +67,39 @@ class user {
     else {
       return false;
     }
+  }
+
+
+
+  /**
+   * Checks whether user email id exists in users table.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $email
+   * @return boolean
+   */
+  function check_if_email_exists (
+    $connection,
+    $email
+  ) {
+
+    // Checking if email exists in DB
+    $query_to_check_if_email_exists = mysqli_query ( $connection, " SELECT slno FROM users WHERE user_email_id = '$email' LIMIT 1 " );
+
+    // Query ran properly
+    // Email exists
+    if ( 
+      $query_to_check_if_email_exists && 
+      mysqli_num_rows($query_to_check_if_email_exists) === 1
+    ) {
+      return true;
+    }
+
+    // Email does not exists
+    return false;
   }
 
 
@@ -112,5 +145,50 @@ class user {
 
     // User ID not fetched
     return "";
+  }
+
+
+
+  /**
+   * Add's new user
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $email_id
+   * @param string $username
+   * @param string $password
+   * @return boolean
+   */
+  function add_new_user ( 
+    $connection,
+    $email_id,
+    $username,
+    $password
+  ) {
+
+    // Secure Unique ID for User
+    $utility = new utility();
+    $user_id = $utility->generate_secure_string ( "user_", 20 );
+
+    // Adding new user in 'users' table
+    $query_add_new_user = mysqli_query (
+      $connection,
+      " INSERT INTO  
+      users ( 
+        user_id, 
+        user_username, 
+        user_password, 
+        user_email_id 
+      ) VALUES ( 
+        '$user_id',
+        '$username',
+        '$password',
+        '$email_id'
+      ) "
+    ) or die (mysqli_error($connection));
+
+    return true;
   }
 }

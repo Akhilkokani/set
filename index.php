@@ -224,7 +224,7 @@ include_once "./libraries/set/set.php";
       <div class="header-actions">
 
         <?php // When user is not signed in ==>
-        if ( $user->check_if_is_logged_in() === false ) { ?>
+        if ( $user->check_if_user_is_logged_in() === false ) { ?>
         <div class="disp-flex">
           <span style="flex:1;"></span>
           <div class="header-action signin-action-wrap">

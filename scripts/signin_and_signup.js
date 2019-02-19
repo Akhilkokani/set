@@ -157,3 +157,117 @@ signin_modal_elements.submit_button.click(function() {
     }
   });
 });
+
+
+
+/** 
+ * Sign Up Elements
+ * 
+ */
+var signup_modal_elements = {
+
+  // Email Textbox
+  email_textbox: $ ( ".signup-modal-wrapper input[name='email']" ),
+
+  // Username Textbox
+  username_textbox: $ ( ".signup-modal-wrapper input[name='uname']" ),
+
+  // Password Textbox
+  password_textbox: $ ( ".signup-modal-wrapper input[name='pwd']" ),
+
+  // Submit button
+  submit_button: $ ( ".signup-modal-wrapper input[name='submit']" ) 
+};
+
+
+signup_modal_elements.submit_button.click(function() {
+  
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Removing any type of whitespace form username textbox value
+  signup_modal_elements.username_textbox.val ( 
+    "" + set.remove_whitespace (
+          signup_modal_elements.username_textbox.val()
+        )
+  );
+
+  // Removing any type of whitespace form email textbox value
+  signup_modal_elements.email_textbox.val ( 
+    "" + set.remove_whitespace (
+          signup_modal_elements.email_textbox.val()
+        )
+  );
+
+  // Fetching & Storing inputs
+  let username = signup_modal_elements.username_textbox.val(),
+      email = signup_modal_elements.email_textbox.val(),
+      password = signup_modal_elements.password_textbox.val();
+
+  // Email is empty
+  if ( email === "" ) {
+    set.show_system_notification ( "Email cannot be empty. Try again.", "danger", 2500 );
+    return;
+  }
+
+  // Email is invalid
+  if ( set.validate_email(email) === false ) {
+    set.show_system_notification ( "Invalid Email ID. Try again.", "danger", 2500 );
+    return;
+  }
+
+  // Username is empty
+  if ( username === "" ) {
+    set.show_system_notification ( "Username cannot be empty. Try again.", "danger", 2500 );
+    return;
+  }
+
+  // Username is invalid
+  if ( username.length < 6 ) {
+    set.show_system_notification ( "Username must be atleast 6 letters. Try again.", "danger", 2500 );
+    return;
+  }
+
+  // Password is invalid
+  if ( password.length < 6 ) {
+    set.show_system_notification ( "Password must be atleast 6 letters. Try again.", "danger", 2500 );
+    return;
+  }
+
+  // Sending request to add new user
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "./ajax/system",
+    data: {
+      action: "signup",
+      email: email,
+      uname: username,
+      pwd: password
+    },
+    success: function(data) {
+      
+      if ( data == "email_used" ) {
+        set.show_system_notification ( "Email is already being used. Try Again.", "", 3000 );
+        return;
+      }
+      else if ( data == "uname_used" ) {
+        set.show_system_notification ( "Username is already being used. Try Again.", "", 3000 );
+        return;
+      }
+      else if ( data == "success" ) {
+        set.show_system_notification ( "Successfully Created Your Account!", "", 3500 );
+        _close_signup_modal();
+        _open_signin_modal();
+        return;
+      } else {
+        set.show_system_notification ( "We ran into an error. Try Again Later.", "danger" );
+        return;
+      }
+    },
+
+    error: function(data) {
+      set.show_system_notification ( "Error: " + data, "danger" );
+      return false;
+    }
+  });
+});

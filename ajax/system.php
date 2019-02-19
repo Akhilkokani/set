@@ -67,3 +67,50 @@ if (
   echo "unknown";
   die();
 }
+
+
+
+/** 
+ * Sign up
+ * 
+ */
+if ( 
+  isset($_POST['action']) &&
+  $_POST['action'] == "signup" &&
+  isset($_POST['email']) &&
+  isset($_POST['uname']) &&
+  isset($_POST['pwd'])
+) {
+  
+  // Fetching and Santising Inputs
+  $email = htmlspecialchars ( $_POST['email'] );
+  $username = htmlspecialchars ( $_POST['uname'] );
+  $password = htmlspecialchars ( $_POST['pwd'] );
+
+  // Email is already used
+  if (
+    $user->check_if_email_exists($connection, $email) ||
+    $incubation->check_if_email_exists($connection, $email)
+  ) {
+
+    echo "email_used";
+    die();
+  }
+
+  // Username is already used
+  if ( $user->check_if_username_exists($connection, $username) ) {
+
+    echo "uname_used";
+    die();
+  }
+
+  // Added new user
+  if ( $user->add_new_user($connection, $email, $username, $password) ) {
+    echo "success";
+    die();
+  }
+
+  // Unknown Error
+  echo "unknown";
+  die();
+}

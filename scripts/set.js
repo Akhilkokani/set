@@ -59,7 +59,7 @@ set.prototype.show_system_notification = function (
   // Adding message to message container
   // Removing .danger CSS class if already exists
   system_notification_span.innerHTML = notification_message;
-  system_notification.classList.remove = "danger";
+  system_notification.classList.remove("danger");
 
   // Notification type is set to danger
   if ( notification_type.toLowerCase() === "danger" ) {
@@ -144,6 +144,11 @@ set.prototype.remove_whitespace = function ( text ) {
   * @param {paramter_data_type} [paramater_var_name]
   * @return What does the function returns? (int, string, void etc...)
   */
+set.prototype.validate_email = function ( email ) {
+
+  let emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return emailRegEx.test ( email.toLowerCase() );
+}
 
 // Adding Global Object to Window
 window.set = new set;
