@@ -24,6 +24,7 @@
 
   <link rel="icon" href="./images/favicon.jpg">
   <link rel="stylesheet" href="./styles/prix.css">
+  <link rel="stylesheet" href="./styles/all-page.css">
   <link rel="stylesheet" href="./styles/view.css">
 
   <script src="./scripts/jquery.js"></script>

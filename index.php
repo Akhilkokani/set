@@ -1,3 +1,20 @@
+<?php
+/**
+ * Homepage
+ *
+ *
+ *
+ *
+ * @author Akhil Kokani
+ * @package SET
+ */
+
+// Starting Session
+session_start();
+
+// SET Library
+include_once "./libraries/set/set.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,9 +28,11 @@
 
   <link rel="icon" href="./images/favicon.jpg">
   <link rel="stylesheet" href="./styles/prix.css">
+  <link rel="stylesheet" href="./styles/all-page.css">
   <link rel="stylesheet" href="./styles/index.css">
   
   <script src="./scripts/jquery.js"></script>
+  <script src="./scripts/set.js"></script>
 
 </head>
 <body>
@@ -204,7 +223,8 @@
     <div class="header-actions-wrap">
       <div class="header-actions">
 
-        <?php // When user is not signed in ==> ?>
+        <?php // When user is not signed in ==>
+        if ( $user->check_if_is_logged_in() === false ) { ?>
         <div class="disp-flex">
           <span style="flex:1;"></span>
           <div class="header-action signin-action-wrap">
@@ -214,12 +234,10 @@
             <button title="Sign Up">Sign Up</button>
           </div>
         </div>
-        <?php // <== When user is not signed in ?>
-
-        <?php // When user is already signed in ==> ?>
-        <!-- <div class="already-signed-in-wrap">
+        <?php } else { ?>
+        <div class="already-signed-in-wrap">
           <div class="user-profile-pic-wrap vert-center">
-            <img src="./images/default_user_profile_picture.png" width="32" height="32" class="user-profile-pic">
+            <img src="./images/default_user_profile_picture.png" width="40" height="40" class="user-profile-pic">
           </div>
 
           <div class="user-signed-in-actions-wrap">
@@ -232,8 +250,8 @@
               </a>
             </div>
           </div>
-        </div> -->
-        <?php // <== When user is already signed in ?>
+        </div>
+        <?php } // User has logged in end ?>
       </div>
     </div>
   </div>
@@ -507,6 +525,8 @@
   </div>
 
   <div class="user-signed-in-hidden-agent"></div>
+
+  <?php include_once "./_includes/all_page_include.php"; ?>
 
   <script src="./scripts/signin_and_signup.js"></script>
   <script src="./scripts/home.js"></script>

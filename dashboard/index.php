@@ -8,6 +8,6 @@
  * @author Akhil Kokani
  * @package SET
  */
-
+session_start();
 header ( "Location: ./startup/" );
 die();

@@ -10,6 +10,9 @@
  * @author Akhil Kokani
  * @package SET
  */
+
+session_start();
+include_once "../_includes/check_login_status.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">

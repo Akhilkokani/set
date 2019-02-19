@@ -37,7 +37,8 @@
         </a>
       
         <div class="disp-flex" style="margin-top: 4em;">
-          <input type="submit" value="Sign In" title="Sign In">
+          <a href="./dashboard/" style="position:absolute; top:-100px;" id="after_signin_success_redirect"></a>
+          <input type="button" name="submit" value="Sign In" title="Sign In">
           <button type="button" style="width: 90px; margin-left: auto;" data-secondary title="Cancel">Cancel</button>
         </div>
       </form>

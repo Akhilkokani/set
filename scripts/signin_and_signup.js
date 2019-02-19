@@ -10,84 +10,150 @@
  * @package SET
  */
 
-// Sign In Modal related elements
-let signin_button = this.document.querySelector ( ".header-actions .signin-action-wrap" );
-let dont_have_account_link_in_signin_modal = this.document.querySelector ( ".signin-modal a.signin-modal-link" );
-let signin_modal_close_button = this.document.querySelector ( ".signin-modal button[title='Cancel']" );
+(function() {
 
-// Sign Up Modal related elements
-let signup_button = this.document.querySelector ( ".header-actions .signup-action-wrap" );
-let have_an_account_link_signup_modal = document.querySelector ( ".signup-modal a.signup-modal-link" );
-let signup_modal_close_button = this.document.querySelector ( ".signup-modal button[title='Cancel']" );
+  // Sign In Modal related elements
+  let signin_button = this.document.querySelector ( ".header-actions .signin-action-wrap" );
+  let dont_have_account_link_in_signin_modal = this.document.querySelector ( ".signin-modal a.signin-modal-link" );
+  let signin_modal_close_button = this.document.querySelector ( ".signin-modal button[title='Cancel']" );
 
-// Opening Sign In Modal
-if ( signin_button ) {
+  // Sign Up Modal related elements
+  let signup_button = this.document.querySelector ( ".header-actions .signup-action-wrap" );
+  let have_an_account_link_signup_modal = document.querySelector ( ".signup-modal a.signup-modal-link" );
+  let signup_modal_close_button = this.document.querySelector ( ".signup-modal button[title='Cancel']" );
 
-  signin_button.onclick = function () {
-    _open_signin_modal();
-  };
-}
+  // Opening Sign In Modal
+  if ( signin_button ) {
 
-// Opening Sign Up Modal, when clicked on "Don't have Account..."
-if ( dont_have_account_link_in_signin_modal ) {
+    signin_button.onclick = function () {
+      _open_signin_modal();
+    };
+  }
 
-  dont_have_account_link_in_signin_modal.onclick = function () {
-    
-    _open_signup_modal();
-    _close_signin_modal();
-  };
-}
+  // Opening Sign Up Modal, when clicked on "Don't have Account..."
+  if ( dont_have_account_link_in_signin_modal ) {
 
-// Closing Sign In Modal
-if ( signin_modal_close_button ) {
+    dont_have_account_link_in_signin_modal.onclick = function () {
+      
+      _open_signup_modal();
+      _close_signin_modal();
+    };
+  }
 
-  signin_modal_close_button.onclick = function() {
-    _close_signin_modal();
-  };
-}
+  // Closing Sign In Modal
+  if ( signin_modal_close_button ) {
 
-// Opening Sign Up Modal
-if ( signup_button ) {
+    signin_modal_close_button.onclick = function() {
+      _close_signin_modal();
+    };
+  }
 
-  signup_button.onclick = function () {
-    _open_signup_modal();
-  };
-}
+  // Opening Sign Up Modal
+  if ( signup_button ) {
 
-// Opening Sign In Modal, when clicked on "Have an account..."
-if ( have_an_account_link_signup_modal ) {
+    signup_button.onclick = function () {
+      _open_signup_modal();
+    };
+  }
 
-  have_an_account_link_signup_modal.onclick = function () {
+  // Opening Sign In Modal, when clicked on "Have an account..."
+  if ( have_an_account_link_signup_modal ) {
 
-    _open_signin_modal();
-    _close_signup_modal();
-  };
-}
+    have_an_account_link_signup_modal.onclick = function () {
 
-// Closing Sign Up Modal
-if ( signup_modal_close_button ) {
+      _open_signin_modal();
+      _close_signup_modal();
+    };
+  }
 
-  signup_modal_close_button.onclick = function () {
-    _close_signup_modal();
-  };
-}
+  // Closing Sign Up Modal
+  if ( signup_modal_close_button ) {
 
-// Open's Sign in Modal
-function _open_signin_modal () {
-document.querySelector ( ".signin-modal-wrapper" ).style.display = "block";
-}
+    signup_modal_close_button.onclick = function () {
+      _close_signup_modal();
+    };
+  }
 
-// Closes Sign in Modal
-function _close_signin_modal () {
-document.querySelector ( ".signin-modal-wrapper" ).style.display = "none";
-}
+  // Open's Sign in Modal
+  function _open_signin_modal () {
+    document.querySelector ( ".signin-modal-wrapper" ).style.display = "block";
+  }
 
-// Open's Sign Up Modal
-function _open_signup_modal () {
-document.querySelector ( ".signup-modal-wrapper" ).style.display = "block";
-}
+  // Closes Sign in Modal
+  function _close_signin_modal () {
+    document.querySelector ( ".signin-modal-wrapper" ).style.display = "none";
+  }
 
-// Closes Sign Up Modal
-function _close_signup_modal () {
-document.querySelector ( ".signup-modal-wrapper" ).style.display = "none";
-}
+  // Open's Sign Up Modal
+  function _open_signup_modal () {
+    document.querySelector ( ".signup-modal-wrapper" ).style.display = "block";
+  }
+
+  // Closes Sign Up Modal
+  function _close_signup_modal () {
+    document.querySelector ( ".signup-modal-wrapper" ).style.display = "none";
+  }
+})();
+
+/** 
+ * Sign In Modal Elements
+ * 
+ */
+var signin_modal_elements = {
+
+  // Username textbox
+  username_textbox: $ ( ".signin-modal-wrapper input[name='uname']" ),
+  
+  // Password textbox
+  password_textbox: $ ( ".signin-modal-wrapper input[name='pwd']" ),
+
+  // Submit Button
+  submit_button: $ ( ".signin-modal-wrapper input[name='submit']" )
+};
+
+signin_modal_elements.submit_button.click(function() {
+
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Username is empty
+  if ( signin_modal_elements.username_textbox.val() === "" ) {
+    set.show_system_notification ( "Username cannot be empty. Try again.", "danger", 2500 );
+    return;
+  }
+
+  // Password is empty
+  if ( signin_modal_elements.password_textbox.val() === "" ) {
+    set.show_system_notification ( "Password cannot be empty. Try again.", "danger", 2500 );
+    return;
+  }
+
+  $.ajax({
+    cache: false,
+    type: "POST",
+    data: {
+      action: "login",
+      uname: signin_modal_elements.username_textbox.val(),
+      pwd: signin_modal_elements.password_textbox.val()
+    },
+    url: "./ajax/system",
+
+    success: function(data) {
+
+      if ( data == "success" ) {
+        document.querySelector("#after_signin_success_redirect").click();
+        return;
+      } else if ( data == "invalid_data" ) {
+        set.show_system_notification ( "Username or Password is Incorrect. Try Again.", "danger", 3000 );
+        return;
+      } else {
+        set.show_system_notification ( "We ran into an error. Try Again Later.", "danger" );
+        return;
+      }
+    },
+
+    error: function(data) {
+      set.show_system_notification ( "Error: " + data, "danger" );
+      return false;
+    }
+  });
+});
