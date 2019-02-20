@@ -11,6 +11,12 @@
  */
 
 var elements = {
+  
+  // Change Profile Picture Button
+  change_profile_picture: document.querySelector ( "#change_profile_picture" ),
+
+  // Change Profile Picture File Selector input[type=file]
+  change_profile_picture_file_selector: document.querySelector ( "#edit_profile_picture_file_selector" ),
 
   // Name
   name: $("#edit_name"),
@@ -24,8 +30,114 @@ var elements = {
   // Password
   password: $("#edit_password"),
 
+  // Description
+  description: $("#edit_description"),
+
   // Bio Textarea
-  bio: $ ( "#edit_bio" )
+  bio: $ ( "#edit_bio" ),
+
+  // Website/App Link
+  link: $ ( "#edit_link" ),
+
+  // LinkedIn URL
+  linkedin: $ ( "#edit_lkdin" ),
+
+  // Twitter URL
+  twitter: $ ( "#edit_titter" ),
+
+  // Facebook URL
+  facebook: $ ( "#edit_fb" ),
+
+  // Instagram URL
+  instagram: $ ( "#edit_ig" )
+};
+
+
+/** 
+ * Update Profile Picture
+ * 
+ */
+elements.change_profile_picture.onclick = function() {
+
+  // Opens file explorer
+  elements.change_profile_picture_file_selector.click();
+}
+// When profile picture is selected
+elements.change_profile_picture_file_selector.oninput = function() {
+
+  // Telling user to wait
+  set.show_system_notification ( "Please Wait...", "", -1 );
+
+  // Image is not selected
+  if ( elements.change_profile_picture_file_selector.value.length <= 0 ) {
+    return;
+  }
+
+  // Accessing updated profile picture details
+  updated_profile_picture = elements.change_profile_picture_file_selector.files[0];
+
+  // Checking file extension
+  // If file is not type of specified images
+  // then it is rejected and uploading process is cancelled
+  if ( set.check_file_extension(updated_profile_picture.name, 'img') !== true ) {
+    set.show_system_notification ( "Incorrect file selected. Try Again.", "", 2000 );
+    return;
+  }
+
+  // Creating request
+  // Code for modern browsers
+  if(window.XMLHttpRequest) {
+    ajax = new XMLHttpRequest();
+  }
+  // Code for old IE browsers
+  else {
+    ajax = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+  // When profile picture is uploaded successfully
+  ajax.addEventListener("load", function(event) {
+
+    // Telling user to wait
+    set.show_system_notification ( "Please wait...", "", -1 );
+
+    // Thumbnail selected is too big
+    if ( event.currentTarget.responseText == "too-big" ) {
+      set.show_system_notification ( "Profile Picture size is too big. Cannot be more than 3MB. Try Again.", "", 3000 );
+      return;
+    }
+    // Unknown Error occurred
+    else if ( event.currentTarget.responseText == "unknown" ) {
+      set.show_system_notification ( "Error Ocurred. Try again.", "", 2000 );
+      return;
+    }
+    // Success, responded with upload image name
+    else if ( event.currentTarget.responseText.length > 20 ) {
+      set.show_system_notification ( "Success!", "", 2500 );
+      $ ( ".edit-profile-pic > img" ).attr ( "src", "../../files/profile_pictures/" + event.currentTarget.responseText );
+    }
+    // Unknown error, server error
+    else {
+      set.show_system_notification ( "Unknown Error. Try Again.", "", 2500 );
+      return;
+    }
+  }, false);
+
+  // While profie picture is uploading
+  ajax.upload.addEventListener("progress", function() {
+    set.show_system_notification ( "Uploading...", "", -1 );
+  }, false);
+
+  // Setting
+  // request type and request URL
+  ajax.open ( "POST", "../../" + "ajax/system" );
+
+  // Accessing file and
+  // adding it to form data
+  var file = new FormData();
+  file.append ( "update-profile-picture", updated_profile_picture );
+
+  // Sending request to server to upload file
+  ajax.send ( file );
 };
 
 
@@ -277,6 +389,46 @@ elements.password.click(function() {
 
 
 /** 
+ * Update Decription
+ * 
+ */
+elements.description.change(function() {
+
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Storing updated bio and trimming spaces
+  let updated_description = elements.description.val().trim();
+
+  // Too large bio
+  if ( updated_description.length > 200 ) {
+    set.show_system_notification("Profile Description cannot contain more than 200 characters. Try Again.", "danger", 3000);
+    return;
+  }
+
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "../../ajax/system",
+    data: {
+      action: "update-description",
+      description: updated_description,
+    },
+    success: function(data) {
+      
+      if ( data == "success" ) {
+        set.show_system_notification("Success!", "", 2500);
+        return;
+      }
+      else {
+        set.show_system_notification("ERROR: Unknown. Try Again.", "", 2500);
+        return;
+      }
+    }
+  });
+});
+
+
+/** 
  * Update Bio
  * 
  */
@@ -300,6 +452,229 @@ elements.bio.change(function() {
     data: {
       action: "update-bio",
       bio: updated_bio,
+    },
+    success: function(data) {
+      
+      if ( data == "success" ) {
+        set.show_system_notification("Success!", "", 2500);
+        return;
+      }
+      else {
+        set.show_system_notification("ERROR: Unknown. Try Again.", "", 2500);
+        return;
+      }
+    }
+  });
+});
+
+
+/** 
+ * Update Link
+ * 
+ */
+elements.link.change(function() {
+
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Removing any type of whitespace from link textbox value
+  elements.link.val ( 
+    "" + set.remove_whitespace (
+          elements.link.val()
+        )
+  );
+
+  // Fetching and Storing Updated Link Value
+  let updated_link = elements.link.val();
+
+  // Link is not empty and
+  // Invalid Link Provided
+  if ( 
+    updated_link.length != 0 && 
+    set.validate_link(updated_link) === false
+  ) {
+    set.show_system_notification ( "Invalid Link Provided. Try Again.", "danger", 2500 );
+    return;
+  }
+
+  // Sending request to update link
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "../../ajax/system",
+    data: {
+      action: "update-link",
+      link: updated_link
+    },
+    success: function(data) {
+      
+      if ( data == "success" ) {
+        set.show_system_notification("Success!", "", 2500);
+        return;
+      }
+      else {
+        set.show_system_notification("ERROR: Unknown. Try Again.", "", 2500);
+        return;
+      }
+    }
+  });
+});
+
+
+/** 
+ * Update LinkedIn Username
+ * 
+ */
+elements.linkedin.change(function() {
+
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Removing any type of whitespace from linkedin textbox value
+  elements.linkedin.val ( 
+    "" + set.remove_whitespace (
+          elements.linkedin.val()
+        )
+  );
+
+  // Fetching and Storing Updated Linkedin Value
+  let updated_linkedin = elements.linkedin.val();
+
+  // Sending request to update linkedin
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "../../ajax/system",
+    data: {
+      action: "update-linkedin",
+      link: updated_linkedin
+    },
+    success: function(data) {
+      
+      if ( data == "success" ) {
+        set.show_system_notification("Success!", "", 2500);
+        return;
+      }
+      else {
+        set.show_system_notification("ERROR: Unknown. Try Again.", "", 2500);
+        return;
+      }
+    }
+  });
+});
+
+
+
+/** 
+ * Update Twitter Username
+ * 
+ */
+elements.twitter.change(function() {
+
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Removing any type of whitespace from twitter textbox value
+  elements.twitter.val ( 
+    "" + set.remove_whitespace (
+          elements.twitter.val()
+        )
+  );
+
+  // Fetching and Storing Updated Twitter Value
+  let updated_twitter = elements.twitter.val();
+
+  // Sending request to update twitter
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "../../ajax/system",
+    data: {
+      action: "update-twitter",
+      link: updated_twitter
+    },
+    success: function(data) {
+      
+      if ( data == "success" ) {
+        set.show_system_notification("Success!", "", 2500);
+        return;
+      }
+      else {
+        set.show_system_notification("ERROR: Unknown. Try Again.", "", 2500);
+        return;
+      }
+    }
+  });
+});
+
+
+
+/** 
+ * Update Facebook Username
+ * 
+ */
+elements.facebook.change(function() {
+
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Removing any type of whitespace from facebook textbox value
+  elements.facebook.val ( 
+    "" + set.remove_whitespace (
+          elements.facebook.val()
+        )
+  );
+
+  // Fetching and Storing Updated Facebook Value
+  let updated_facebook = elements.facebook.val();
+
+  // Sending request to update facebook
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "../../ajax/system",
+    data: {
+      action: "update-facebook",
+      link: updated_facebook
+    },
+    success: function(data) {
+      
+      if ( data == "success" ) {
+        set.show_system_notification("Success!", "", 2500);
+        return;
+      }
+      else {
+        set.show_system_notification("ERROR: Unknown. Try Again.", "", 2500);
+        return;
+      }
+    }
+  });
+});
+
+
+
+/** 
+ * Update Instagram Username
+ * 
+ */
+elements.instagram.change(function() {
+
+  set.show_system_notification ( "Working...", "", -1 );
+
+  // Removing any type of whitespace from Instagram textbox value
+  elements.instagram.val ( 
+    "" + set.remove_whitespace (
+          elements.instagram.val()
+        )
+  );
+
+  // Fetching and Storing Updated Instagram Value
+  let updated_instagram = elements.instagram.val();
+
+  // Sending request to update facebook
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "../../ajax/system",
+    data: {
+      action: "update-instagram",
+      link: updated_instagram
     },
     success: function(data) {
       

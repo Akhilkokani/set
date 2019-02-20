@@ -118,6 +118,63 @@ if (
 }
 
 
+/** 
+ * Update Profile Picture
+ * 
+ */
+if ( isset($_FILES['update-profile-picture']['name']) ) {
+
+  // Accessing file properties
+  // 1. File name
+  // 2. Temp file name
+  // 3. File size
+  $updated_profile_picture_name = $_FILES['update-profile-picture']['name'];
+  $updated_profile_picture_temp_name = $_FILES['update-profile-picture']['tmp_name'];
+  $updated_profile_picture_file_size = $_FILES['update-profile-picture']['size'];
+
+  // Getting file extenstion
+  $updated_profile_picture_filename_explosion = explode ( '.', $updated_profile_picture_name );
+  $updated_profile_picture_file_extension = end ( $updated_profile_picture_filename_explosion );
+
+  // Checking for file size
+  // Size (3048576 Bytes ==> 3MB)
+  if ( $updated_profile_picture_file_size > 3048576 ) {
+    echo 'too-big';
+    die();
+  }
+
+  // Existing profile picture id
+  $existing_profile_picture_id = $user->get_profile_picture_id ( $connection, $logged_in_user_id );
+
+  // User has already uploadeda different picture
+  if ( $existing_profile_picture_id != NULL ) {
+
+    // And if that file exists in file system
+    if ( file_exists("../files/profile_pictures/" . $existing_profile_picture_id) ) {
+
+      // Delete that file
+      unlink("../files/profile_pictures/" . $existing_profile_picture_id);
+    }
+  }
+
+  // Generating new name for updated profile picture
+  $updated_profile_picture_new_name = $utility->generate_secure_string ( "upp_", 10 );
+
+  // Moving profile picture file to file system
+  $moveCourseThumbnail = move_uploaded_file ( $_FILES["update-profile-picture"]["tmp_name"], "../files/profile_pictures/" . $updated_profile_picture_new_name );
+  
+  // Updated Successfully
+  if ( $user->update_profile_picture_id ( $connection, $logged_in_user_id, $updated_profile_picture_new_name ) ) {
+    echo $updated_profile_picture_new_name;
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
 
 /** 
  * Update User's Name
@@ -267,6 +324,32 @@ if (
 
 
 /** 
+ * Update User's Profile Description
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-description" &&
+  isset($_POST['description'])
+) {
+
+  // Fetching and Santising Input
+  $updated_decsription = htmlspecialchars ( $_POST['description'] );
+
+  // Updated Bio
+  if ( $user->update_profile_description($connection, $logged_in_user_id, $updated_decsription) ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
  * Update User's Bio
  * 
  */
@@ -281,6 +364,136 @@ if (
 
   // Updated Bio
   if ( $user->update_bio($connection, $logged_in_user_id, $updated_bio) ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update User's Website/App Link
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-link" &&
+  isset($_POST['link'])
+) {
+
+  // Fetching and Santising Input
+  $updated_link = htmlspecialchars ( $_POST['link'] );
+
+  // Updated Link
+  if ( $user->update_link($connection, $logged_in_user_id, $updated_link) ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update User's LinkedIn Username
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-linkedin" &&
+  isset($_POST['link'])
+) {
+
+  // Fetching and Santising Input
+  $updated_linkedin = htmlspecialchars ( $_POST['link'] );
+
+  // Updated Link
+  if ( $user->update_linkedin($connection, $logged_in_user_id, $updated_linkedin) ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update User's Twitter Username
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-twitter" &&
+  isset($_POST['link'])
+) {
+
+  // Fetching and Santising Input
+  $updated_twitter = htmlspecialchars ( $_POST['link'] );
+
+  // Updated Link
+  if ( $user->update_twitter($connection, $logged_in_user_id, $updated_twitter) ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update User's Facebook Username
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-facebook" &&
+  isset($_POST['link'])
+) {
+
+  // Fetching and Santising Input
+  $updated_facebook = htmlspecialchars ( $_POST['link'] );
+
+  // Updated Link
+  if ( $user->update_facebook($connection, $logged_in_user_id, $updated_facebook) ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update User's Instagram Username
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-instagram" &&
+  isset($_POST['link'])
+) {
+
+  // Fetching and Santising Input
+  $updated_instagram = htmlspecialchars ( $_POST['link'] );
+
+  // Updated Link
+  if ( $user->update_instagram($connection, $logged_in_user_id, $updated_instagram) ) {
     echo "success";
     die();
   }

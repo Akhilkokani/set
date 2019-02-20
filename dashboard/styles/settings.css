@@ -16,6 +16,10 @@
   font-family: sans-serif;
 }
 
+#edit_profile_floor img {
+  border-radius: 100px;
+}
+
 #edit_profile_floor .edit-profile-pic-wrap {
   width: 331.42px;
   padding: 10px;

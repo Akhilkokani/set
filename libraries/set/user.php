@@ -171,6 +171,46 @@ class user {
 
 
   /**
+   * Get's user profile picture id.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return String
+   */
+  function get_profile_picture_id (
+    $connection,
+    $user_id
+  ) {
+
+    // Fetching user profile picture id from DB
+    $query_to_get_user_profile_picture_id = mysqli_query (
+      $connection, 
+      " SELECT 
+        user_info_profile_pic_id
+      FROM 
+        user_info
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // User Profile Pic ID Fetched
+    if ( mysqli_num_rows($query_to_get_user_profile_picture_id) === 1 ) {
+
+      return mysqli_fetch_array ( $query_to_get_user_profile_picture_id, MYSQLI_ASSOC )["user_info_profile_pic_id"];
+    }
+
+    // User Profile Picture ID not fetched
+    return null;
+  }
+
+
+
+  /**
    * Gets user's name.
    *
    *
@@ -326,6 +366,55 @@ class user {
 
 
 
+  /**
+   * Gets User Profile Description.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @return string
+   */
+  function get_profile_description (
+    $connection,
+    $user_id
+  ) {
+
+    // Fetching user's bio
+    $query_to_get_user_bio = mysqli_query (
+      $connection,
+      " SELECT 
+        user_profile_description 
+      FROM 
+         user_info
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Fetched bio properly, returning it
+    if ( $query_to_get_user_bio ) {
+      return mysqli_fetch_array ( $query_to_get_user_bio )["user_profile_description"];
+    }
+
+    // Could not fetch user bio
+    return null;
+  }
+
+
+
+  /**
+   * Gets User Bio.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @return string
+   */
   function get_user_bio (
     $connection,
     $user_id
@@ -350,6 +439,201 @@ class user {
     }
 
     // Could not fetch user bio
+    return null;
+  }
+
+
+
+  /**
+   * Gets User Link.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @return string
+   */
+  function get_user_link (
+    $connection,
+    $user_id
+  ) {
+
+    // Querying to get user profile link
+    $query_to_get_user_link = mysqli_query (
+      $connection,
+      " SELECT 
+        user_official_link 
+      FROM 
+         user_info
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Fetched bio properly, returning it
+    if ( $query_to_get_user_link ) {
+      return mysqli_fetch_array ( $query_to_get_user_link )["user_official_link"];
+    }
+
+    // Could not fetch user profile link
+    return null;
+  }
+
+
+
+  /**
+   * Gets User LinkedIn.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @return string
+   */
+  function get_user_linkedin (
+    $connection,
+    $user_id
+  ) {
+
+    // Querying to get user profile link
+    $query_to_get_user_link = mysqli_query (
+      $connection,
+      " SELECT 
+        user_linkedin_link 
+      FROM 
+         user_info
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Fetched bio properly, returning it
+    if ( $query_to_get_user_link ) {
+      return mysqli_fetch_array ( $query_to_get_user_link )["user_linkedin_link"];
+    }
+
+    // Could not fetch user profile link
+    return null;
+  }
+
+
+
+  /**
+   * Gets User Twitter.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @return string
+   */
+  function get_user_twitter (
+    $connection,
+    $user_id
+  ) {
+
+    // Querying to get user profile link
+    $query_to_get_user_link = mysqli_query (
+      $connection,
+      " SELECT 
+        user_twitter_id 
+      FROM 
+         user_info
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Fetched bio properly, returning it
+    if ( $query_to_get_user_link ) {
+      return mysqli_fetch_array ( $query_to_get_user_link )["user_twitter_id"];
+    }
+
+    // Could not fetch user profile link
+    return null;
+  }
+
+
+
+  /**
+   * Gets User Facebook.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @return string
+   */
+  function get_user_facebook (
+    $connection,
+    $user_id
+  ) {
+
+    // Querying to get user profile link
+    $query_to_get_user_link = mysqli_query (
+      $connection,
+      " SELECT 
+        user_facebook_id 
+      FROM 
+         user_info
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Fetched bio properly, returning it
+    if ( $query_to_get_user_link ) {
+      return mysqli_fetch_array ( $query_to_get_user_link )["user_facebook_id"];
+    }
+
+    // Could not fetch user profile link
+    return null;
+  }
+
+
+
+  /**
+   * Gets User Instagram.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @return string
+   */
+  function get_user_instagram (
+    $connection,
+    $user_id
+  ) {
+
+    // Querying to get user profile link
+    $query_to_get_user_link = mysqli_query (
+      $connection,
+      " SELECT 
+        user_instagram_id 
+      FROM 
+         user_info
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Fetched bio properly, returning it
+    if ( $query_to_get_user_link ) {
+      return mysqli_fetch_array ( $query_to_get_user_link )["user_instagram_id"];
+    }
+
+    // Could not fetch user profile link
     return null;
   }
 
@@ -421,6 +705,47 @@ class user {
         return false;
     }
 
+    return false;
+  }
+
+
+
+  /**
+   * Updates profile picture id.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @param string $updated_profile_picture_id
+   * @return boolean
+   */
+  function update_profile_picture_id (
+    $connection,
+    $user_id,
+    $updated_profile_picture_id
+  ) {
+
+    // Updating profile picture id
+    $query_to_update_profile_picture_id = mysqli_query (
+      $connection, 
+      " UPDATE 
+        user_info 
+      SET 
+        user_info_profile_pic_id = '$updated_profile_picture_id' 
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Updated correctly
+    if ( $query_to_update_profile_picture_id ) {
+      return true;
+    }
+
+    // Could not update
     return false;
   }
 
@@ -587,6 +912,47 @@ class user {
 
 
   /**
+   * Updates user's profile description.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @param string $updated_profile_description
+   * @return boolean
+   */
+  function update_profile_description (
+    $connection,
+    $user_id,
+    $updated_profile_description
+  ) {
+
+    // Querying to update user profile description
+    $query_to_update_description  = mysqli_query (
+      $connection, 
+      " UPDATE 
+          user_info 
+        SET 
+          user_profile_description = '$updated_profile_description' 
+        WHERE 
+          user_info_user_id = '$user_id' 
+        LIMIT 
+          1 "
+    );
+
+    // Updated user's bio successfully
+    if ( $query_to_update_description ) {
+      return true;
+    }
+
+    // Could not update
+    return false;
+  }
+
+
+
+  /**
    * Updates user's bio.
    *
    *
@@ -618,6 +984,211 @@ class user {
 
     // Updated user's bio successfully
     if ( $query_to_update_bio ) {
+      return true;
+    }
+
+    // Could not update
+    return false;
+  }
+
+
+
+  /**
+   * Updates Profile Link.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @param string $updated_link
+   * @return boolean
+   */
+  function update_link (
+    $connection,
+    $user_id,
+    $updated_link
+  ) {
+
+    // Querying to update user link
+    $query_to_update_link  = mysqli_query (
+      $connection, 
+      " UPDATE 
+          user_info 
+        SET 
+          user_official_link = '$updated_link' 
+        WHERE 
+          user_info_user_id = '$user_id' 
+        LIMIT 
+          1 "
+    );
+
+    // Updated user's link successfully
+    if ( $query_to_update_link ) {
+      return true;
+    }
+
+    // Could not update
+    return false;
+  }
+
+
+
+  /**
+   * Updates LinkedIn Username.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @param string $updated_linkedin
+   * @return boolean
+   */
+  function update_linkedin (
+    $connection,
+    $user_id,
+    $updated_linkedin
+  ) {
+
+    // Querying to update user link
+    $query_to_update_linkedin  = mysqli_query (
+      $connection, 
+      " UPDATE 
+          user_info 
+        SET 
+          user_linkedin_link = '$updated_linkedin' 
+        WHERE 
+          user_info_user_id = '$user_id' 
+        LIMIT 
+          1 "
+    );
+
+    // Updated user's linkedin successfully
+    if ( $query_to_update_linkedin ) {
+      return true;
+    }
+
+    // Could not update
+    return false;
+  }
+
+
+
+  /**
+   * Updates Twitter Username.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @param string $updated_twitter
+   * @return boolean
+   */
+  function update_twitter (
+    $connection,
+    $user_id,
+    $updated_twitter
+  ) {
+
+    // Querying to update user link
+    $query_to_update_twitter = mysqli_query (
+      $connection, 
+      " UPDATE 
+          user_info 
+        SET 
+          user_twitter_id = '$updated_twitter' 
+        WHERE 
+          user_info_user_id = '$user_id' 
+        LIMIT 
+          1 "
+    );
+
+    // Updated user's twitter successfully
+    if ( $query_to_update_twitter ) {
+      return true;
+    }
+
+    // Could not update
+    return false;
+  }
+
+
+
+  /**
+   * Updates Facebook Username.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @param string $updated_twitter
+   * @return boolean
+   */
+  function update_facebook (
+    $connection,
+    $user_id,
+    $updated_facebook
+  ) {
+
+    // Querying to update user link
+    $query_to_update_facebook = mysqli_query (
+      $connection, 
+      " UPDATE 
+          user_info 
+        SET 
+          user_facebook_id = '$updated_facebook' 
+        WHERE 
+          user_info_user_id = '$user_id' 
+        LIMIT 
+          1 "
+    );
+
+    // Updated user's facebook successfully
+    if ( $query_to_update_facebook ) {
+      return true;
+    }
+
+    // Could not update
+    return false;
+  }
+
+
+
+  /**
+   * Updates Instagram Username.
+   *
+   *
+   * @package SET
+   *
+   * @param string $connection
+   * @param string $user_id
+   * @param string $updated_instagram
+   * @return boolean
+   */
+  function update_instagram (
+    $connection,
+    $user_id,
+    $updated_instagram
+  ) {
+
+    // Querying to update user link
+    $query_to_update_instagram = mysqli_query (
+      $connection, 
+      " UPDATE 
+          user_info 
+        SET 
+          user_instagram_id = '$updated_instagram' 
+        WHERE 
+          user_info_user_id = '$user_id' 
+        LIMIT 
+          1 "
+    );
+
+    // Updated user's instagram successfully
+    if ( $query_to_update_instagram ) {
       return true;
     }
 

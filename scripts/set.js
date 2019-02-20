@@ -136,19 +136,82 @@ set.prototype.remove_whitespace = function ( text ) {
 
 
  /**
-  * Function_Description
+  * Validates Email ID.
   *
   *
-  * @package package_name
+  * @package SET
   *
-  * @param {paramter_data_type} [paramater_var_name]
-  * @return What does the function returns? (int, string, void etc...)
+  * @param {string} [email]
+  * @return boolean
   */
 set.prototype.validate_email = function ( email ) {
 
   let emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return emailRegEx.test ( email.toLowerCase() );
 }
+
+
+
+/**
+ * Validates Link
+ *
+ *
+ * @package SET
+ *
+ * @param {string} [link]
+ * @return boolean
+ */
+set.prototype.validate_link = function ( link ) {
+
+  var urlRegEx = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+  return urlRegEx.test(link);
+}
+
+
+
+/**
+ * Checks for File Extension
+ *
+ *
+ * @package SET
+ *
+ * @param {string} [file_name]
+ * @param {string} [file_allowed_type]
+ * @return boolean
+ */
+set.prototype.check_file_extension = function (
+  file_name = "", 
+  file_allowed_type = ""
+) {
+
+  // Finding file extension and making it lowercase
+  file_extension = file_name.split('.').pop().toLowerCase();
+
+  // Checking which file extensions to match Image or PDF
+  // If to match with image
+  if( file_allowed_type == 'image' ||  file_allowed_type == 'img') {
+    fileAllowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+  }
+  // If to match with .pdf
+  else if ( file_allowed_type == 'pdf') {
+    fileAllowedExtensions = ['pdf'];
+  }
+
+  // Finding number of extensions
+  length = fileAllowedExtensions.length;
+
+  // Checking file extension
+  for (i = 0; i < length; i++) {
+
+    // Extension found
+    if (file_extension == fileAllowedExtensions[i]) {
+      return(true);
+    }
+  }
+
+  // Extension not found
+  return(false);
+};
 
 // Adding Global Object to Window
 window.set = new set;

@@ -98,14 +98,20 @@ include_once "../../libraries/set/set.php";
                   <div class="left-side" style="width: 50%; border-right: 1px solid #eaeaea;">
                     <div class="edit-profile-pic-wrap disp-flex">
                       <div class="edit-profile-pic" style="margin-right:1em;">
-                        <img src="../../images/default_user_profile_picture.png" width="44" height="44">
+                        <?php 
+                        $profile_picture = "../../images/default_user_profile_picture.png";
+                        if ( $user->get_profile_picture_id($connection, $logged_in_user_id) != NULL )
+                          $profile_picture = "../../files/profile_pictures/" . $user->get_profile_picture_id($connection, $logged_in_user_id);
+                        ?>
+                        <img src="<?php echo $profile_picture; ?>" width="44" height="44">
                       </div>
-                      <div class="edit-profile-pic-message-wrap" style="margin-right:12em; height:44px;">
-                        <p class="vert-center" style="margin:0;">Profile Picture</p>
+                      <div class="edit-profile-pic-message-wrap" style="margin-right:13em; height:44px;">
+                        <p class="vert-center" style="margin:0; font-size:13px;">Profile Picture</p>
                       </div>
                       <div class="edit-profile-pic-change-wrap" style="height:44px;">
-                        <a class="vert-center" id="change_startup_profile_picture" title="Click to change your Startup Profile Picture">Change</a>
+                        <a class="vert-center" id="change_profile_picture" style="font-size:12px;" title="Click to change your Startup Profile Picture">Change</a>
                       </div>
+                      <input type="file" id="edit_profile_picture_file_selector" style="position:absolute; top:-100px;">
                     </div>
 
                     <!-- Edit General Information -->
@@ -150,6 +156,13 @@ include_once "../../libraries/set/set.php";
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
+                            <label>Description</label>
+                            <textarea id="edit_description" cols="30" rows="2" placeholder="About you and your milestones in life, in less than 200 characters" style="width:100%; overflow:scroll; resize:vertical;"><?php echo $user->get_profile_description ( $connection, $logged_in_user_id ); ?></textarea>
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
                             <label>Bio</label>
                             <textarea id="edit_bio" cols="30" rows="3" placeholder="Tell about yourself" style="width:100%; overflow:scroll; resize:vertical;"><?php echo $user->get_user_bio ( $connection, $logged_in_user_id ); ?></textarea>
                           </div>
@@ -158,7 +171,7 @@ include_once "../../libraries/set/set.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Link</label>
-                            <input id="edit_stup_link" type="text" value="" placeholder="Website/App Link" style="width:100%;">
+                            <input id="edit_link" type="text" value="<?php echo $user->get_user_link ( $connection, $logged_in_user_id ); ?>" placeholder="Website/App Link" style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -179,28 +192,28 @@ include_once "../../libraries/set/set.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>LinkedIn</label>
-                            <input id="edit_lkdin" type="text" value="" placeholder="LinkedIn URL" style="width:100%;">
+                            <input id="edit_lkdin" type="text" value="<?php echo $user->get_user_linkedin ( $connection, $logged_in_user_id ); ?>" placeholder="LinkedIn Username" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Twitter</label>
-                            <input id="edit_titter" type="text" value="" placeholder="Twitter URL" style="width:100%;">
+                            <input id="edit_titter" type="text" value="<?php echo $user->get_user_twitter ( $connection, $logged_in_user_id ); ?>" placeholder="Twitter Username" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Facebook</label>
-                            <input id="edit_fb" type="text" value="" placeholder="Facebook URL" style="width:100%;">
+                            <input id="edit_fb" type="text" value="<?php echo $user->get_user_facebook ( $connection, $logged_in_user_id ); ?>" placeholder="Facebook Username" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Instagram</label>
-                            <input id="edit_ig" type="text" value="" placeholder="Instagram URL" style="width:100%;">
+                            <input id="edit_ig" type="text" value="<?php echo $user->get_user_instagram ( $connection, $logged_in_user_id ); ?>" placeholder="Instagram Username" style="width:100%;">
                           </div>
                         </div>
                       </div>
