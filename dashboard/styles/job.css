@@ -28,6 +28,39 @@
 /** Job CV Actions END */
 
 
+.work-startup-logo-wrap {
+  width: 30%;
+}
+
+.work-startup-logo img {
+  border-radius: 100px;
+}
+
+.work-startup-vertical-line {
+  height: 100px;
+  width: 1px;
+  background-color: rgb(209, 209, 209);
+}
+
+.work-startup-details-wrap * {
+  font-family: sans-serif;
+}
+
+.work-startup-name h2 {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.work-startup-vision {
+  color: #696969;
+  font-weight: 100;
+}
+.work-startup-vision p {
+  margin: 0;
+}
+/** Work Startup END */
+
+
 .job-not-applied-wrap svg {
   display: block;
   margin: auto;
