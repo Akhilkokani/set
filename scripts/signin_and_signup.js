@@ -228,8 +228,14 @@ signup_modal_elements.submit_button.click(function() {
   }
 
   // Password is invalid
+  if ( password === "" ) {
+    set.show_system_notification ( "Password cannot be empty. Try again.", "danger", 2500 );
+    return;
+  }
+
+  // Password is invalid
   if ( password.length < 6 ) {
-    set.show_system_notification ( "Password must be atleast 6 letters. Try again.", "danger", 2500 );
+    set.show_system_notification ( "Password must be combination of atleast 6 letters or numbers. Try again.", "danger", 2500 );
     return;
   }
 
@@ -237,7 +243,7 @@ signup_modal_elements.submit_button.click(function() {
   $.ajax({
     cache: false,
     type: "POST",
-    url: "./ajax/system",
+    url: "./ajax/system.php",
     data: {
       action: "signup",
       email: email,
@@ -260,6 +266,8 @@ signup_modal_elements.submit_button.click(function() {
         _open_signin_modal();
         return;
       } else {
+        alert(data);
+        console.log(data);
         set.show_system_notification ( "We ran into an error. Try Again Later.", "danger" );
         return;
       }

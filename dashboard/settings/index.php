@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings Page Isndie Dashboard
+ * Settings Page Inside Dashboard
  *
  *
  *
@@ -13,6 +13,7 @@
 
 session_start();
 include_once "../_includes/check_login_status.php";
+include_once "../../libraries/set/set.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,11 +28,13 @@ include_once "../_includes/check_login_status.php";
 
   <link rel="icon" href="../../images/favicon.jpg">
   <link rel="stylesheet" href="../../styles/prix.css">
+  <link rel="stylesheet" href="../../styles/all-page.css">
   <link rel="stylesheet" href="../styles/dashboard.css">
   <link rel="stylesheet" href="../styles/settings.css">
 
   <script src="../../scripts/jquery.js"></script>
   <script src="../../scripts/chart.js"></script>
+  <script src="../../scripts/set.js"></script>
   
 </head>
 <body>
@@ -117,21 +120,21 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Name</label>
-                            <input id="edit_name" type="text" value="" placeholder="Name" style="width:100%;">
+                            <input id="edit_name" type="text" value="<?php echo $user->get_name ( $connection, $logged_in_user_id ); ?>" placeholder="Name" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Email</label>
-                            <input id="edit_email" type="text" value="" placeholder="Email" style="width:100%;">
+                            <input id="edit_email" type="text" value="<?php echo $user->get_user_email_id ( $connection, $logged_in_user_id ); ?>" placeholder="Email" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Username</label>
-                            <input id="edit_username" type="text" value="" placeholder="Username" style="width:100%;">
+                            <input id="edit_username" type="text" value="<?php echo $user->get_user_username ( $connection, $logged_in_user_id ); ?>" placeholder="Username" style="width:100%;">
                           </div>
                         </div>
 
@@ -139,16 +142,16 @@ include_once "../_includes/check_login_status.php";
                           <div class="group-action-input">
                             <div class="disp-flex">
                               <label style="flex:1;">Password</label>
-                              <a style="font-size:10px; color:#5d5d5d;" title="Click to Change Your Account Password">Change</a>
+                              <a id="edit_password" style="font-size:10px; color:#5d5d5d;" title="Click to Change Your Account Password">Change</a>
                             </div>
-                            <input id="edit_password" type="password" disabled readonly value="password" placeholder="Password" style="width:100%;">
+                            <input type="password" disabled readonly value="password" placeholder="Password" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Bio</label>
-                            <textarea id="edit_stup_stry" cols="30" rows="3" placeholder="Tell about yourself" style="width:100%; overflow:scroll; resize:vertical;"></textarea>
+                            <textarea id="edit_bio" cols="30" rows="3" placeholder="Tell about yourself" style="width:100%; overflow:scroll; resize:vertical;"><?php echo $user->get_user_bio ( $connection, $logged_in_user_id ); ?></textarea>
                           </div>
                         </div>
 
@@ -237,5 +240,6 @@ include_once "../_includes/check_login_status.php";
   
   <script src="../scripts/settings.js"></script>
   <?php include_once "../_includes/user_signed_in_actions.php"; ?>
+  <?php include_once "../../_includes/all_page_include.php"; ?>
 </body>
 </html>

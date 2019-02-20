@@ -21,3 +21,6 @@ if (
   header("Location: ../../");
   die();
 }
+
+// User ID of user who has logged in
+$logged_in_user_id = $_SESSION['user_id'];
