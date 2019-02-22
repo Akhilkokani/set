@@ -102,14 +102,21 @@
 /** Not Uploaded CV END */
 
 
+.job-applied-wrap .job-application-wrap {
+  margin-right: 2.2em;
+}
+
 .job-applied-wrap .job-application {
-  height: 140px;
   cursor: pointer;
   margin-right: 2.2em;
 }
 
 .job-applied-wrap .job-application:hover {
   text-decoration: none;
+}
+
+.job-application .profile-picture-wrap > img {
+  border-radius: 100px;
 }
 
 .job-applied-wrap .job-application .name-wrap {
@@ -125,23 +132,23 @@
   display: block;
 }
 
-.job-applied-wrap .job-application .remove-link-wrap {
-  margin-top: -11px;
+.job-applied-wrap .remove-link-wrap {
+  margin-top: -24px;
   text-align: center;
   opacity: 0;
-  transition: opacity .50s ease-in;
+  transition: opacity .25s ease-in;
 }
 
-.job-applied-wrap .job-application .remove-link-wrap span {
+.job-applied-wrap .remove-link-wrap a {
   color: #bf1010;
   font-size: 11px;
 }
 
-.job-applied-wrap .job-application .remove-link-wrap span:hover {
+.job-applied-wrap .remove-link-wrap a:hover {
   text-decoration: underline;
 }
 
-.job-applied-wrap .job-application:hover .remove-link-wrap {
+.job-applied-wrap .job-application-wrap:hover .remove-link-wrap {
   opacity: 1;
 }
 /** Jobs Applied END */

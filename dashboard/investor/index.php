@@ -13,6 +13,7 @@
 
 session_start();
 include_once "../_includes/check_login_status.php";
+include_once "../../libraries/set/set.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +32,8 @@ include_once "../_includes/check_login_status.php";
   
   <script src="../../scripts/jquery.js"></script>
   <script src="../../scripts/chart.js"></script>
+  <script src="../../scripts/set.js"></script>
+
 </head>
 <body>
   
@@ -83,17 +86,14 @@ include_once "../_includes/check_login_status.php";
             </div>
           </div>
 
-          <div class="tab-user-actions-wrap">
-            <div class="tab-user-action user-profile-pic-wrap vert-center">
-              <img src="../../images/default_user_profile_picture.png" class="user-profile-pic" width="44" height="44">
-            </div>
-          </div>
+          <?php include "../_includes/page_header_actions.php"; ?>
         </div>
 
         <div class="dashboard-content investor-tab-content">
-          
+
+          <?php if ( $user->check_if_investor($connection, $logged_in_user_id) == false ) { ?>
           <!-- If investor has not listed as investor -->
-          <div class="dashboard-floor investor-floor" style="display: none;">
+          <div class="dashboard-floor investor-floor">
             <div class="no-incubation-center-wrap">
               <div class="no-incubation-center">
                 <div class="no-incubation-center-image-wrap">
@@ -124,7 +124,7 @@ include_once "../_includes/check_login_status.php";
               </div>
             </div>
           </div>
-
+          <?php } else { ?>
           <!-- Startups Invested -->
           <div class="dashboard-floor investor-floor">
             <div class="ic-startups-incubated-wrap">
@@ -135,13 +135,14 @@ include_once "../_includes/check_login_status.php";
                   </div>
                   <div class="remove-as-investor-action-wrap">
                     <div class="remove-as-investor-action vert-center">
-                      <a style="font-size:11px; font-family:sans-serif; color:#9a9a9a;" title="Click to remove you as Investor">Remove as Investor</a>
+                      <a style="font-size:11px; font-family:sans-serif; color:#9a9a9a;" title="Click to remove you as Investor" id="remove_as_investor">Remove as Investor</a>
                     </div>
                   </div>
                 </div>
 
-                <!-- If no startups have listed as investor -->
-                <!-- <div class="ic-no-startups-incubated-wrap">
+                <?php if ( $user->count_number_of_startups_invested($connection, $logged_in_user_id) == 0 ) { ?>
+                <!-- If no startups have listed user as investor -->
+                <div class="ic-no-startups-incubated-wrap">
                   <div class="no-incubation-center-wrap">
                     <div class="no-incubation-center">
                       <div class="no-incubation-center-image-wrap">
@@ -163,45 +164,65 @@ include_once "../_includes/check_login_status.php";
                           <h2>No Content Here</h2>
                         </div>
                         <div class="no-incubation-center-para-wrap" style="line-height:1.8;">
-                          <span>Still no startups have added your as their Investor, encourage your startups to  <br>register and list their startup and you as their investor.</span>
+                          <span>Still no startups have added you as their Investor, encourage your startups to  <br>register and list their startup and add you as their investor.</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div> -->
-
-                <!-- If startups have added center as their incubation center -->
+                </div>
+                <?php } else { ?>
+                <!-- If startups have added as investor -->
                 <div class="ic-startups-wrap" style="margin-top:2em;">
                   <div class="ic-startups disp-flex">
-                    <div class="a-startup">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_startup_icon_dark.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Jshta</span>
-                      </div>
-                    </div>
-                    <div class="a-startup">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_startup_icon_dark.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Google</span>
-                      </div>
-                    </div>
-                    <div class="a-startup">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_startup_icon_dark.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Apple</span>
-                      </div>
-                    </div>
+                    <?php
+
+                    // Query to get user invested startups
+                    $query_to_get_user_invested_startups = mysqli_query (
+                      $connection,
+                      " SELECT 
+                        startup_investor_startup_id 
+                      FROM 
+                        startup_investor_details 
+                      WHERE 
+                        startup_investor_user_id = '$logged_in_user_id' "
+                    );
+
+                    // Found user invested startups
+                    if ( $query_to_get_user_invested_startups ) {
+
+                      // Fetching startups invested one by one
+                      while ( $invested_startup = mysqli_fetch_assoc($query_to_get_user_invested_startups) ) {
+
+                        // ID of Startup in which investement has been made
+                        // Startup Profile Picture ID
+                        // Startup Logo Source
+                        $invested_startup_id = $invested_startup['startup_investor_startup_id'];
+                        $invested_startup_profile_picture_id = $startup->get_profile_pic_id ( $connection, $invested_startup_id);
+                        $invested_startup_profile_picture_source = "../../images/default_startup_icon_dark.png";
+
+                        // Rebuilding Startup Logo source, because, startup owner has uploaded custom profile picture
+                        if ( $invested_startup_profile_picture_id !== NULL )
+                          $invested_startup_profile_picture_source = "../../files/profile_pictures/" . $invested_startup_profile_picture_id; 
+                        ?>
+                        <div class="a-startup" title="<?php echo $invested_startup_id; ?>">
+                          <div class="profile-picture-wrap">
+                            <img style="border-radius:100px;" src="<?php echo $invested_startup_profile_picture_source; ?>" width="101" height="101">
+                          </div>
+                          <div class="name-wrap">
+                            <span><?php echo $startup->get_name ( $connection, $invested_startup_id ); ?></span>
+                          </div>
+                        </div>
+                    <?php
+                      } // Fetching startups invested one by one END
+                    } // Getting user invested startups END
+                    ?>
                   </div>
                 </div>
+                <?php } // Count Number of Startups Invested END ?>
               </div>
             </div>
           </div>
+          <?php } // Check if User is investor END  ?>
 
           <footer style="padding:2em; text-align:center;">
             <span style="font-size:12px; color:#9a9a9a; font-family:sans-serif;">Made Possible By CodeManiacs</span>
@@ -213,5 +234,7 @@ include_once "../_includes/check_login_status.php";
 
   <script src="../scripts/investor.js"></script>
   <?php include_once "../_includes/user_signed_in_actions.php"; ?>
+  <?php include_once "../_includes/notification_system.php"; ?>
+  <?php include_once "../../_includes/all_page_include.php"; ?>
 </body>
 </html>

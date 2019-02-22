@@ -52,7 +52,7 @@ class user {
    *
    * @package SET
    *
-   * @return boolean
+   * @return Boolean
    */
   function check_if_user_is_logged_in () {
 
@@ -77,9 +77,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $email
-   * @return boolean
+   * @param String $connection
+   * @param String $email
+   * @return Boolean
    */
   function check_if_email_exists (
     $connection,
@@ -105,12 +105,249 @@ class user {
 
 
   /**
+   * Checks whether user is listed as investor or not.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Boolean
+   */
+  function check_if_investor (
+    $connection,
+    $user_id
+  ) {
+
+    // Checking if user is investor or not
+    $query_to_check_if_user_is_investor = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        user_info 
+      WHERE 
+        user_info_user_id = '$user_id' 
+      AND 
+        user_info_is_a_investor = 1 
+      LIMIT 
+        1 "
+    );
+
+    // User is investor
+    if ( mysqli_num_rows($query_to_check_if_user_is_investor) === 1 )
+      return true;
+
+    // User is investor or
+    // Could not find user row, for some reason
+    return false;
+  }
+
+
+
+  /**
+   * Checks whether user has uploaded his/her CV for applying jobs.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Boolean
+   */
+  function check_if_uploaded_cv (
+    $connection,
+    $user_id
+  ) {
+
+    // Checking whether user has uploaded cv or not
+    $query_to_check_if_user_has_uploaded_cv = mysqli_query (
+      $connection,
+      " SELECT 
+        user_cv_id 
+      FROM 
+        user_info 
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // User Record Found
+    if ( mysqli_num_rows($query_to_check_if_user_has_uploaded_cv) === 1 ) {
+
+      // Fetching user cv id
+      $user_cv_id = mysqli_fetch_array ( $query_to_check_if_user_has_uploaded_cv, MYSQLI_ASSOC )["user_cv_id"];
+      if ( $user_cv_id !== NULL )
+        return true;
+    }
+
+    // User has not uploaded cv or
+    // User record not found
+    return false;
+  }
+
+
+
+  /**
+   * Checks whether user has been listed in any of startup team members list.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Boolean
+   */
+  function check_if_listed_in_startup_team (
+    $connection,
+    $user_id
+  ) {
+
+    // Checking if user is listed in one of startup team members list
+    $query_to_check_if_user_is_listed_in_startup_team = mysqli_query ( 
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        startup_team_member_details 
+      WHERE 
+        startup_team_member_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // User is listed in one startup team members list
+    if ( mysqli_num_rows($query_to_check_if_user_is_listed_in_startup_team) == 1 )
+      return true;
+
+    // User is not listed or
+    return false;
+  }
+
+
+
+  /**
+   * Checks whether user has sent their CV to a particular startup.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @param String $startup_id
+   * @return Boolean
+   */
+  function check_if_sent_cv_for_startup (
+    $connection,
+    $user_id,
+    $startup_id
+  ) {
+
+    // Checking whether user has sent CV to startup
+    $query_to_checK_if_user_has_sent_cv_for_startup = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        jobs_applied 
+      WHERE 
+        job_applied_startup_id = '$startup_id' 
+      AND 
+        job_applier_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // User has sent their CV
+    if ( mysqli_num_rows($query_to_checK_if_user_has_sent_cv_for_startup) == 1 )
+      return true;
+    
+    // Could not check, for some reason
+    return false;
+  }
+
+
+
+  /**
+   * Counts number of jobs user has applied in different startups.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Integer
+   */
+  function count_number_of_jobs_applied (
+    $connection,
+    $user_id
+  ) {
+
+    // Counting number of jobs applied by user
+    $query_to_count_number_of_jobs_applied = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        jobs_applied 
+      WHERE 
+        job_applier_user_id = '$user_id' "
+    );
+
+    // Returning total number of jobs applied
+    if ( $query_to_count_number_of_jobs_applied )
+      return mysqli_num_rows($query_to_count_number_of_jobs_applied);
+
+    // Could not get total number of jobs for some reason
+    return 0;
+  }
+
+
+
+  /**
+   * Counts total number of startups user has invested.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Integer
+   */
+  function count_number_of_startups_invested (
+    $connection,
+    $user_id
+  ) {
+
+    // Counting number of startups user has invested
+    $query_to_count_number_of_startups_user_has_invested = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        startup_investor_details 
+      WHERE 
+        startup_investor_user_id = '$user_id' "
+    );
+
+    // Counted number of startups invested by user
+    if ( $query_to_count_number_of_startups_user_has_invested )
+      return mysqli_num_rows($query_to_count_number_of_startups_user_has_invested);
+
+    // Could not find for some reason
+    return 0;
+  }
+
+
+
+  /**
    * Gets logged in user's user_id.
    *
    *
    * @package SET
    *
-   * @return string
+   * @return String
    */
   function get_logged_in_user_id() {
 
@@ -153,7 +390,7 @@ class user {
         user_username = '$username' 
       LIMIT 
         1 "
-    ) or die ( mysqli_error($connection) );
+    );
 
     // User ID Fetched
     if ( 
@@ -166,6 +403,44 @@ class user {
 
     // User ID not fetched
     return "";
+  }
+
+
+
+  /**
+   * Get's startup ID where user is working.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return String
+   */
+  function get_startup_id_where_user_is_working (
+    $connection,
+    $user_id
+  ) {
+
+    // Getting startup id where user is working
+    $query_to_get_startup_id_where_user_is_working = mysqli_query (
+      $connection,
+      " SELECT 
+        startup_team_member_startup_id
+      FROM 
+        startup_team_member_details 
+      WHERE 
+        startup_team_member_user_id = '$user_id'
+      LIMIT 
+        1 "
+    );
+
+    // Found startup ID
+    if ( mysqli_num_rows($query_to_get_startup_id_where_user_is_working) === 1 )
+      return mysqli_fetch_array($query_to_get_startup_id_where_user_is_working)['startup_team_member_startup_id'];
+
+    // Could not find, for some reason
+    return NULL;
   }
 
 
@@ -216,9 +491,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_name (
     $connection,
@@ -255,9 +530,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_email_id (
     $connection,
@@ -294,9 +569,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_username (
     $connection,
@@ -333,9 +608,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_password (
     $connection,
@@ -372,9 +647,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_profile_description (
     $connection,
@@ -411,9 +686,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_bio (
     $connection,
@@ -450,9 +725,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_link (
     $connection,
@@ -489,9 +764,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_linkedin (
     $connection,
@@ -528,9 +803,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_twitter (
     $connection,
@@ -567,9 +842,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_facebook (
     $connection,
@@ -606,9 +881,9 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @return string
+   * @param String $connection
+   * @param String $user_id
+   * @return String
    */
   function get_user_instagram (
     $connection,
@@ -640,16 +915,56 @@ class user {
 
 
   /**
+   * Get's user CV ID.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Boolean
+   */
+  function get_cv_id (
+    $connection,
+    $user_id
+  ) {
+
+    // Getting user CV ID from DB
+    $query_to_get_user_cv_id = mysqli_query ( 
+      $connection,
+      " SELECT 
+        user_cv_id 
+      FROM 
+        user_info 
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    ) or die(mysqli_error($connection));
+
+    // User Row Found
+    if ( mysqli_num_rows($query_to_get_user_cv_id) === 1 )
+      //  User CV ID
+      return mysqli_fetch_array ( $query_to_get_user_cv_id, MYSQLI_ASSOC )["user_cv_id"];
+
+    // User Row not found or
+    // System Error
+    return null;
+  }
+
+
+
+  /**
    * Add's new user
    *
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $email_id
-   * @param string $username
-   * @param string $password
-   * @return boolean
+   * @param String $connection
+   * @param String $email_id
+   * @param String $username
+   * @param String $password
+   * @return Boolean
    */
   function add_new_user ( 
     $connection,
@@ -711,15 +1026,58 @@ class user {
 
 
   /**
+   * Updates Investor Status
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @param Integer $investor_status
+   * @return Boolean
+   */
+  function update_investor_status (
+    $connection,
+    $user_id,
+    $investor_status
+  ) {
+
+    // Santising
+    $investor_status = (int) $investor_status;
+
+    // Updating investor status
+    $query_to_update_investor_status = mysqli_query (
+      $connection,
+      " UPDATE 
+        user_info 
+      SET 
+        user_info_is_a_investor = $investor_status 
+      WHERE 
+        user_info_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Updated investor status
+    if ( $query_to_update_investor_status )
+      return true;
+
+    // Could not update for some reason
+    return false;
+  }
+
+
+
+  /**
    * Updates profile picture id.
    *
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_profile_picture_id
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_profile_picture_id
+   * @return Boolean
    */
   function update_profile_picture_id (
     $connection,
@@ -757,10 +1115,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_name
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_name
+   * @return Boolean
    */
   function update_name ( 
     $connection,
@@ -797,10 +1155,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_email_id
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_email_id
+   * @return Boolean
    */
   function update_email_id (
     $connection,
@@ -837,10 +1195,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_username
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_username
+   * @return Boolean
    */
   function update_username (
     $connection,
@@ -877,10 +1235,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_password
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_password
+   * @return Boolean
    */
   function update_password (
     $connection,
@@ -917,10 +1275,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_profile_description
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_profile_description
+   * @return Boolean
    */
   function update_profile_description (
     $connection,
@@ -958,10 +1316,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_bio
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_bio
+   * @return Boolean
    */
   function update_bio (
     $connection,
@@ -999,10 +1357,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_link
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_link
+   * @return Boolean
    */
   function update_link (
     $connection,
@@ -1040,10 +1398,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_linkedin
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_linkedin
+   * @return Boolean
    */
   function update_linkedin (
     $connection,
@@ -1081,10 +1439,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_twitter
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_twitter
+   * @return Boolean
    */
   function update_twitter (
     $connection,
@@ -1122,10 +1480,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_twitter
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_twitter
+   * @return Boolean
    */
   function update_facebook (
     $connection,
@@ -1163,10 +1521,10 @@ class user {
    *
    * @package SET
    *
-   * @param string $connection
-   * @param string $user_id
-   * @param string $updated_instagram
-   * @return boolean
+   * @param String $connection
+   * @param String $user_id
+   * @param String $updated_instagram
+   * @return Boolean
    */
   function update_instagram (
     $connection,
@@ -1193,6 +1551,172 @@ class user {
     }
 
     // Could not update
+    return false;
+  }
+
+
+
+  /**
+   * Updates User CV ID.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Boolean
+   */
+  function update_cv_id (
+    $connection,
+    $user_id,
+    $cv_id
+  ) {
+
+    // Updating CV ID
+    if ( $cv_id != NULL )
+      $query_to_update_cv_id = mysqli_query ( 
+        $connection,
+        " UPDATE 
+          user_info 
+        SET 
+          user_cv_id  = '$cv_id' 
+        WHERE 
+          user_info_user_id = '$user_id' 
+        LIMIT 
+          1 "
+      );
+    else
+      $query_to_update_cv_id = mysqli_query ( 
+        $connection,
+        " UPDATE 
+          user_info 
+        SET 
+          user_cv_id  = NULL
+        WHERE 
+          user_info_user_id = '$user_id'
+        LIMIT 
+          1 "
+      );
+
+    // Updated Successfully
+    if ( $query_to_update_cv_id )
+      return true;
+
+    // Could not update
+    return false;
+  }
+
+
+
+  /**
+   * Removes User CV from DB and File System.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @param String $cv_source
+   * @return Boolean
+   */
+  function remove_cv (
+    $connection,
+    $user_id,
+    $cv_source
+  ) {
+
+    // Getting user's CV Id
+    $cv_id_to_remove = $this->get_cv_id($connection, $user_id);
+
+    // CV is uploaded
+    if ( $cv_id_to_remove !== NULL ) {
+      
+      // CV to remove exists in file system
+      if ( file_exists($cv_source . $cv_id_to_remove) ) {
+
+        unlink ( $cv_source . $cv_id_to_remove );
+        $this->update_cv_id ( $connection, $user_id, NULL );
+        return true;
+      } 
+      else return false;
+    }
+
+    return true;
+  }
+
+
+
+  /**
+   * Removes a particular Job Application.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $job_application_id
+   * @return Boolean
+   */
+  function remove_job_application (
+    $connection,
+    $user_id,
+    $job_application_id
+  ) {
+
+    // Santising
+    $job_application_id = htmlspecialchars ( $job_application_id );
+
+    // Removing job application
+    $query_to_remove_job_application = mysqli_query (
+      $connection,
+      " DELETE FROM 
+        jobs_applied 
+      WHERE 
+        job_applied_id = '$job_application_id'
+      AND
+        job_applier_user_id = '$user_id'
+      LIMIT 
+        1 "
+    );
+
+    // Removed job application
+    if ( $query_to_remove_job_application )
+      return true;
+
+    // Could not remove job application for some reason
+    return false;
+  }
+
+
+
+  /**
+   * Removes user from startup team member list.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return String
+   */
+  function remove_from_startup_team (
+    $connection,
+    $user_id
+  ) {
+
+    // Removing user from startup team member list
+    $query_to_remove_user_from_startup_team_list = mysqli_query (
+      $connection,
+      " DELETE FROM 
+        startup_team_member_details 
+      WHERE 
+        startup_team_member_user_id = '$user_id' "
+    );
+
+    // Removed user from startup team member list
+    if ( $query_to_remove_user_from_startup_team_list )
+      return true;
+
+    // Could not remove for some reason
     return false;
   }
 }

@@ -161,7 +161,7 @@ if ( isset($_FILES['update-profile-picture']['name']) ) {
   $updated_profile_picture_new_name = $utility->generate_secure_string ( "upp_", 10 );
 
   // Moving profile picture file to file system
-  $moveCourseThumbnail = move_uploaded_file ( $_FILES["update-profile-picture"]["tmp_name"], "../files/profile_pictures/" . $updated_profile_picture_new_name );
+  move_uploaded_file ( $_FILES["update-profile-picture"]["tmp_name"], "../files/profile_pictures/" . $updated_profile_picture_new_name );
   
   // Updated Successfully
   if ( $user->update_profile_picture_id ( $connection, $logged_in_user_id, $updated_profile_picture_new_name ) ) {
@@ -499,6 +499,177 @@ if (
   }
 
   // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Updating User CV
+ * 
+ */
+if ( isset($_FILES['update-cv']['name']) ) {
+
+  // Accessing file properties
+  // 1. File name
+  // 2. Temp file name
+  // 3. File size
+  $updated_cv_name = $_FILES['update-cv']['name'];
+  $updated_cv_temp_name = $_FILES['update-cv']['tmp_name'];
+  $updated_cv_file_size = $_FILES['update-cv']['size'];
+
+  // Getting file extenstion
+  $updated_cv_filename_explosion = explode ( '.', $updated_cv_name );
+  $updated_cv_file_extension = end ( $updated_cv_filename_explosion );
+
+  // Checking for file size
+  // Size (15048576 Bytes ==> 15MB)
+  if ( $updated_cv_file_size > 15048576 ) {
+    echo 'too-big';
+    die();
+  }
+
+  // Existing cv id
+  $existing_cv_id = $user->get_cv_id ( $connection, $logged_in_user_id );
+
+  // User has already uploaded different CV before
+  if ( $existing_cv_id != NULL ) {
+
+    // And if that file exists in file system
+    if ( file_exists("../files/cv/" . $existing_cv_id) ) {
+
+      // Delete that file
+      unlink("../files/cv/" . $existing_cv_id);
+    }
+  }
+
+  // Generating new name for CV
+  $cv_new_name = $utility->generate_secure_string ( "ucv_", 10 );
+
+  // Moving CV file to file system
+  move_uploaded_file ( $_FILES["update-cv"]["tmp_name"], "../files/cv/" . $cv_new_name );
+  
+  // Updated Successfully
+  if ( $user->update_cv_id ( $connection, $logged_in_user_id, $cv_new_name ) ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Remove User CV
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "remove-cv" &&
+  isset($_POST['confirm_remove']) &&
+  $_POST['confirm_remove'] == 1
+) {
+
+  // Removing CV from DB and File System
+  if ( $user->remove_cv ($connection, $logged_in_user_id, "../files/cv/") ) {
+    echo "success";
+    die();
+  }
+
+  // Could not remove, for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Remove Job Application
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "remove-job-application" &&
+  $_POST['id']
+) {
+
+  // Removed job application
+  if ( $user->remove_job_application ($connection, $logged_in_user_id, $_POST['id']) )
+    echo "success";
+    die();
+
+  // Could not remove job application
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Remove from work
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "remove-from-work" &&
+  isset($_POST['confirm']) &&
+  $_POST['confirm'] == 1
+) {
+
+  // Removed from startup team member list
+  if ( $user->remove_from_startup_team($connection, $logged_in_user_id) )
+    echo "success";
+    die();
+
+  // System error
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Make me investor
+ * 
+ */
+if ( 
+  isset($_POST['action']) &&
+  $_POST['action'] == "make-investor"
+) {
+
+  // Updated investor status of user
+  if ( $user->update_investor_status($connection, $logged_in_user_id, 1) )
+    echo "success";
+    die();
+
+  // Server Error
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Remove as investor
+ * 
+ */
+if ( 
+  isset($_POST['action']) &&
+  $_POST['action'] == "remove-as-investor" &&
+  isset($_POST['confirm']) &&
+  $_POST['confirm'] == 1
+) {
+
+  // Updated investor status of user
+  if ( $user->update_investor_status($connection, $logged_in_user_id, 0) )
+    echo "success";
+    die();
+
+  // Server Error
   echo "unknown";
   die();
 }
