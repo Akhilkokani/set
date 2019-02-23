@@ -27,6 +27,7 @@ include_once "../../libraries/set/set.php";
 
   <link rel="icon" href="../../images/favicon.jpg">
   <link rel="stylesheet" href="../../styles/prix.css">
+  <link rel="stylesheet" href="../../styles/all-page.css">
   <link rel="stylesheet" href="../styles/dashboard.css">
   <link rel="stylesheet" href="../styles/investor.css">
   
@@ -234,7 +235,6 @@ include_once "../../libraries/set/set.php";
 
   <script src="../scripts/investor.js"></script>
   <?php include_once "../_includes/user_signed_in_actions.php"; ?>
-  <?php include_once "../_includes/notification_system.php"; ?>
   <?php include_once "../../_includes/all_page_include.php"; ?>
 </body>
 </html>

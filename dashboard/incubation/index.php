@@ -718,7 +718,6 @@ include_once "../../libraries/set/set.php";
   <input type="file" id="edit_profile_picture_file_selector" style="position:absolute; top:-100px;">
   <script src="../scripts/add_incubation_center.js"></script>
   <?php include_once "../_includes/user_signed_in_actions.php"; ?>
-  <?php include_once "../_includes/notification_system.php"; ?>
   <?php include_once "../../_includes/all_page_include.php"; ?>
 </body>
 </html>

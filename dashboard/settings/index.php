@@ -75,11 +75,7 @@ include_once "../../libraries/set/set.php";
             </div>
           </div>
 
-          <div class="tab-user-actions-wrap">
-            <div class="tab-user-action user-profile-pic-wrap vert-center">
-              <img src="../../images/default_user_profile_picture.png" class="user-profile-pic" width="44" height="44">
-            </div>
-          </div>
+          <?php include "../_includes/page_header_actions.php"; ?>
         </div>
 
         <div class="dashboard-content startup-tab-content">

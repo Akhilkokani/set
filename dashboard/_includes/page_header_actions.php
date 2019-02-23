@@ -27,6 +27,18 @@
     </div>
   </div>
   <div class="tab-user-action user-profile-pic-wrap vert-center">
-    <img src="../../images/default_user_profile_picture.png" class="user-profile-pic" width="44" height="44">
+    <?php
+    // User Profile Picture
+    $user_profile_picture = $user->get_profile_picture_id ( $connection, $logged_in_user_id );
+
+    // Default Profile Picture
+    if ( $user_profile_picture == "" || is_null($user_profile_picture) )
+      $user_profile_picture = "../../images/default_user_profile_picture.png";
+    
+    // Rebuilding profile picture source, because, user has uploaded custom profile picture
+    else
+      $user_profile_picture = "../../files/profile_pictures/" . $user_profile_picture;
+    ?>
+    <img src="<?php echo $user_profile_picture; ?>" class="user-profile-pic" width="44" height="44">
   </div>
 </div>
