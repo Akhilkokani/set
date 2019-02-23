@@ -235,6 +235,7 @@ a.search-result:hover .startup-name-wrap {
 }
 
 .profile-header-content-splitter .profile-picture > img {
+  border: 1px solid #dddddd;
   border-radius: 100px;
 }
 
@@ -395,6 +396,10 @@ a.search-result:hover .startup-name-wrap {
   margin-top: 4px;
   font-size: 12px;
   color: #545454;
+}
+
+.tab-para-wrap p {
+  white-space: pre-line;
 }
 
 

@@ -11,11 +11,42 @@
  * @package SET
  */
 
-// Starting Session
-session_start();
-
 // SET Library
 include_once "./libraries/set/set.php";
+
+// By default nobody's profile can be shown
+$profileToShow = NULL;
+
+// Startup profile to be shown
+if ( isset ($_GET['sid']) ) {
+  $profileToShow = "startup";
+  $startup_id = htmlspecialchars ( $_GET['sid'], ENT_QUOTES );
+}
+
+// Incubation Center profile to be shown
+else if ( isset ($_GET['icid']) ) {
+  $profileToShow = "incubation"; 
+  $incubcation_center_id = htmlspecialchars ( $_GET['icid'], ENT_QUOTES );
+  $profileName = $incubation->get_name ( $connection, $incubcation_center_id );
+}
+
+// User profile to be shown
+else if ( isset ($_GET['uid']) ) {
+  $profileToShow = "user";
+  $username = htmlspecialchars ( $_GET['uid'], ENT_QUOTES );
+  $user_id = $user->get_user_id_using_username ( $connection, $username );
+  $profileName = $user->get_name ( $connection, $user_id );
+}
+
+// Redirect user to homepage
+else {
+
+  header ( "Location: ./" );
+  die();
+}
+
+// Starting Session
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +57,7 @@ include_once "./libraries/set/set.php";
   <meta name="author" content="CodeManiacs">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  <title>PROFILE_NAME - Startup Ecosystem Tracker | CodeManiacs</title>
+  <title><?php echo $profileName; ?> - Startup Ecosystem Tracker | CodeManiacs</title>
 
   <link rel="icon" href="./images/favicon.jpg">
   <link rel="stylesheet" href="./styles/prix.css">
@@ -34,6 +65,8 @@ include_once "./libraries/set/set.php";
   <link rel="stylesheet" href="./styles/view.css">
 
   <script src="./scripts/jquery.js"></script>
+  <script src="./scripts/set.js"></script>
+  <script src="./scripts/view.js"></script>
 </head>
 <body>
 
@@ -238,6 +271,8 @@ include_once "./libraries/set/set.php";
   <div class="profile-wrap startup-profile-wrap">
     <div class="profile startup-profile">
 
+      <?php if ( $profileToShow == "startup" ) { ?>
+
       <!-- Profile Picture, Name, Description, Link -->
       <div class="profile-header-wrap">
         <div class="profile-header">
@@ -261,11 +296,6 @@ include_once "./libraries/set/set.php";
           </div>
         </div>
       </div>
-
-      <?php $profileToShow = "startup"; ?>
-
-      <?php if ( $profileToShow == "startup" ) { ?>
-
       <!-- Profile Tabs -->
       <div class="profile-tabs-wrap">
         <div class="profile-tabs startup-profile-tabs disp-flex">
@@ -650,7 +680,44 @@ include_once "./libraries/set/set.php";
         </div>
       </div>
       <?php } else if ( $profileToShow == "incubation" ) { ?>
+      
+      <?php
+        // Default IC Profile Picture Source
+        $incubcation_center_profile_picture_source = $incubation->get_profile_pic_id ( $connection, $incubcation_center_id );
 
+        // Default profile picture
+        if ( $incubcation_center_profile_picture_source == "" || is_null($incubcation_center_profile_picture_source) ) {
+          $incubcation_center_profile_picture_source = "./images/default_startup_icon_dark.png";
+        }
+        // Custom profile picture
+        else {
+          $incubcation_center_profile_picture_source = "./files/profile_pictures/" . $incubcation_center_profile_picture_source;
+        }
+      ?>
+      <!-- Profile Picture, Name, Description, Link -->
+      <div class="profile-header-wrap">
+        <div class="profile-header">
+          <div class="profile-header-content-splitter disp-flex">
+            <div class="profile-picture-wrap">
+              <div class="profile-picture vert-center">
+                <img src="<?php echo $incubcation_center_profile_picture_source; ?>" width="150" height="150" alt="Profile Picture">
+              </div>
+            </div>
+            <div class="profile-name-desc-wrap">
+              <div class="profile-name">
+                <h2><?php echo $incubation->get_name ( $connection, $incubcation_center_id ); ?></h2>
+              </div>
+              <div class="profile-desc">
+                <p><?php echo $incubation->get_description ( $connection, $incubcation_center_id ); ?></p>
+                <!-- <p>Profile Description. Pasture he invited mr company shyness. But when shot real her. Chamber her observe visited removal six sending himself boy.</p> -->
+              </div>
+              <div class="profile-link">
+                <a href="https://<?php echo $incubation->get_link ( $connection, $incubcation_center_id ); ?>" target="_blank"><?php echo $incubation->get_link ( $connection, $incubcation_center_id ); ?></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Profile Tabs -->
       <div class="profile-tabs-wrap">
         <div class="profile-tabs incubation-profile-tabs disp-flex">
@@ -727,9 +794,10 @@ include_once "./libraries/set/set.php";
                     <span>Our Story</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>
+                    <p><?php echo $incubation->get_story ( $connection, $incubcation_center_id ); ?></p>
+                    <!-- <p>
                       This is the startup story. Far quitting dwelling graceful the likewise received building. An fact so to that show am shed sold cold. 
-                      <br><br>Unaffected remarkably get yet introduced excellence terminated led. Result either design saw she esteem and. On ashamed no inhabit ferrars it ye besides resolve. Own judgment directly few trifling. <br><br>Elderly as pursuit at regular do parlors. Rank what has into fond she. Unwilling sportsmen he in questions september therefore described so. Attacks may set few believe moments was. Reasonably how possession shy way introduced age inquietude. Missed he engage no exeter of. Still tried means we aware order among on. <br><br>Eldest father can design tastes did joy settle. Roused future he ye an marked. Arose mr rapid in so vexed words. Gay welcome led add lasting chiefly say looking.</p>
+                      <br><br>Unaffected remarkably get yet introduced excellence terminated led. Result either design saw she esteem and. On ashamed no inhabit ferrars it ye besides resolve. Own judgment directly few trifling. <br><br>Elderly as pursuit at regular do parlors. Rank what has into fond she. Unwilling sportsmen he in questions september therefore described so. Attacks may set few believe moments was. Reasonably how possession shy way introduced age inquietude. Missed he engage no exeter of. Still tried means we aware order among on. <br><br>Eldest father can design tastes did joy settle. Roused future he ye an marked. Arose mr rapid in so vexed words. Gay welcome led add lasting chiefly say looking.</p> -->
                   </div>
                 </div>
               </div>
@@ -739,7 +807,8 @@ include_once "./libraries/set/set.php";
                     <span>Registration Number</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>123-654-789-01</p>
+                    <!-- <p>123-654-789-01</p> -->
+                    <p><?php echo $incubation->get_reg_no ( $connection, $incubcation_center_id ); ?></p>
                   </div>
                 </div>
 
@@ -748,7 +817,8 @@ include_once "./libraries/set/set.php";
                     <span>Contact Number</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>0831-2442255</p>
+                    <!-- <p>0831-2442255</p> -->
+                    <p><?php echo $incubation->get_contact_number ( $connection, $incubcation_center_id ); ?></p>
                   </div>
                 </div>
 
@@ -758,7 +828,7 @@ include_once "./libraries/set/set.php";
                   </div>
                   <div class="tab-para-wrap">
                     <div class="disp-flex">
-                      <a class="social-icon-wrap" title="LinkedIn" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="LinkedIn" href="https://www.linkedin.com/in/<?php echo $incubation->get_linkedin ( $connection, $incubcation_center_id ); ?>/" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <g>
@@ -770,7 +840,7 @@ include_once "./libraries/set/set.php";
                           </g>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Twitter" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Twitter" href="https://www.twitter.com/<?php echo $incubation->get_twitter ( $connection, $incubcation_center_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <path d="M492,109.5c-17.4,7.7-36,12.9-55.6,15.3c20-12,35.4-31,42.6-53.6c-18.7,11.1-39.4,19.2-61.5,23.5
@@ -781,14 +851,14 @@ include_once "./libraries/set/set.php";
                           C462.6,146,479,129,492,109.5z"/>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Facebook" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Facebook" href="https://www.facebook.com/<?php echo $incubation->get_facebook ( $connection, $incubcation_center_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <path d="M288,192v-38.1c0-17.2,3.8-25.9,30.5-25.9H352V64h-55.9c-68.5,0-91.1,31.4-91.1,85.3V192h-45v64h45v192h83V256h56.4l7.6-64
 	                        H288z"/>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Instagram" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Instagram" href="https://www.instagram.com/<?php echo $incubation->get_instagram ( $connection, $incubcation_center_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <g>
@@ -817,7 +887,8 @@ include_once "./libraries/set/set.php";
             <div class="disp-flex">
               <div class="left-side-wrap" style="width:100%;">
                 <!-- If no startups have been incubated -->
-                <!-- <div class="tab-block-wrap">
+                <?php if ( $incubation->count_number_of_startups_incubated($connection, $incubcation_center_id) == 0 ) { ?>
+                <div class="tab-block-wrap">
                   <div class="no-startups-incubated" style="fill: #ddd; color: #8e8e8e;">
                     <div>
                       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -838,57 +909,51 @@ include_once "./libraries/set/set.php";
                       <p>No Startups have been incubated yet.</p>
                     </div>
                   </div>
-                </div> -->
+                </div>
+                <?php } else { ?>
                 <div class="tab-block-wrap startup-investors-wrap">
-                  <div class="tab-title-wrap">
+                  <div class="tab-title-wrap" style="margin-bottom: 2em;">
                     <span>Startups Incubated</span>
                   </div>
                   <div class="tab-grid-wrap">
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>A Startup</span>
-                      </div>
-                    </a>
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>B Startup</span>
-                      </div>
-                    </a>
+                    <?php 
+                    $query_to_get_startups_incubated = mysqli_query (
+                      $connection, " SELECT startup_id FROM startups_info WHERE startup_incubation_center_id = '$incubcation_center_id' "
+                    );
 
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>C Startup</span>
-                      </div>
-                    </a>
+                    // Query ran properly
+                    if ( $query_to_get_startups_incubated ) {
 
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                      // Fetching startups incubated one by one
+                      while ( $startup_incubated = mysqli_fetch_assoc($query_to_get_startups_incubated) ) {
 
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                        // Default Startup Profile Picture Source
+                        $incubated_startup_profile_picture_source = $startup->get_profile_pic_id ( $connection, $startup_incubated['startup_id'] );
+
+                        // Default profile picture
+                        if ( $incubated_startup_profile_picture_source == "" || is_null($incubcation_center_profile_picture_source) ) {
+                          $incubated_startup_profile_picture_source = "./images/default_startup_icon_dark.png";
+                        }
+                        // Custom profile picture
+                        else {
+                          $incubated_startup_profile_picture_source = "./files/profile_pictures/" . $startup_incubated['startup_id'];
+                        }
+
+                        ?>
+                        <a class="grid-item" href="./view?sid=<?php echo $startup_incubated['startup_id']; ?>">
+                          <div class="image-wrap">
+                            <img src="<?php echo $incubated_startup_profile_picture_source; ?>" width="64" height="64" alt="User Profile Picture">
+                          </div>
+                          <div class="tab-text-wrap">
+                            <span><?php echo $startup->get_name ( $connection, $startup_incubated['startup_id'] ) ?></span>
+                          </div>
+                        </a>
+                        <?php
+                      } // Fetching startups incubated one by one END
+                    } // Query ran properly END ?>
                   </div>
                 </div>
+                <?php } // Count of number of startups incubated END ?>
               </div>
             </div>
           </div>
@@ -902,7 +967,8 @@ include_once "./libraries/set/set.php";
                     <span>Address</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>House No. 1590, Ramteerth Nagar 2nd Cross, Kanabargi Road.</p>
+                    <!-- <p>House No. 1590, Ramteerth Nagar 2nd Cross, Kanabargi Road.</p> -->
+                    <p><?php echo $incubation->get_address ( $connection, $incubcation_center_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -910,7 +976,7 @@ include_once "./libraries/set/set.php";
                     <span>Contact Number</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>0831-2442255</p>
+                    <p><?php echo $incubation->get_contact_number ( $connection, $incubcation_center_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -918,7 +984,7 @@ include_once "./libraries/set/set.php";
                     <span>State</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>Karnataka</p>
+                    <p><?php echo $incubation->get_state ( $connection, $incubcation_center_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -926,7 +992,7 @@ include_once "./libraries/set/set.php";
                     <span>City</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>Belagavi</p>
+                    <p><?php echo $incubation->get_city ( $connection, $incubcation_center_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -934,7 +1000,7 @@ include_once "./libraries/set/set.php";
                     <span>Pincode</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>590016</p>
+                    <p><?php echo $incubation->get_pincode ( $connection, $incubcation_center_id ); ?></p>
                   </div>
                 </div>
               </div>
@@ -943,71 +1009,43 @@ include_once "./libraries/set/set.php";
         </div>
       </div>
       <?php } else if ( $profileToShow == "user" ) { ?>
+      
+      <?php
+      // Default User Profile Picture Source
+      $user_profile_picture_source = $user->get_profile_picture_id ( $connection, $user_id );
 
-      <!-- Profile Tabs -->
-      <!-- <div class="profile-tabs-wrap" style="margin-top:5em;">
-        <div class="profile-tabs incubation-profile-tabs disp-flex">
-          <div class="tab about-tab active" title="About" onclick="activate_tab('about-tab', 'incubation-profile-tabs', 'incubation-about-tab')">
-            <div class="tab-content disp-flex">
-              <div class="tab-icon-wrap">
-                <svg class="vert-center" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                  width="20px" height="20px" viewBox="0 0 512 512" xml:space="preserve">
-                  <g>
-                    <path d="M256,48C141.1,48,48,141.1,48,256c0,114.9,93.1,208,208,208c114.9,0,208-93.1,208-208C464,141.1,370.9,48,256,48z
-                      M260.3,366c-9.4,0-17-7.5-17-16.9c0-9.3,7.6-16.8,17-16.8c9.4,0,17,7.5,17,16.8C277.3,358.5,269.7,366,260.3,366z M294.1,250.7
-                      c-22.8,22.5-22.2,27.4-23.3,53.3h-19c1.1-28.5,7.5-43.7,30.1-64.5c11-10.3,19.4-22.7,19.4-38.1c0-23.6-19.4-39.9-42.6-39.9
-                      c-32.4,0-48.5,16.4-47.9,46.4H192c0.3-42,24.4-62.1,67.6-62.1c33,0,60.4,20.4,60.4,54.6C320,222.3,309.3,236.6,294.1,250.7z"/>
-                  </g>
-                </svg>
-              </div>
-              <div class="tab-name-wrap">
-                <span class="vert-center">About</span>
+      // Default profile picture
+      if ( $user_profile_picture_source == "" || is_null($user_profile_picture_source) ) {
+        $user_profile_picture_source = "./images/default_startup_icon_dark.png";
+      }
+      // Custom profile picture
+      else {
+        $user_profile_picture_source = "./files/profile_pictures/" . $user_profile_picture_source;
+      }
+    ?>
+      <!-- Profile Picture, Name, Description, Link -->
+      <div class="profile-header-wrap">
+        <div class="profile-header">
+          <div class="profile-header-content-splitter disp-flex">
+            <div class="profile-picture-wrap">
+              <div class="profile-picture vert-center">
+                <img src="<?php echo $user_profile_picture_source; ?>" width="150" height="150">
               </div>
             </div>
-          </div>
-          <div class="tab startups-tab" title="Startups Incubated" onclick="activate_tab('startups-tab', 'incubation-profile-tabs', 'incubation-startup-tab')">
-            <div class="tab-content disp-flex">
-              <div class="tab-icon-wrap">
-                <svg class="vert-center" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                  width="20px" height="20px" viewBox="0 0 512 512" xml:space="preserve">
-                  <g>
-                    <path d="M393.267,238.088l-0.231,10.404c-0.814,11.65-3.797,31.912-14.102,54.736c3.251-15.208,4.978-30.982,4.978-47.164
-                      c0-12.096-0.958-23.968-2.799-35.544c-15.091-94.901-89.626-169.923-184.138-185.518C185.706,32.285,179.048,32,179.048,32
-                      c0.238,0.281,0.465,0.562,0.7,0.844c39.458,47.181,44.1,96.656,37.744,131.85c-2.281,12.629-5.978,23.421-9.991,31.605
-                      c0,0,3.359-13.911,3.035-29.72c-0.293-14.234-3.572-30.006-14.986-38.552c3.497,18.378-0.752,33.501-9.121,47.729
-                      C161.69,217.808,101,249.386,96,327.408v3.836c0,53.692,25.624,98.979,68.719,125.012c-6.85-12.344-14.964-35.207-8.733-60.151
-                      c3.998,23.669,9.951,36.045,20.879,51.756c8.153,11.721,19.104,19.269,33.095,24.934S238.995,480,255.889,480
-                      c55.809,0,105.228-28.567,133.845-71.952l0.267,0.061v-0.007c16-25.254,26.1-55.5,26.1-88.019
-                      C416.1,290.112,407.596,262.071,393.267,238.088z"/>
-                  </g>
-                </svg>
+            <div class="profile-name-desc-wrap">
+              <div class="profile-name">
+                <h2><?php echo $user->get_name ( $connection, $user_id ); ?></h2>
               </div>
-              <div class="tab-name-wrap">
-                <span class="vert-center">Startups</span>
+              <div class="profile-desc">
+                <p style="white-space: pre-line;"><?php echo $user->get_profile_description ( $connection, $user_id ); ?></p>
               </div>
-            </div>
-          </div>
-          <div class="tab contact-tab" title="Address &amp; Contact Details" onclick="activate_tab('contact-tab', 'incubation-profile-tabs', 'incubation-contact-tab')">
-            <div class="tab-content disp-flex">
-              <div class="tab-icon-wrap">
-                <svg class="vert-center" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                  width="20px" height="20px" viewBox="0 0 512 512" xml:space="preserve">
-                  <g>
-                    <polygon points="256,320 192,320 192,256 320,128 64,128 64,432 384,432 384,192 	"/>
-                    <polygon points="387.927,91.74 208,271.651 208,304 240.216,304 420.261,124.016 	"/>
-                    <path d="M444.213,80.312l-12.465-12.466C429.084,65.467,425.556,64,421.746,64c-3.812,0-7.304,1.468-9.929,3.85L399.666,80
-                      l0.08,0.08l11.293,11.293l21.02,21.02l12.15-12.15c2.383-2.625,3.791-6.117,3.791-9.929C448,86.504,446.592,82.975,444.213,80.312z
-                      "/>
-                  </g>
-                </svg>
-              </div>
-              <div class="tab-name-wrap">
-                <span class="vert-center">Contact</span>
+              <div class="profile-link">
+                <a href="https://<?php echo $user->get_user_link ( $connection, $user_id ); ?>" target="_blank"><?php echo $user->get_user_link ( $connection, $user_id ); ?></a>
               </div>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
       <!-- Profile Tab Content -->
       <div class="user-profile-tab-content-wrap profile-tab-content-wrap" style="margin-top:5em;">
         <div class="user-profile-tab-content">
@@ -1019,9 +1057,10 @@ include_once "./libraries/set/set.php";
                     <span>My Story</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>
+                    <!-- <p>
                       This is the startup story. Far quitting dwelling graceful the likewise received building. An fact so to that show am shed sold cold. 
-                      <br><br>Unaffected remarkably get yet introduced excellence terminated led. Result either design saw she esteem and. On ashamed no inhabit ferrars it ye besides resolve. Own judgment directly few trifling. <br><br>Elderly as pursuit at regular do parlors. Rank what has into fond she. Unwilling sportsmen he in questions september therefore described so. Attacks may set few believe moments was. Reasonably how possession shy way introduced age inquietude. Missed he engage no exeter of. Still tried means we aware order among on. <br><br>Eldest father can design tastes did joy settle. Roused future he ye an marked. Arose mr rapid in so vexed words. Gay welcome led add lasting chiefly say looking.</p>
+                      <br><br>Unaffected remarkably get yet introduced excellence terminated led. Result either design saw she esteem and. On ashamed no inhabit ferrars it ye besides resolve. Own judgment directly few trifling. <br><br>Elderly as pursuit at regular do parlors. Rank what has into fond she. Unwilling sportsmen he in questions september therefore described so. Attacks may set few believe moments was. Reasonably how possession shy way introduced age inquietude. Missed he engage no exeter of. Still tried means we aware order among on. <br><br>Eldest father can design tastes did joy settle. Roused future he ye an marked. Arose mr rapid in so vexed words. Gay welcome led add lasting chiefly say looking.</p> -->
+                    <p><?php echo $user->get_user_bio ( $connection, $user_id ); ?></p>
                   </div>
                 </div>
               </div>
@@ -1031,25 +1070,31 @@ include_once "./libraries/set/set.php";
                     <span>Am I Investor?</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>123-654-789-01</p>
+                    <?php if ( $user->check_if_investor($connection, $user_id) ) { ?>
+                      <p>Yes</p>
+                    <?php } else { ?>
+                      <p>No</p>
+                    <?php } ?>
                   </div>
                 </div>
-
+                
+                <?php if ( $user->check_if_user_has_startup($connection, $user_id) ) { ?>
                 <div class="tab-block-wrap">
                   <div class="tab-title-wrap">
                     <span>My Startup</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <a href="./view">Jshta</a>
+                    <a href="./viewsid=<?php echo $user->get_user_startup_id ( $connection, $user_id ); ?>"><?php echo $startup->get_name ( $connection, $user->get_user_startup_id($connection, $user_id) ); ?></a>
                   </div>
                 </div>
+                <?php } ?>
 
                 <div class="tab-block-wrap">
                   <div class="tab-title-wrap">
                     <span>Email ID</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>emailid@gmail.com</p>
+                    <p><?php echo $user->get_user_email_id ( $connection, $user_id ); ?></p>
                   </div>
                 </div>
 
@@ -1059,7 +1104,7 @@ include_once "./libraries/set/set.php";
                   </div>
                   <div class="tab-para-wrap">
                     <div class="disp-flex">
-                      <a class="social-icon-wrap" title="LinkedIn" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="LinkedIn" href="https://www.linkedin.com/in/<?php echo $user->get_user_linkedin ( $connection, $user_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <g>
@@ -1071,7 +1116,7 @@ include_once "./libraries/set/set.php";
                           </g>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Twitter" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Twitter" href="https://www.twitter.com/<?php echo $user->get_user_twitter ( $connection, $user_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <path d="M492,109.5c-17.4,7.7-36,12.9-55.6,15.3c20-12,35.4-31,42.6-53.6c-18.7,11.1-39.4,19.2-61.5,23.5
@@ -1082,14 +1127,14 @@ include_once "./libraries/set/set.php";
                           C462.6,146,479,129,492,109.5z"/>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Facebook" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Facebook" href="https://www.facebook.com/<?php echo $user->get_user_facebook ( $connection, $user_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <path d="M288,192v-38.1c0-17.2,3.8-25.9,30.5-25.9H352V64h-55.9c-68.5,0-91.1,31.4-91.1,85.3V192h-45v64h45v192h83V256h56.4l7.6-64
 	                        H288z"/>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Instagram" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Instagram" href="https://www.instagram.com<?php echo $user->get_user_instagram ( $connection, $user_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <g>
@@ -1244,7 +1289,6 @@ include_once "./libraries/set/set.php";
 
   <?php include_once "./_includes/all_page_include.php"; ?>
 
-  <script src="./scripts/view.js"></script>
   <script src="./scripts/signin_and_signup.js"></script>
   <script src="./scripts/search.js"></script>
   <script>

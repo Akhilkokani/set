@@ -149,6 +149,7 @@ a.tab.active {
 }
 
 .tab-user-actions-wrap img.user-profile-pic {
+  border-radius: 100px;
   cursor: pointer;
 }
 

@@ -309,6 +309,45 @@ class user {
 
 
   /**
+   * Checks whether user has their own startup or not
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Boolean
+   */
+  function check_if_user_has_startup (
+    $connection,
+    $user_id
+  ) {
+
+    // Checking whether user has startup or not
+    $query_to_check_whether_user_has_startup = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        startups 
+      WHERE 
+        startup_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // User has startup
+    if ( mysqli_num_rows($query_to_check_whether_user_has_startup) == 1 )
+      return true;
+
+    // User does not has startup or
+    // System error
+    return false;
+  }
+
+
+
+  /**
    * Counts number of jobs user has applied in different startups.
    *
    *
@@ -477,6 +516,44 @@ class user {
     // Found startup ID
     if ( mysqli_num_rows($query_to_get_startup_id_where_user_is_working) === 1 )
       return mysqli_fetch_array($query_to_get_startup_id_where_user_is_working)['startup_team_member_startup_id'];
+
+    // Could not find, for some reason
+    return NULL;
+  }
+
+
+
+  /**
+   * Get's User's Startup ID
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return String
+   */
+  function get_user_startup_id (
+    $connection,
+    $user_id
+  ) {
+
+    // Getting startup id where user is working
+    $query_to_get_user_startup_id = mysqli_query (
+      $connection,
+      " SELECT 
+        startup_id
+      FROM 
+        startups 
+      WHERE 
+        startup_user_id = '$user_id'
+      LIMIT 
+        1 "
+    );
+
+    // Found user's startup ID
+    if ( mysqli_num_rows($query_to_get_user_startup_id) === 1 )
+      return mysqli_fetch_array ( $query_to_get_user_startup_id )['startup_id'];
 
     // Could not find, for some reason
     return NULL;

@@ -572,7 +572,7 @@ class incubation {
     $query_to_get_ic_state_id = mysqli_query (
       $connection,
       " SELECT 
-        incubation_center_registration_number_id 
+        incubation_center_state_id 
       FROM 
         incubation_centers_info
       WHERE 
@@ -583,7 +583,7 @@ class incubation {
 
     // Found IC Record
     if ( $query_to_get_ic_state_id )
-      return mysqli_fetch_assoc ( $query_to_get_ic_state_id )['incubation_center_registration_number_id'];
+      return mysqli_fetch_assoc ( $query_to_get_ic_state_id )['incubation_center_state_id'];
 
     // Could not find, for some reason
     return NULL;
@@ -622,6 +622,126 @@ class incubation {
     // Found IC Record
     if ( $query_to_get_ic_pincode )
       return mysqli_fetch_assoc ( $query_to_get_ic_pincode )['incubation_center_pincode'];
+
+    // Could not find, for some reason
+    return NULL;
+  }
+
+
+
+  /**
+   * Gets State Name.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $ic_id
+   * @return String
+   */
+  function get_state (
+    $connection,
+    $ic_id
+  ) {
+
+    // Gettting state id
+    $state_id_of_ic = $this->get_state_id ( $connection, $ic_id );
+
+    // Query to get IC State
+    $query_to_get_ic_state_name = mysqli_query (
+      $connection,
+      " SELECT 
+        state_text 
+      FROM 
+        states
+      WHERE 
+        state_id = '$state_id_of_ic' 
+      LIMIT 
+        1 "
+    );
+
+    // Found IC State Record
+    if ( $query_to_get_ic_state_name )
+      return mysqli_fetch_assoc ( $query_to_get_ic_state_name )['state_text'];
+
+    // Could not find, for some reason
+    return NULL;
+  }
+
+
+
+  /**
+   * Gets City ID.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $ic_id
+   * @return String
+   */
+  function get_city_id (
+    $connection,
+    $ic_id
+  ) {
+
+    // Query to get IC City ID
+    $query_to_get_ic_city_id = mysqli_query (
+      $connection,
+      " SELECT 
+        incubation_center_city_id 
+      FROM 
+        incubation_centers_info
+      WHERE 
+        incubation_center_id = '$ic_id' 
+      LIMIT 
+        1 "
+    );
+
+    // Found IC Record
+    if ( $query_to_get_ic_city_id )
+      return mysqli_fetch_assoc ( $query_to_get_ic_city_id )['incubation_center_city_id'];
+
+    // Could not find, for some reason
+    return NULL;
+  }
+
+
+
+  /**
+   * Gets City Name.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $ic_id
+   * @return String
+   */
+  function get_city (
+    $connection,
+    $ic_id
+  ) {
+
+    // Gettting city id
+    $city_id_of_ic = $this->get_city_id ( $connection, $ic_id );
+
+    // Query to get IC City
+    $query_to_get_ic_city_name = mysqli_query (
+      $connection,
+      " SELECT 
+        city_text 
+      FROM 
+        cities
+      WHERE 
+        city_id = '$city_id_of_ic' 
+      LIMIT 
+        1 "
+    );
+
+    // Found IC State Record
+    if ( $query_to_get_ic_city_name )
+      return mysqli_fetch_assoc ( $query_to_get_ic_city_name )['city_text'];
 
     // Could not find, for some reason
     return NULL;
