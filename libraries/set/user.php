@@ -270,6 +270,45 @@ class user {
 
 
   /**
+   * Checks whether user has incubation center or not
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return Boolean
+   */
+  function check_if_user_has_incubation_center (
+    $connection,
+    $user_id
+  ) {
+
+    // Checking whether user has incubation center or not
+    $query_to_check_whether_user_has_incubation_center = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        incubation_centers 
+      WHERE 
+        incubation_center_user_id = '$user_id' 
+      LIMIT 
+        1 "
+    );
+
+    // User has incubation center
+    if ( mysqli_num_rows($query_to_check_whether_user_has_incubation_center) == 1 )
+      return true;
+
+    // User does not has incubation center or
+    // System error
+    return false;
+  }
+
+
+
+  /**
    * Counts number of jobs user has applied in different startups.
    *
    *
@@ -940,7 +979,7 @@ class user {
         user_info_user_id = '$user_id' 
       LIMIT 
         1 "
-    ) or die(mysqli_error($connection));
+    );
 
     // User Row Found
     if ( mysqli_num_rows($query_to_get_user_cv_id) === 1 )

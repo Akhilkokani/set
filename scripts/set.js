@@ -73,6 +73,7 @@ set.prototype.show_system_notification = function (
     setTimeout(() => {
       system_notification_span.innerHTML = "";
       system_notification_wrap.style.display = "none";
+      system_notification.classList.remove("danger");
     }, notification_display_limit);
   }
 

@@ -673,3 +673,606 @@ if (
   echo "unknown";
   die();
 }
+
+
+
+/** 
+ * Initialise new incubation center
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "init-new-ic"
+) {
+
+  // Added new IC
+  if ( $incubation->add_new($connection, $logged_in_user_id) )
+    echo "success";
+    die();
+
+  // Could not add new IC
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Delete incubation center
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "remove-ic"
+) {
+
+  // Added new IC
+  if ( 
+    $incubation->delete (
+      $connection, 
+      $incubation->get_id($connection, $logged_in_user_id),
+      "../files/profile_pictures/"
+    ) 
+  ) {
+    echo "success";
+    die(); 
+  }
+
+  // Could not add new IC
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Profile Picture
+ * 
+ */
+if ( isset($_FILES['update-ic-profile-picture']['name']) ) {
+
+  // User's IC ID
+  $incubation_center_id = $incubation->get_id ( $connection, $logged_in_user_id );
+
+  // Accessing file properties
+  // 1. File name
+  // 2. Temp file name
+  // 3. File size
+  $updated_ic_profile_picture_name = $_FILES['update-ic-profile-picture']['name'];
+  $updated_ic_profile_picture_temp_name = $_FILES['update-ic-profile-picture']['tmp_name'];
+  $updated_ic_profile_picture_file_size = $_FILES['update-ic-profile-picture']['size'];
+
+  // Getting file extenstion
+  $updated_ic_profile_picture_filename_explosion = explode ( '.', $updated_ic_profile_picture_name );
+  $updated_ic_profile_picture_file_extension = end ( $updated_ic_profile_picture_filename_explosion );
+
+  // Checking for file size
+  // Size (3048576 Bytes ==> 3MB)
+  if ( $updated_ic_profile_picture_file_size > 3048576 ) {
+    echo 'too-big';
+    die();
+  }
+
+  // Existing profile picture id
+  $existing_ic_profile_picture_id = $incubation->get_profile_pic_id ( 
+    $connection, 
+    $incubation_center_id
+  );
+
+  // User has already uploadeda different picture
+  if ( $existing_ic_profile_picture_id != NULL ) {
+
+    // And if that file exists in file system
+    if ( file_exists("../files/profile_pictures/" . $existing_ic_profile_picture_id) ) {
+
+      // Delete that file
+      unlink("../files/profile_pictures/" . $existing_ic_profile_picture_id);
+    }
+  }
+
+  // Generating new name for updated profile picture
+  $updated_ic_profile_picture_new_name = $utility->generate_secure_string ( "icpp_", 10 );
+
+  // Moving profile picture file to file system
+  move_uploaded_file ( $_FILES["update-ic-profile-picture"]["tmp_name"], "../files/profile_pictures/" . $updated_ic_profile_picture_new_name );
+  
+  // Updated Successfully
+  if ( $incubation->update_ic_profile_picture_id ( $connection, $incubation_center_id, $updated_ic_profile_picture_new_name ) ) {
+    echo $updated_ic_profile_picture_new_name;
+    die();
+  }
+
+  // Could not update
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Name.
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-name" &&
+  isset($_POST['updated_ic_name'])
+) {
+
+  // Santising
+  $updated_ic_name = htmlspecialchars ( $_POST['updated_ic_name'] );
+
+  // Updated incubation center name
+  if ( 
+    $incubation->update_name (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_name
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Email.
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-email" &&
+  isset($_POST['updated_ic_email'])
+) {
+
+  // Santising
+  $updated_ic_email = htmlspecialchars ( $_POST['updated_ic_email'] );
+
+  // Email is already being used
+  if ( 
+    $incubation->check_if_email_exists ( $connection, $updated_ic_email ) ||
+    $user->check_if_email_exists ( $connection, $updated_ic_email )
+  ) {
+    echo "email-used";
+    die();
+  }
+
+  // Updated incubation center email
+  if ( 
+    $incubation->update_email (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_email
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Description.
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-desc" &&
+  isset($_POST['updated_ic_desc'])
+) {
+
+  // Santising
+  $updated_ic_desc = htmlspecialchars ( $_POST['updated_ic_desc'], ENT_QUOTES );
+
+  // Updated incubation center description
+  if ( 
+    $incubation->update_description (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_desc
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Story.
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-story" &&
+  isset($_POST['updated_ic_story'])
+) {
+
+  // Santising
+  $updated_ic_story = htmlspecialchars ( $_POST['updated_ic_story'] );
+
+  // Updated incubation center story
+  if ( 
+    $incubation->update_story (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_story
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Link.
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-link" &&
+  isset($_POST['updated_ic_link'])
+) {
+
+  // Santising
+  $updated_ic_link = htmlspecialchars ( $_POST['updated_ic_link'] );
+
+  // Updated incubation center link
+  if ( 
+    $incubation->update_link (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_link
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Reg. No.
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-reg" &&
+  isset($_POST['updated_ic_reg'])
+) {
+
+  // Santising
+  $updated_ic_reg = htmlspecialchars ( $_POST['updated_ic_reg'] );
+
+  // Updated incubation center reg. no.
+  if ( 
+    $incubation->update_registration_number (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_reg
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center State
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-state" &&
+  isset($_POST['updated_ic_state'])
+) {
+
+  // Santising
+  $updated_ic_state = htmlspecialchars ( $_POST['updated_ic_state'] );
+
+  // Updated incubation center state
+  if ( 
+    $incubation->update_state (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_state
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center City
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-city" &&
+  isset($_POST['updated_ic_city'])
+) {
+
+  // Santising
+  $updated_ic_city = htmlspecialchars ( $_POST['updated_ic_city'] );
+
+  // Updated incubation center city
+  if ( 
+    $incubation->update_city (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_city
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Pincode
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-pcode" &&
+  isset($_POST['updated_ic_pcode'])
+) {
+
+  // Santising
+  $updated_ic_pincode = htmlspecialchars ( $_POST['updated_ic_pcode'] );
+
+  // Updated incubation center pincode
+  if ( 
+    $incubation->update_pincode (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_pincode
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+
+/** 
+ * Update Incubation Center Address
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-addr" &&
+  isset($_POST['updated_ic_address'])
+) {
+
+  // Santising
+  $updated_ic_address = htmlspecialchars ( $_POST['updated_ic_address'] );
+
+  // Updated incubation center address
+  if ( 
+    $incubation->update_address (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_address
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Contact Number
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-cnct-num" &&
+  isset($_POST['updated_ic_contact_num'])
+) {
+
+  // Santising
+  $updated_ic_contact_num = htmlspecialchars ( $_POST['updated_ic_contact_num'] );
+
+  // Updated incubation center address
+  if ( 
+    $incubation->update_contact_number (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_contact_num
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center LinkedIn
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-linkedin" &&
+  isset($_POST['updated_ic_lkdin'])
+) {
+
+  // Santising
+  $updated_ic_linkedin = htmlspecialchars ( $_POST['updated_ic_lkdin'] );
+
+  // Updated incubation center linkedin
+  if ( 
+    $incubation->update_linkedin (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_linkedin
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Twitter
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-twitter" &&
+  isset($_POST['updated_ic_twtr'])
+) {
+
+  // Santising
+  $updated_ic_twitter = htmlspecialchars ( $_POST['updated_ic_twtr'] );
+
+  // Updated incubation center twitter
+  if ( 
+    $incubation->update_twitter (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_twitter
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Facebook
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-facebook" &&
+  isset($_POST['updated_ic_fb'])
+) {
+
+  // Santising
+  $updated_ic_facebook = htmlspecialchars ( $_POST['updated_ic_fb'] );
+
+  // Updated incubation center facebook
+  if ( 
+    $incubation->update_facebook (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_facebook
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}
+
+
+
+/** 
+ * Update Incubation Center Instagram
+ * 
+ */
+if (
+  isset($_POST['action']) &&
+  $_POST['action'] == "update-ic-instagram" &&
+  isset($_POST['updated_ic_ig'])
+) {
+
+  // Santising
+  $updated_ic_instagram = htmlspecialchars ( $_POST['updated_ic_ig'] );
+
+  // Updated incubation center instagram
+  if ( 
+    $incubation->update_instagram (
+      $connection,
+      $incubation->get_id ($connection, $logged_in_user_id),
+      $updated_ic_instagram
+    ) 
+  ) {
+    echo "success";
+    die();
+  }
+
+  // Could not update for some reason
+  echo "unknown";
+  die();
+}

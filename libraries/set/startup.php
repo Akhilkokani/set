@@ -109,7 +109,7 @@ class startup {
         startup_id = '$startup_id' 
       LIMIT 
         1 "
-    ) or die(mysqli_error($query_to_get_startup_profile_pic_id));
+    );
 
     // Returning profile picture id
     if ( $query_to_get_startup_profile_pic_id )

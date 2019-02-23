@@ -9,7 +9,7 @@
  * @author Akhil Kokani
  * @package SET
  */
-var elements = {
+var nf_system = {
 
   // Notification Icon
   nf_icon: $ ( ".notification-icon" ),
@@ -22,15 +22,15 @@ var elements = {
 };
 
 // When notification is clicked
-elements.nf_icon.click(function() {
+nf_system.nf_icon.click(function() {
 
-  elements.nf_wrap.css ( "display", "block" );
-  elements.nf_sys.addClass ( "notification-system-expand" );
+  nf_system.nf_wrap.css ( "display", "block" );
+  nf_system.nf_sys.addClass ( "notification-system-expand" );
 });
 
 // When notification system wrap is clicked
-elements.nf_wrap.click(function() {
+nf_system.nf_wrap.click(function() {
 
-  elements.nf_wrap.css ( "display", "none" );
-  elements.nf_sys.removeClass ( "notification-system-expand" );
+  nf_system.nf_wrap.css ( "display", "none" );
+  nf_system.nf_sys.removeClass ( "notification-system-expand" );
 });

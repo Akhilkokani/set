@@ -13,6 +13,7 @@
 
 session_start();
 include_once "../_includes/check_login_status.php";
+include_once "../../libraries/set/set.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,11 +27,13 @@ include_once "../_includes/check_login_status.php";
 
   <link rel="icon" href="../../images/favicon.jpg">
   <link rel="stylesheet" href="../../styles/prix.css">
+  <link rel="stylesheet" href="../../styles/all-page.css">
   <link rel="stylesheet" href="../styles/dashboard.css">
   <link rel="stylesheet" href="../styles/incubation.css">
   
   <script src="../../scripts/jquery.js"></script>
   <script src="../../scripts/chart.js"></script>
+  <script src="../../scripts/set.js"></script>
 
 </head>
 <body>
@@ -67,17 +70,15 @@ include_once "../_includes/check_login_status.php";
             </div>
           </div>
 
-          <div class="tab-user-actions-wrap">
-            <div class="tab-user-action user-profile-pic-wrap vert-center">
-              <img src="../../images/default_user_profile_picture.png" class="user-profile-pic" width="44" height="44">
-            </div>
-          </div>
+          <?php include "../_includes/page_header_actions.php"; ?>
         </div>
 
         <div class="dashboard-content incubation-center-tab-content">
 
-          <!-- If incubation center has not been listed -->
-          <!-- <div class="dashboard-floor incubation-center-floor" style="display:block;">
+          <?php if ( $user->check_if_user_has_incubation_center($connection, $logged_in_user_id) === false ) { ?>
+
+          <!-- If incubation center has not been added -->
+          <div class="dashboard-floor incubation-center-floor" style="display:block;">
             <div class="no-incubation-center-wrap">
               <div class="no-incubation-center">
                 <div class="no-incubation-center-image-wrap">
@@ -107,7 +108,11 @@ include_once "../_includes/check_login_status.php";
                 </div>
               </div>
             </div>
-          </div> -->
+          </div>
+          <?php } else { ?>
+          <?php 
+            // User's incubation center's ID
+            $incubation_center_id = $incubation->get_id ( $connection, $logged_in_user_id ); ?>
 
           <!-- Startups incubated under center -->
           <div class="dashboard-floor incubation-center-floor">
@@ -119,65 +124,89 @@ include_once "../_includes/check_login_status.php";
                   </div>
                 </div>
 
-                <!-- If no startups have been incubated -->
-                <!-- <div class="ic-no-startups-incubated-wrap">
-                  <div class="no-incubation-center-wrap">
-                    <div class="no-incubation-center">
-                      <div class="no-incubation-center-image-wrap">
-                        <div class="no-incubation-center-image">
-                          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                            width="125px" height="125px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                            <path d="M383.1,257.4c0.6-5.4,0.9-10,0.9-13.8c0-19.6-3.3-19.7-16-19.7h-75.5c7.3-12,11.5-24.4,11.5-37c0-37.9-57.3-56.4-57.3-88
-                              c0-11.7,5.1-21.3,9.3-34.9c-26.5,7-47.4,33.5-47.4,61.6c0,48.3,56.3,48.7,56.3,84.8c0,4.5-1.4,8.5-2.1,13.5h-55.9
-                              c0.8-3,1.3-6.2,1.3-9.3c0-22.8-39.1-33.9-39.1-52.8c0-7,1-12.8,3.2-21c-12.9,5.1-28.3,20-28.3,36.8c0,26.7,31.9,29.3,36.8,46.3H80
-                              c-12.7,0-16,0.1-16,19.7c0,19.6,7.7,61.3,28.3,111c20.6,49.7,44.4,71.6,61.2,86.2l0.1-0.2c5.1,4.6,11.8,7.3,19.2,7.3h102.4
-                              c7.4,0,14.1-2.7,19.2-7.3l0.1,0.2c9-7.8,20-17.8,31.4-32.9c4.7,2,9.8,3.7,15.4,5c8.4,2,16.8,3,24.8,3c24,0,45.6-9.2,60.8-25.8
-                              c13.4-14.6,21.1-34.4,21.1-54.2C448,297,420,264.5,383.1,257.4z M366.1,384.2c-8.6,0-15.6-1.2-22.1-4.2c4-8,7.9-15.9,11.7-25.1
-                              c10.1-24.4,17.1-47,21.6-65.8c22,4.3,38.7,23.8,38.7,47.1C416,358.9,398.8,384.2,366.1,384.2z"/>
-                          </svg>
+                <?php if ( $incubation->count_number_of_startups_incubated($connection, $incubation->get_id($connection, $logged_in_user_id)) == 0 ) { ?>
+
+                  <!-- If no startups have been incubated -->
+                  <div class="ic-no-startups-incubated-wrap">
+                    <div class="no-incubation-center-wrap">
+                      <div class="no-incubation-center">
+                        <div class="no-incubation-center-image-wrap">
+                          <div class="no-incubation-center-image">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                              width="125px" height="125px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                              <path d="M383.1,257.4c0.6-5.4,0.9-10,0.9-13.8c0-19.6-3.3-19.7-16-19.7h-75.5c7.3-12,11.5-24.4,11.5-37c0-37.9-57.3-56.4-57.3-88
+                                c0-11.7,5.1-21.3,9.3-34.9c-26.5,7-47.4,33.5-47.4,61.6c0,48.3,56.3,48.7,56.3,84.8c0,4.5-1.4,8.5-2.1,13.5h-55.9
+                                c0.8-3,1.3-6.2,1.3-9.3c0-22.8-39.1-33.9-39.1-52.8c0-7,1-12.8,3.2-21c-12.9,5.1-28.3,20-28.3,36.8c0,26.7,31.9,29.3,36.8,46.3H80
+                                c-12.7,0-16,0.1-16,19.7c0,19.6,7.7,61.3,28.3,111c20.6,49.7,44.4,71.6,61.2,86.2l0.1-0.2c5.1,4.6,11.8,7.3,19.2,7.3h102.4
+                                c7.4,0,14.1-2.7,19.2-7.3l0.1,0.2c9-7.8,20-17.8,31.4-32.9c4.7,2,9.8,3.7,15.4,5c8.4,2,16.8,3,24.8,3c24,0,45.6-9.2,60.8-25.8
+                                c13.4-14.6,21.1-34.4,21.1-54.2C448,297,420,264.5,383.1,257.4z M366.1,384.2c-8.6,0-15.6-1.2-22.1-4.2c4-8,7.9-15.9,11.7-25.1
+                                c10.1-24.4,17.1-47,21.6-65.8c22,4.3,38.7,23.8,38.7,47.1C416,358.9,398.8,384.2,366.1,384.2z"/>
+                            </svg>
+                          </div>
                         </div>
-                      </div>
-                      <div class="no-incubation-center-content">
-                        <div class="no-incubation-center-title-wrap">
-                          <h2>No Content Here</h2>
-                        </div>
-                        <div class="no-incubation-center-para-wrap" style="line-height:1.8;">
-                          <span>Still no startups have added your as their Incubation Center, encourage your startups to  <br>register and list their startup and you as their incubation center.</span>
+                        <div class="no-incubation-center-content">
+                          <div class="no-incubation-center-title-wrap">
+                            <h2>No Content Here</h2>
+                          </div>
+                          <div class="no-incubation-center-para-wrap" style="line-height:1.8;">
+                            <span>Still no startups have added your as their Incubation Center, encourage your startups to  <br>register and list their startup and add you as their incubator.</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div> -->
-
+                <?php } else { ?>
+              
                 <!-- If startups have added center as their incubation center -->
                 <div class="ic-startups-wrap" style="margin-top:2em;">
                   <div class="ic-startups disp-flex">
-                    <div class="a-startup">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_startup_icon_dark.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Jshta</span>
-                      </div>
-                    </div>
-                    <div class="a-startup">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_startup_icon_dark.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Google</span>
-                      </div>
-                    </div>
-                    <div class="a-startup">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_startup_icon_dark.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Apple</span>
-                      </div>
-                    </div>
+                    <?php
+                    // Getting startups information which are incubated under IC
+                    $query_to_get_startups_incubated = mysqli_query (
+                      $connection,
+                      " SELECT 
+                        startup_id 
+                      FROM 
+                        startups_info 
+                      WHERE 
+                        startup_incubation_center_id = '$incubation_center_id' "
+                    );
+
+                    // Query ran properly
+                    if ( $query_to_get_startups_incubated ) {
+
+                      // Fetching startups incubated one by one
+                      while ( $startup_incubated = mysqli_fetch_assoc($query_to_get_startups_incubated) ) {
+
+                        // Incubated Startup's Unique ID
+                        $incubated_startup_id = $startup_incubated [ 'startup_id' ];
+
+                        // Incubated Startup's Profile Picture ID
+                        $incubated_startup_profile_picture = $startup->get_profile_pic_id($connection, $incubated_startup_id);
+
+                        if ( $incubated_startup_profile_picture == "" || is_null($incubated_startup_profile_picture) )
+                          // Startup profile picture default source
+                          $incubated_startup_profile_picture = "../../images/default_startup_icon_dark.png";
+                        else
+                          // Rebuilding Startup profile picture source, because, startup owner has uploaded custom profile picutre
+                          $incubated_startup_profile_picture = "../../files/profile_pictures/" . $incubated_startup_profile_picture;
+                        ?>
+                        <div class="a-startup">
+                          <div class="profile-picture-wrap">
+                            <img style="border-radius: 100px;" src="<?php echo $incubated_startup_profile_picture; ?>" width="101" height="101">
+                          </div>
+                          <div class="name-wrap">
+                            <span><?php echo $startup->get_name ( $connection, $incubated_startup_id ); ?></span>
+                          </div>
+                        </div>
+                        <?php
+                      } // Fetching startups incubated one by one END
+                    } // Query ran properly END ?>
                   </div>
                 </div>
+                <?php
+                } // Number of startups incubated are more than 0 END 
+                ?>
               </div>
             </div>
           </div>
@@ -190,13 +219,26 @@ include_once "../_includes/check_login_status.php";
               </div>
             </div>
 
+            <?php
+            // Profile Picture of IC
+            $ic_profile_picture = $incubation->get_profile_pic_id ( $connection, $incubation_center_id );
+
+            // IC Owner has not uploaded custom profile picture
+            if ( $ic_profile_picture == "" || is_null($ic_profile_picture) )
+              $ic_profile_picture = "../../images/default_incubation_center_icon_dark.png";
+            
+            // IC Owner has uploaded custom profile picture
+            else
+              $ic_profile_picture = "../../files/profile_pictures/" . $ic_profile_picture;
+            ?>
+
             <div class="edit-startup-wrap" style="display:block;">
               <div class="edit-startup" style="overflow:scroll;">
                 <div class="disp-flex">
                   <div class="left-side" style="width: 50%; border-right: 1px solid #eaeaea;">
                     <div class="edit-profile-pic-wrap disp-flex">
                       <div class="edit-profile-pic" style="margin-right:1em;">
-                        <img src="../../images/default_incubation_center_icon_dark.png" width="44" height="44">
+                        <img style="border-radius: 100px;" src="<?php echo $ic_profile_picture; ?>" width="44" height="44">
                       </div>
                       <div class="edit-profile-pic-message-wrap" style="margin-right:12em; height:44px;">
                         <p class="vert-center" style="margin:0;">Profile Picture</p>
@@ -218,35 +260,42 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Name</label>
-                            <input id="edit_ic_name" type="text" value="" placeholder="Incubation Center Name" style="width:100%;">
+                            <input id="edit_ic_name" type="text" value="<?php echo $incubation->get_name ( $connection, $incubation_center_id ); ?>" placeholder="Incubation Center Name" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Email</label>
+                            <input id="edit_ic_email" type="text" value="<?php echo $incubation->get_email ( $connection, $incubation_center_id ); ?>" placeholder="Incubation Center Email" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Description</label>
-                            <input id="edit_ic_desc" type="text" value="" placeholder="Description" style="width:100%;">
+                            <input id="edit_ic_desc" type="text" value="<?php echo $incubation->get_description ( $connection, $incubation_center_id ); ?>" placeholder="Description" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Story</label>
-                            <textarea id="edit_ic_stry" cols="30" rows="10" placeholder="Your Incubation Center Story" style="width:100%; overflow:scroll; resize:vertical;"></textarea>
+                            <textarea id="edit_ic_stry" cols="30" rows="10" placeholder="Your Incubation Center Story" style="width:100%; overflow:scroll; resize:vertical;"><?php echo $incubation->get_story ( $connection, $incubation_center_id ); ?></textarea>
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Link</label>
-                            <input id="edit_ic_link" type="text" value="" placeholder="Website/App Link" style="width:100%;">
+                            <input id="edit_ic_link" type="text" value="<?php echo $incubation->get_link ( $connection, $incubation_center_id ); ?>" placeholder="Website/App Link" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Registration Number</label>
-                            <input id="edit_ic_reg_no" type="text" value="" placeholder="Registration Number" style="width:100%;">
+                            <input id="edit_ic_reg_no" type="text" value="<?php echo $incubation->get_reg_no ( $connection, $incubation_center_id ); ?>" placeholder="Registration Number" style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -268,11 +317,23 @@ include_once "../_includes/check_login_status.php";
                           <div class="group-action-input">
                             <label>State</label>
                             <select id="edit_ic_state" style="display: block;" title="State in which your Startup resides">
-                              <option value="" selected disabled>Startup State</option>
-                              <option value="">Karnataka</option>
-                              <option value="">Maharashtra</option>
-                              <option value="">Gujrat</option>
-                              <option value="">Haryana</option>
+                              <option selected disabled>Startup State</option>
+                              <?php 
+                                // Getting states list
+                                $query_to_get_states = mysqli_query ( $connection, " SELECT state_id, state_text FROM states " );
+
+                                // Query ran properly
+                                if ( mysqli_num_rows($query_to_get_states) > 0 ) {
+
+                                  // Fetching state one by one
+                                  while ( $state = mysqli_fetch_assoc($query_to_get_states) ) {
+                                    $state_id = $state['state_id'];
+                                    $state_text = $state['state_text']; ?>
+                                    <option value="<?php echo $state_id; ?>"><?php echo $state_text; ?></option>
+                                <?php
+                                  } // Fetching state one by one END
+                                } // Checking if states are more than 0 END
+                              ?>
                             </select>
                           </div>
                         </div>
@@ -281,11 +342,24 @@ include_once "../_includes/check_login_status.php";
                           <div class="group-action-input">
                             <label>City</label>
                             <select id="edit_ic_city" style="display: block;" title="City in which your Startup resides">
-                              <option value="" selected disabled>Startup City</option>
-                              <option value="">Karnataka</option>
-                              <option value="">Maharashtra</option>
-                              <option value="">Gujrat</option>
-                              <option value="">Haryana</option>
+                              <option selected disabled>Startup City</option>
+                              <?php
+                                // Getting cities list 
+                                $query_to_get_cities = mysqli_query (  
+                                  $connection,
+                                  " SELECT city_id, city_text FROM cities "
+                                );
+
+                                // Query ran properly
+                                if ( $query_to_get_cities ) {
+
+                                  // Fetching city one by one
+                                  while ( $city = mysqli_fetch_assoc($query_to_get_cities) ) { ?>
+                                    <option value="<?php echo $city['city_id']; ?>"><?php echo $city['city_text']; ?></option>
+                                <?php
+                                  }
+                                } // Query ran properly END
+                              ?>
                             </select>
                           </div>
                         </div>
@@ -293,14 +367,21 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Pincode</label>
-                            <input id="edit_ic_pcode" type="text" value="" placeholder="Pincode" style="width:100%;">
+                            <input id="edit_ic_pcode" type="text" value="<?php echo $incubation->get_pincode ( $connection, $incubation_center_id ); ?>" placeholder="Pincode" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Address</label>
-                            <input id="edit_ic_addr" type="text" value="" placeholder="Address" style="width:100%;">
+                            <input id="edit_ic_addr" type="text" value="<?php echo $incubation->get_address ( $connection, $incubation_center_id ); ?>" placeholder="Address" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Contact Number</label>
+                            <input id="edit_cnct_num" type="text" value="<?php echo $incubation->get_contact_number ( $connection, $incubation_center_id ); ?>" placeholder="Contact Number" style="width: 90%;">
                           </div>
                         </div>
                       </div>
@@ -318,28 +399,28 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>LinkedIn</label>
-                            <input id="edit_ic_lkdin" type="text" value="" placeholder="LinkedIn URL" style="width:100%;">
+                            <input id="edit_ic_lkdin" type="text" value="<?php echo $incubation->get_linkedin ( $connection, $incubation_center_id ); ?>" placeholder="LinkedIn Username" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Twitter</label>
-                            <input id="edit_ic_titter" type="text" value="" placeholder="Twitter URL" style="width:100%;">
+                            <input id="edit_ic_titter" type="text" value="<?php echo $incubation->get_twitter ( $connection, $incubation_center_id ); ?>" placeholder="Twitter Username" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Facebook</label>
-                            <input id="edit_ic_fb" type="text" value="" placeholder="Facebook URL" style="width:100%;">
+                            <input id="edit_ic_fb" type="text" value="<?php echo $incubation->get_facebook ( $connection, $incubation_center_id ); ?>" placeholder="Facebook Username" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Instagram</label>
-                            <input id="edit_ic_ig" type="text" value="" placeholder="Instagram URL" style="width:100%;">
+                            <input id="edit_ic_ig" type="text" value="<?php echo $incubation->get_instagram ( $connection, $incubation_center_id ); ?>" placeholder="Instagram Username" style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -349,6 +430,7 @@ include_once "../_includes/check_login_status.php";
               </div>
             </div>
           </div>
+          <?php } // User has incubation center END ?>
         </div>
 
         <footer style="padding:2em; text-align:center;">
@@ -388,13 +470,18 @@ include_once "../_includes/check_login_status.php";
                   </div>
 
                   <div class="phase-text-input-wrap">
+                    <label>Email</label>
+                    <input type="text" id="ic-email" placeholder="Email ID">
+                  </div>
+
+                  <div class="phase-text-input-wrap">
                     <label>Description</label>
                     <input type="text" id="ic-desc" placeholder="Describe your Incubcation Center in few words">
                   </div>
 
                   <div class="phase-text-input-wrap">
                     <label>Story</label>
-                    <textarea id="ic-complete-story" style="resize:vertical; overflow:scroll;" cols="30" rows="2" placeholder="Tell your story"></textarea>
+                    <textarea id="ic-story" style="resize:vertical; overflow:scroll;" cols="30" rows="2" placeholder="Tell your story"></textarea>
                   </div>
 
                   <div class="phase-text-input-wrap" style="width:95%;">
@@ -411,10 +498,10 @@ include_once "../_includes/check_login_status.php";
                 <div class="gen-info-right-side">
                   <div class="phase-text-input-wrap">
                     <label style="margin-bottom: 7px; text-align: center; display: block;">Profile Picture</label>
-                    <img src="../../images/default_incubation_center_icon_dark.png" width="202" height="202" style="display: block; margin: auto;">
+                    <img style="border-radius: 100px; display: block; margin: auto;" src="../../images/default_incubation_center_icon_dark.png" width="202" height="202" style="display: block; margin: auto;">
                     <div class="gen-info-profile-pic-actions-wrap disp-flex">
                       <div class="change-pic">
-                        <a title="Change your Incubation Center Profile Picture">Change</a>
+                        <a id="custom_profile_picture" title="Change your Incubation Center Profile Picture">Change</a>
                       </div>
                     </div>
                   </div>
@@ -444,22 +531,47 @@ include_once "../_includes/check_login_status.php";
                   <div class="phase-text-input-wrap">
                     <label>State</label>
                     <select id="ic-state" style="display: block;" title="State in which your Incubation Center resides">
-                      <option value="" selected disabled>Startup State</option>
-                      <option value="">Karnataka</option>
-                      <option value="">Maharashtra</option>
-                      <option value="">Gujrat</option>
-                      <option value="">Haryana</option>
+                      <option selected disabled>Startup State</option>
+                      <?php 
+                      // Getting states list
+                      $query_to_get_states = mysqli_query ( $connection, " SELECT state_id, state_text FROM states " );
+
+                      // Query ran properly
+                      if ( mysqli_num_rows($query_to_get_states) > 0 ) {
+
+                        // Fetching state one by one
+                        while ( $state = mysqli_fetch_assoc($query_to_get_states) ) {
+                          $state_id = $state['state_id'];
+                          $state_text = $state['state_text']; ?>
+                          <option value="<?php echo $state_id; ?>"><?php echo $state_text; ?></option>
+                      <?php
+                        } // Fetching state one by one END
+                      } // Checking if states are more than 0 END
+                      ?>
                     </select>
                   </div>
 
                   <div class="phase-text-input-wrap" style="width: 45%;">
                     <label>City</label>
                     <select id="ic-city" style="display: block;" title="City in which your Incubation Center resides">
-                      <option value="" selected disabled>Startup City</option>
-                      <option value="">Belgaum</option>
-                      <option value="">Mumbai</option>
-                      <option value="">Ahemdabad</option>
-                      <option value="">Delhi</option>
+                      <option selected disabled>Startup City</option>
+                      <?php
+                      // Getting cities list 
+                      $query_to_get_cities = mysqli_query (  
+                        $connection,
+                        " SELECT city_id, city_text FROM cities "
+                      );
+
+                      // Query ran properly
+                      if ( $query_to_get_cities ) {
+
+                        // Fetching city one by one
+                        while ( $city = mysqli_fetch_assoc($query_to_get_cities) ) { ?>
+                          <option value="<?php echo $city['city_id']; ?>"><?php echo $city['city_text']; ?></option>
+                      <?php
+                        }
+                      } // Query ran properly END
+                      ?>
                     </select>
                   </div>
 
@@ -537,22 +649,22 @@ include_once "../_includes/check_login_status.php";
 
                   <div class="phase-text-input-wrap" style="width: 80%;" title="LinkedIn Profile ID">
                     <label>LinkedIn</label>
-                    <input type="text" id="ic-lkdin" placeholder="LinkedIn URL">
+                    <input type="text" id="ic-lkdin" placeholder="LinkedIn Username">
                   </div>
 
                   <div class="phase-text-input-wrap" style="width: 76%;" title="Twitter Profile ID">
                     <label>Twitter</label>
-                    <input type="text" id="ic-twtr" placeholder="Twitter URL">
+                    <input type="text" id="ic-twtr" placeholder="Twitter Username">
                   </div>
 
                   <div class="phase-text-input-wrap" style="width: 72%;" title="Facebook Profile ID">
                     <label>Facebook</label>
-                    <input type="text" id="ic-fb" placeholder="Facebook URL">
+                    <input type="text" id="ic-fb" placeholder="Facebook Username">
                   </div>
 
                   <div class="phase-text-input-wrap" style="width: 68%;" title="Intsagram Profile ID">
                     <label>Instagram</label>
-                    <input type="text" id="ic-gram" placeholder="Instagram URL">
+                    <input type="text" id="ic-gram" placeholder="Instagram Username">
                   </div>
                 </div>
 
@@ -603,7 +715,10 @@ include_once "../_includes/check_login_status.php";
     </div>
   </div>
 
+  <input type="file" id="edit_profile_picture_file_selector" style="position:absolute; top:-100px;">
   <script src="../scripts/add_incubation_center.js"></script>
   <?php include_once "../_includes/user_signed_in_actions.php"; ?>
+  <?php include_once "../_includes/notification_system.php"; ?>
+  <?php include_once "../../_includes/all_page_include.php"; ?>
 </body>
 </html>
