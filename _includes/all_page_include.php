@@ -68,6 +68,9 @@
       <div class="notification disp-flex">
         <div class="notification-icon-wrap">
           <div class="notification-icon">
+            <!-- 
+              NOTE: When loading notification icon, be aware, because notification will be viewed outside of dashboard page as well
+                    so, be aware of notification icon's file location i.e. relative path -->
             <img src="../../images/default_startup_icon_dark.png" width="48" height="48" alt="">
           </div>
         </div>
