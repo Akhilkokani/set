@@ -17,6 +17,79 @@ include_once "../libraries/set/set.php";
 // User ID of who is currently logged in
 $logged_in_user_id = $user->get_logged_in_user_id();
 
+
+
+/** 
+ * Search
+ * 
+ */
+if (
+  isset ( $_POST['action'] ) &&
+  $_POST['action'] == "search" &&
+  isset ( $_POST['key'] )
+) {
+
+  // Santising Input
+  $search_key = htmlspecialchars ( $_POST['key'], ENT_QUOTES );
+
+  // Be Default Indicating Search Results Do Not Exist
+  $search_results [ 'results_exists' ] = 'no';
+
+  // Input Is Empty
+  if ( strlen($search_key) == 0 ) {
+    echo json_encode ( $search_results );
+    die();
+  }
+
+  // Getting Search Results
+  $query_to_get_search_results = mysqli_query ( $connection, " SELECT startup_id FROM startups WHERE startup_name LIKE '%$search_key%' LIMIT 5 " );
+
+  // Query Ran Properly
+  if ( $query_to_get_search_results && mysqli_num_rows($query_to_get_search_results) > 0 ) {
+    
+    // Indicating Search Results Exists
+    $search_results [ 'results_exists' ] = 'yes';
+
+    // Fetching Search Results One By One
+    while ( $search_result = mysqli_fetch_assoc($query_to_get_search_results) ) {
+
+      // Startup Name
+      $search_results [ $search_result['startup_id'] ]['name'] = $startup->get_name ( $connection, $search_result['startup_id'] );
+
+      // Getting Startup's Profile Picture ID
+      $search_result_startup_logo = $startup->get_profile_pic_id ( $connection, $search_result['startup_id'] );
+
+      // Startup Owner has not uploaded custom profile picture
+      if ( $search_result_startup_logo == "" || is_null($search_result_startup_logo) ) {
+        $search_result_startup_logo = "./images/default_startup_icon.png";
+      }
+      // Startup Owner has uploaded custom profile picture
+      else {
+        $search_result_startup_logo = "./files/profile_pictures/" . $search_result_startup_logo;
+      }
+
+      // Startup Logo
+      $search_results [ $search_result['startup_id'] ]['logo'] = $search_result_startup_logo;
+    }
+
+    // Sending Results
+    echo json_encode ( $search_results );
+    die();
+  }
+  else {
+    $search_results [ 'results_exists' ] = 'no';
+    echo json_encode ( $search_results );
+    die();
+  }
+
+  // Unknown Error
+  $search_results [ 'results_exists' ] = 'unknown';
+  echo json_encode ( $search_results );
+  die();
+}
+
+
+
 /** 
  * Sign In
  * 

@@ -165,56 +165,16 @@ include_once "./libraries/set/set.php";
             </svg>
           </div>
           <div class="search-text-box-wrap">
-            <input type="text" title="Search Startups..." onclick="document.getElementById('search-results').style.display = 'block';" placeholder="Search..." name="search-tbox" class="search-tbox">
+            <input type="text" title="Search Startups..." id="search_box" placeholder="Search..." name="search-tbox" class="search-tbox">
           </div>
         </div>
 
         <?php // Search Results Panel ==> ?>
         <div class="search-results-wrap" id="search-results" style="display:none;">
           <div class="search-results">
-            <a class="search-result" href="./view?sid=asdasdads123ASD">
-              <div class="disp-flex search-result-container">
-                <div class="startup-logo-wrap">
-                  <img src="./images/default_startup_icon.png" width="32" height="32">
-                </div>
-                <div class="startup-name-wrap">
-                  <span class="vert-center">CodeManiacs</span>
-                </div>
-              </div>
-            </a>
-
-            <a class="search-result" href="./view?sid=asdasdads123ASD">
-              <div class="disp-flex search-result-container">
-                <div class="startup-logo-wrap">
-                  <img src="./images/default_startup_icon.png" width="32" height="32">
-                </div>
-                <div class="startup-name-wrap">
-                  <span class="vert-center">Jshta</span>
-                </div>
-              </div>
-            </a>
-
-            <a class="search-result" href="./view?sid=asdasdads123ASD">
-              <div class="disp-flex search-result-container">
-                <div class="startup-logo-wrap">
-                  <img src="./images/default_startup_icon.png" width="32" height="32">
-                </div>
-                <div class="startup-name-wrap">
-                  <span class="vert-center">Cool Startup</span>
-                </div>
-              </div>
-            </a>
-
-            <a class="search-result" href="./view?sid=asdasdads123ASD">
-              <div class="disp-flex search-result-container">
-                <div class="startup-logo-wrap">
-                  <img src="./images/default_startup_icon.png" width="32" height="32">
-                </div>
-                <div class="startup-name-wrap">
-                  <span class="vert-center">OYO Rooms</span>
-                </div>
-              </div>
-            </a>
+            <!-- 
+              Results Are Displayed Using JS by building DOM Nodes Dynamically.
+              @see search.js for more information. -->
           </div>
         </div>
         <?php // <== Search Results Panel ?>
@@ -544,6 +504,7 @@ include_once "./libraries/set/set.php";
 
   <script src="./scripts/signin_and_signup.js"></script>
   <script src="./scripts/home.js"></script>
+  <script src="./scripts/search.js"></script>
   <script>
 
     // Initiating and adding event listeners for signed in actions
