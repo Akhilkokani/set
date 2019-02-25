@@ -10,6 +10,7 @@
 
 session_start();
 include_once "../_includes/check_login_status.php";
+include_once "../../libraries/set/set.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,11 +24,14 @@ include_once "../_includes/check_login_status.php";
 
   <link rel="icon" href="../../images/favicon.jpg">
   <link rel="stylesheet" href="../../styles/prix.css">
+  <link rel="stylesheet" href="../../styles/all-page.css">
   <link rel="stylesheet" href="../styles/dashboard.css">
   <link rel="stylesheet" href="../styles/startup.css">
   
   <script src="../../scripts/jquery.js"></script>
   <script src="../../scripts/chart.js"></script>
+  <script src="../../scripts/set.js"></script>
+  <script src="../scripts/startup_graphs.js"></script>
 
 </head>
 <body>
@@ -96,17 +100,12 @@ include_once "../_includes/check_login_status.php";
             </div>
           </div>
 
-          <div class="tab-user-actions-wrap">
-            <div class="tab-user-action user-profile-pic-wrap vert-center">
-              <img src="../../images/default_user_profile_picture.png" class="user-profile-pic" width="44" height="44">
-            </div>
-          </div>
+          <?php include "../_includes/page_header_actions.php"; ?>
         </div>
 
         <div class="dashboard-content startup-tab-content">
           <!-- If User has not listed his/her startup -->
-          <?php $showOrNot = false; ?>
-          <?php if ( $showOrNot ) { ?>
+          <?php if ( $user->check_if_user_has_startup ($connection, $logged_in_user_id) == false ) { ?>
           <div class="dashboard-floor startup-floor">
             <div class="no-startup-wrap">
               <div class="no-startup">
@@ -132,13 +131,17 @@ include_once "../_includes/check_login_status.php";
                     <span>It seems that you have not listed your startup yet. To list your startup click below.</span>
                   </div>
                   <div class="no-startup-action-wrap">
-                    <button class="prix-primary" title="Add your first startup">List My Startup</button>
+                    <button id="list_my_startup" class="prix-primary" title="Add your first startup">List My Startup</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <?php } else { ?>
+
+          <?php 
+          // Acts as global variable for entire page
+          $startup_id = $user->get_user_startup_id ( $connection, $logged_in_user_id ); ?>
 
           <!-- Profile Visits -->
           <div class="dashboard-floor startup-floor">
@@ -152,48 +155,41 @@ include_once "../_includes/check_login_status.php";
 
                 <div class="profile-visits-graph-wrap">
                   <div class="profile-visits">
+                    <!-- When there no enough visits -->
+                    <div class="not-enough-visits-wrap" style="display: none;">
+                      <div class="no-enough-visits">
+                        <div class="no-enough-visits-image-wrap">
+                          <div class="not-enough-visits-image">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                              width="125px" height="125px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                              <path d="M383.1,257.4c0.6-5.4,0.9-10,0.9-13.8c0-19.6-3.3-19.7-16-19.7h-75.5c7.3-12,11.5-24.4,11.5-37c0-37.9-57.3-56.4-57.3-88
+                                c0-11.7,5.1-21.3,9.3-34.9c-26.5,7-47.4,33.5-47.4,61.6c0,48.3,56.3,48.7,56.3,84.8c0,4.5-1.4,8.5-2.1,13.5h-55.9
+                                c0.8-3,1.3-6.2,1.3-9.3c0-22.8-39.1-33.9-39.1-52.8c0-7,1-12.8,3.2-21c-12.9,5.1-28.3,20-28.3,36.8c0,26.7,31.9,29.3,36.8,46.3H80
+                                c-12.7,0-16,0.1-16,19.7c0,19.6,7.7,61.3,28.3,111c20.6,49.7,44.4,71.6,61.2,86.2l0.1-0.2c5.1,4.6,11.8,7.3,19.2,7.3h102.4
+                                c7.4,0,14.1-2.7,19.2-7.3l0.1,0.2c9-7.8,20-17.8,31.4-32.9c4.7,2,9.8,3.7,15.4,5c8.4,2,16.8,3,24.8,3c24,0,45.6-9.2,60.8-25.8
+                                c13.4-14.6,21.1-34.4,21.1-54.2C448,297,420,264.5,383.1,257.4z M366.1,384.2c-8.6,0-15.6-1.2-22.1-4.2c4-8,7.9-15.9,11.7-25.1
+                                c10.1-24.4,17.1-47,21.6-65.8c22,4.3,38.7,23.8,38.7,47.1C416,358.9,398.8,384.2,366.1,384.2z"/>
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="not-enough-visits-content">
+                          <div class="not-enough-visits-title-wrap">
+                            <h2>No Enough Data to Show</h2>
+                          </div>
+                          <div class="not-enough-visits-para-wrap">
+                            <span>As People Visit Your Profile Month on Month Data will Start Displaying.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div class="graph-container" style="width:100%; height:350px; position: relative;">
-                      <canvas id="myChart" width="100%" height="100%"></canvas>
-                      <script>
-                        var ctx = document.getElementById("myChart").getContext('2d');
-                        var myChart = new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                                datasets: [{
-                                    label: 'Profile Visits',
-                                    data: [99, 78, 90, 98, 45, 98],
-                                    backgroundColor: '#ffe7c6',
-                                    borderColor: '#fe9000'
-                                }]
-                            },
-                            options: {
-                              legend: {
-                                display: false
-                              },
-                              scales: {
-                                  yAxes: [{
-                                      ticks: {
-                                          beginAtZero:true
-                                      },
-                                      gridLines: {
-                                        display:false
-                                      }
-                                  }],
-                                  xAxes: [{
-                                    gridLines: {
-                                      display:false
-                                    }
-                                  }]
-                              },
-                              responsive: true,
-                              maintainAspectRatio: false
-                            }
-                        });
-                      </script>
+                      <canvas id="profile-visits-graph" width="100%" height="100%"></canvas>
                     </div>
                   </div>
                 </div>
+                <script>
+                  profile_visits ( document.querySelector(".profile-visits-graph-wrap") );
+                </script>
               </div>
             </div>
           </div>
@@ -211,50 +207,42 @@ include_once "../_includes/check_login_status.php";
                   </div>
                   <div class="top-locations-graph-wrap">
                     <div class="profile-visits">
-                      <div class="graph-container" style="width:100%; height:350px; position: relative;">
-                        <canvas id="myChart2" width="100%" height="100%"></canvas>
-                        <script>
-                          var ctx = document.getElementById("myChart2").getContext('2d');
-                          var myChart = new Chart(ctx, {
-                              type: 'radar',
-                              data: {
-                                  labels: ["Belgaum", "Delhi", "Kolkata", "Mumbai", "Bangalore", "Prayaraj"],
-                                  datasets: [{
-                                      label: 'Profile Visits',
-                                      data: [2, 25, 12, 47, 25, 30],
-                                      backgroundColor: '#ffe7c6',
-                                      borderColor: '#fe9000'
-                                  }]
-                              },
-                              options: {
-                                legend: {
-                                  display: false
-                                },
-                                scales: {
-                                    yAxes: [{
-                                        display: false,
-                                        ticks: {
-                                            beginAtZero:true
-                                        },
-                                        gridLines: {
-                                          display:false
-                                        }
-                                    }],
-                                    xAxes: [{
-                                      display: false,
-                                      gridLines: {
-                                        display:false
-                                      }
-                                    }]
-                                },
-                                responsive: true,
-                                maintainAspectRatio: false
-                              }
-                          });
-                        </script>
+                      <!-- When there no enough visits -->
+                      <div class="not-enough-visits-wrap" style="display: none;">
+                        <div class="no-enough-visits">
+                          <div class="no-enough-visits-image-wrap">
+                            <div class="not-enough-visits-image">
+                              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                width="125px" height="125px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                <path d="M383.1,257.4c0.6-5.4,0.9-10,0.9-13.8c0-19.6-3.3-19.7-16-19.7h-75.5c7.3-12,11.5-24.4,11.5-37c0-37.9-57.3-56.4-57.3-88
+                                  c0-11.7,5.1-21.3,9.3-34.9c-26.5,7-47.4,33.5-47.4,61.6c0,48.3,56.3,48.7,56.3,84.8c0,4.5-1.4,8.5-2.1,13.5h-55.9
+                                  c0.8-3,1.3-6.2,1.3-9.3c0-22.8-39.1-33.9-39.1-52.8c0-7,1-12.8,3.2-21c-12.9,5.1-28.3,20-28.3,36.8c0,26.7,31.9,29.3,36.8,46.3H80
+                                  c-12.7,0-16,0.1-16,19.7c0,19.6,7.7,61.3,28.3,111c20.6,49.7,44.4,71.6,61.2,86.2l0.1-0.2c5.1,4.6,11.8,7.3,19.2,7.3h102.4
+                                  c7.4,0,14.1-2.7,19.2-7.3l0.1,0.2c9-7.8,20-17.8,31.4-32.9c4.7,2,9.8,3.7,15.4,5c8.4,2,16.8,3,24.8,3c24,0,45.6-9.2,60.8-25.8
+                                  c13.4-14.6,21.1-34.4,21.1-54.2C448,297,420,264.5,383.1,257.4z M366.1,384.2c-8.6,0-15.6-1.2-22.1-4.2c4-8,7.9-15.9,11.7-25.1
+                                  c10.1-24.4,17.1-47,21.6-65.8c22,4.3,38.7,23.8,38.7,47.1C416,358.9,398.8,384.2,366.1,384.2z"/>
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="not-enough-visits-content">
+                            <div class="not-enough-visits-title-wrap">
+                              <h2>No Content Here</h2>
+                            </div>
+                            <div class="not-enough-visits-para-wrap">
+                              <span>Not Enough Data to Show.</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- When there enough visits -->
+                      <div class="graph-container" style="display: none; width:100%; height:350px; position: relative;">
+                        <canvas id="top-locations-graph" width="100%" height="100%"></canvas>
                       </div>
                     </div>
                   </div>
+                  <script>
+                    top_locations ( document.querySelector(".top-locations-graph-wrap") );
+                  </script>
                 </div>
               </div>
             </div>
@@ -269,13 +257,18 @@ include_once "../_includes/check_login_status.php";
                     </div>
                     <div class="job-application-action-wrap">
                       <div class="job-application-action vert-center">
-                        <a style="font-size:11px; font-family:sans-serif; color:#9a9a9a;" title="Stop Hiring">Stop Hiring</a>
+                        <?php if ( $startup->get_hiring($connection, $startup_id) == 1 ) { ?>
+                          <a style="font-size:11px; font-family:sans-serif; color:#9a9a9a;" title="Stop Hiring" id="hire" data-action='0'>Stop Hiring</a>
+                        <?php } else { ?>
+                          <a style="font-size:11px; font-family:sans-serif; color:#9a9a9a;" title="Start Hiring" id="hire" data-action='1'>Start Hiring</a>
+                        <?php } ?>
                       </div>
                     </div>
                   </div>
 
-                  <!-- No Applications Received -->
-                  <!-- <div class="no-data-job-applications-wrap" style="height:370px;">
+                  <?php if ( $startup->get_hiring($connection, $startup_id) == 0 || $startup->count_number_of_job_applications_received ( $connection, $startup_id ) == 0 ) { ?>
+                  <!-- No Applications Received or Startup is not hiring -->
+                  <div class="no-data-job-applications-wrap" style="height:370px;">
                     <div class="no-data vert-center">
                       <div style="margin:auto;">
                         <div style="margin-top:-15px;">
@@ -304,34 +297,71 @@ include_once "../_includes/check_login_status.php";
                         </div>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
+                  <?php } else { ?>
 
                   <div class="applications-list">
-                    <div class="application">
-                      <div class="disp-flex">
-                        <div class="applicator-profile-pic-wrap">
-                          <div class="applicator-profile-pic">
-                            <img src="../../images/default_user_profile_picture.png" width="25" height="25" />
+                  <?php 
+                  // Getting job applicants
+                  $query_to_get_job_applicants = mysqli_query (
+                    $connection,
+                    " SELECT 
+                      job_applier_user_id 
+                    FROM 
+                      jobs_applied 
+                    WHERE 
+                      job_applied_startup_id = '$startup_id' "
+                  );
+
+                  // Job Applicants found
+                  if ( mysqli_num_rows($query_to_get_job_applicants) > 0 ) {
+
+                    // Fetching Job Applicants details one by one
+                    while ( $job_applicant = mysqli_fetch_assoc($query_to_get_job_applicants) ) {
+
+                      // Checking whether user has uploaded CV or not
+                      if ( 
+                        $user->get_cv_id ( $connection, $job_applicant['job_applier_user_id'] ) != "" || 
+                        !is_null($user->get_cv_id($connection, $job_applicant['job_applier_user_id']))
+                      ) {
+                        // Getting applicant profile picture
+                        $job_applicant_profile_picture = $user->get_profile_picture_id ( $connection, $job_applicant['job_applier_user_id'] );
+
+                        // Default profile picture
+                        if ( $job_applicant_profile_picture == "" || is_null($job_applicant_profile_picture) )
+                          $job_applicant_profile_picture = "../../images/default_user_profile_picture.png";
+                        // Custom profile picture
+                        else
+                          $job_applicant_profile_picture = "../../files/profile_pictures/" . $user->get_profile_picture_id ( $connection, $job_applicant['job_applier_user_id'] ); ?>
+                        <div class="application">
+                          <div class="disp-flex">
+                            <div class="applicator-profile-pic-wrap">
+                              <div class="applicator-profile-pic">
+                                <img style="border-radius: 100px;" src="<?php echo $job_applicant_profile_picture; ?>" width="32" height="32" />
+                              </div>
+                            </div>
+                            <div class="applicator-name" style="height: 32px; flex:1;">
+                              <p class="vert-center" style="margin: 0 0 0 8px; font-family: sans-serif; font-size: 12px;"><?php echo $user->get_name ( $connection, $job_applicant['job_applier_user_id'] ); ?></p>
+                            </div>
+                            <div class="applicator-actions-wrap" style="height:32px;">
+                              <div class="applicator-actions disp-flex vert-center">
+                                <div class="applicator-view-cv-action-wrap">
+                                  <a title="View CV" target="_blank" href="../../files/cv/<?php echo $user->get_cv_id ( $connection, $job_applicant['job_applier_user_id'] ); ?>">View CV</a>
+                                </div>
+                                <div class="applicator-add-as-team-member-action-wrap">
+                                  <a title="Add to team" onclick="add_to_team ( '<?php echo $job_applicant['job_applier_user_id']; ?>' );">Add to team</a>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div class="applicator-name" style="height: 25px; flex:1;">
-                          <p class="vert-center" style="margin: 0 0 0 8px; font-family: sans-serif; font-size: 12px;">Akhil Kokani</p>
-                        </div>
-                        <div class="applicator-actions-wrap" style="height:25px;">
-                          <div class="applicator-actions disp-flex vert-center">
-                            <div class="applicator-view-cv-action-wrap">
-                              <a title="View CV">View CV</a>
-                            </div>
-                            <div class="applicator-add-as-team-member-action-wrap">
-                              <a title="Add to team">Add to team</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                        <?php 
+                      } // Checking whether user has uploaded CV or not END
+                    } // Fetching Job Applicants details one by one END
+                  } // Job Applicants found END ?>
                   </div>
+                  <?php } ?>
                   <!-- Application list end -->
-                  
                 </div>
               </div>
             </div>
@@ -345,7 +375,7 @@ include_once "../_includes/check_login_status.php";
               </div>
               <div class="add-new-member-action-wrap" style="height:21px;">
                 <div class="add-new-member vert-center">
-                  <a style="font-size:12px;" id="add_new_team_member_action" title="Add New Team Member">Add New</a>
+                  <a style="font-size:12px;" onclick="request_user_to_join_team();" title="Add New Team Member">Add New</a>
                 </div>
               </div>
             </div>
@@ -353,30 +383,47 @@ include_once "../_includes/check_login_status.php";
               <div class="team-details">
                 <div class="team-members-wrap">
                   <div class="team-member-wrap disp-flex">
-                    <div class="team-member">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Akhil Kokani</span>
-                      </div>
-                    </div>
-                    <div class="team-member">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Akhil Kokani</span>
-                      </div>
-                    </div>
-                    <div class="team-member">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Akhil Kokani</span>
-                      </div>
-                    </div>
+                    <?php
+
+                    // Getting team member details
+                    $query_to_get_team_member_details = mysqli_query (
+                      $connection,
+                      " SELECT 
+                        startup_team_member_user_id 
+                      FROM 
+                        startup_team_member_details 
+                      WHERE 
+                        startup_team_member_startup_id = '$startup_id' "
+                    );
+
+                    // Team members exists
+                    if ( mysqli_num_rows($query_to_get_team_member_details) > 0 ) {
+
+                      // Fetching team member deatails one by one
+                      while ( $team_member = mysqli_fetch_assoc($query_to_get_team_member_details) ) {
+
+                        // Default profile picture
+                        if ( 
+                          $user->get_profile_picture_id($connection, $team_member['startup_team_member_user_id']) == "" || 
+                          is_null($user->get_profile_picture_id($connection, $team_member['startup_team_member_user_id']))
+                        ) {
+                          $team_member_profile_picture = "../../images/default_user_profile_picture.png";
+                        }
+                        // Custom profile picture
+                        else {
+                          $team_member_profile_picture = "../../files/profile_pictures/" . $user->get_profile_picture_id($connection, $team_member['startup_team_member_user_id']);
+                        } ?>
+                          <div class="team-member">
+                            <div class="profile-picture-wrap">
+                              <img style="border-radius: 100px;" src="<?php echo $team_member_profile_picture; ?>" width="101" height="101">
+                            </div>
+                            <div class="name-wrap">
+                              <span><?php echo $user->get_name ( $connection, $team_member['startup_team_member_user_id'] ); ?></span>
+                            </div>
+                          </div>
+                          <?php
+                      } // Fetching team member deatails one by one END
+                    } // Team members exists END ?>
                   </div>
                 </div>
               </div>
@@ -391,7 +438,7 @@ include_once "../_includes/check_login_status.php";
               </div>
               <div class="add-new-investor-action-wrap" style="height:21px;">
                 <div class="add-new-investor vert-center">
-                  <a style="font-size:12px;" id="add_new_investor_member_action" title="Add New Investor/Director">Add New</a>
+                  <a style="font-size:12px;" onclick="request_investor_to_join();" title="Add New Investor/Director">Add New</a>
                 </div>
               </div>
             </div>
@@ -399,14 +446,46 @@ include_once "../_includes/check_login_status.php";
               <div class="investor-details">
                 <div class="investors-collection-wrap">
                   <div class="investor-wrap disp-flex">
-                    <div class="investor">
-                      <div class="profile-picture-wrap">
-                        <img src="../../images/default_user_profile_picture.png" width="101" height="101">
-                      </div>
-                      <div class="name-wrap">
-                        <span>Akhil Kokani</span>
-                      </div>
-                    </div>
+                    <?php
+                    // Getting investor details
+                    $query_to_get_investor_details = mysqli_query (
+                      $connection,
+                      " SELECT 
+                        startup_investor_user_id 
+                      FROM 
+                        startup_investor_details 
+                      WHERE 
+                        startup_investor_startup_id = '$startup_id' "
+                    );
+
+                    // Investors exists
+                    if ( mysqli_num_rows($query_to_get_investor_details) > 0 ) {
+
+                      // Fetching Investors details one by one
+                      while ( $investor = mysqli_fetch_assoc($query_to_get_investor_details) ) {
+                        
+                        // Default profile picture
+                        if ( 
+                          $user->get_profile_picture_id($connection, $investor['startup_investor_user_id']) == "" || 
+                          is_null($user->get_profile_picture_id($connection, $investor['startup_investor_user_id']))
+                        ) {
+                          $investor_profile_picture = "../../images/default_user_profile_picture.png";
+                        }
+                        // Custom profile picture
+                        else {
+                          $investor_profile_picture = "../../files/profile_pictures/" . $user->get_profile_picture_id ( $connection, $investor['startup_investor_user_id'] );
+                        } ?>
+                        <div class="investor">
+                          <div class="profile-picture-wrap">
+                            <img style="border-radius: 100px;" src="<?php echo $investor_profile_picture; ?>" width="101" height="101">
+                          </div>
+                          <div class="name-wrap">
+                            <span><?php echo $user->get_name ( $connection, $investor['startup_investor_user_id'] ); ?></span>
+                          </div>
+                        </div>
+                        <?php
+                      } // Fetching Investors details one by one END
+                    } // Investors exists END ?>
                   </div>
                 </div>
               </div>
@@ -426,19 +505,32 @@ include_once "../_includes/check_login_status.php";
               </div>
             </div>
 
+            <?php
+            // User's Startup ID
+            $startup_id = $user->get_user_startup_id ( $connection, $logged_in_user_id );
+
+            // Default profile picture
+            $startup_profile_picture = "../../images/default_startup_icon_dark.png";
+
+            // Get Profile Picture ID
+            if ( $startup->get_profile_pic_id($connection, $startup_id) != "" && $startup->get_profile_pic_id($connection, $startup_id) !== NULL ) {
+              $startup_profile_picture = "../../files/profile_pictures/" . $startup->get_profile_pic_id($connection, $startup_id);
+            }
+            ?>
+
             <div class="edit-startup-wrap" style="display:none;">
               <div class="edit-startup" style="overflow:scroll;">
                 <div class="disp-flex">
                   <div class="left-side" style="width: 50%; border-right: 1px solid #eaeaea;">
                     <div class="edit-profile-pic-wrap disp-flex">
                       <div class="edit-profile-pic" style="margin-right:1em;">
-                        <img src="../../images/default_startup_icon_dark.png" width="44" height="44">
+                        <img style="border-radius: 100px;" src="<?php echo $startup_profile_picture; ?>" width="44" height="44">
                       </div>
                       <div class="edit-profile-pic-message-wrap" style="margin-right:12em; height:44px;">
                         <p class="vert-center" style="margin:0;">Profile Picture</p>
                       </div>
                       <div class="edit-profile-pic-change-wrap" style="height:44px;">
-                        <a class="vert-center" id="change_startup_profile_picture" title="Click to change your Startup Profile Picture">Change</a>
+                        <a class="vert-center change_startup_profile_picture" title="Click to change your Startup Profile Picture">Change</a>
                       </div>
                     </div>
 
@@ -454,40 +546,40 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Name</label>
-                            <input id="edit_stup_name" type="text" value="" placeholder="Startup Name" style="width:100%;">
+                            <input id="stup-name" type="text" value="<?php echo $startup->get_name ( $connection, $startup_id ); ?>" placeholder="Startup Name" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Vision</label>
-                            <input id="edit_stup_vison" type="text" value="" placeholder="Vision" style="width:100%;">
+                            <input id="stup-vision" type="text" value="<?php echo $startup->get_vision ( $connection, $startup_id ); ?>" placeholder="Vision" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Description</label>
-                            <input id="edit_stup_desc" type="text" value="" placeholder="Description" style="width:100%;">
+                            <input id="stup-desc" type="text" value="<?php echo $startup->get_description ( $connection, $startup_id ); ?>" placeholder="Description" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Story</label>
-                            <textarea id="edit_stup_stry" cols="30" rows="10" placeholder="Your Startup Story" style="width:100%; overflow:scroll; resize:vertical;"></textarea>
+                            <textarea id="stup-complete-story" cols="30" rows="10" placeholder="Your Startup Story" style="width:100%; overflow:scroll; resize:vertical;"><?php echo $startup->get_story ( $connection, $startup_id ); ?></textarea>
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Category</label>
-                            <select id="edit_stup_cat" style="width: 100%;">
+                            <select id="stup-cat" style="width: 100%;">
                               <option value="" selected disabled>Select Startup Category</option>
-                              <option value="">Technology</option>
-                              <option value="">Food</option>
-                              <option value="">Education</option>
-                              <option value="">Entertainment</option>
+                              <option value="technology">Technology</option>
+                              <option value="food">Food</option>
+                              <option value="education">Education</option>
+                              <option value="entertainment">Entertainment</option>
                             </select>
                           </div>
                         </div>
@@ -495,7 +587,7 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Link</label>
-                            <input id="edit_stup_link" type="text" value="" placeholder="Website/App Link" style="width:100%;">
+                            <input id="stup-link" type="text" value="<?php echo $startup->get_link ( $connection, $startup_id ); ?>" placeholder="Website/App Link" style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -513,12 +605,24 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>State</label>
-                            <select id="edit_stup_state" style="display: block;" title="State in which your Startup resides">
+                            <select id="stup-state" style="display: block;" title="State in which your Startup resides">
                               <option value="" selected disabled>Startup State</option>
-                              <option value="">Karnataka</option>
-                              <option value="">Maharashtra</option>
-                              <option value="">Gujrat</option>
-                              <option value="">Haryana</option>
+                              <?php 
+                              // Getting states list
+                              $query_to_get_states = mysqli_query ( $connection, " SELECT state_id, state_text FROM states " );
+
+                              // Query ran properly
+                              if ( mysqli_num_rows($query_to_get_states) > 0 ) {
+
+                                // Fetching state one by one
+                                while ( $state = mysqli_fetch_assoc($query_to_get_states) ) {
+                                  $state_id = $state['state_id'];
+                                  $state_text = $state['state_text']; ?>
+                                  <option value="<?php echo $state_id; ?>"><?php echo $state_text; ?></option>
+                              <?php
+                                } // Fetching state one by one END
+                              } // Checking if states are more than 0 END
+                              ?>
                             </select>
                           </div>
                         </div>
@@ -526,12 +630,25 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>City</label>
-                            <select id="edit_stup_city" style="display: block;" title="City in which your Startup resides">
+                            <select id="stup-city" style="display: block;" title="City in which your Startup resides">
                               <option value="" selected disabled>Startup City</option>
-                              <option value="">Karnataka</option>
-                              <option value="">Maharashtra</option>
-                              <option value="">Gujrat</option>
-                              <option value="">Haryana</option>
+                              <?php
+                              // Getting cities list 
+                              $query_to_get_cities = mysqli_query (  
+                                $connection,
+                                " SELECT city_id, city_text FROM cities "
+                              );
+
+                              // Query ran properly
+                              if ( $query_to_get_cities ) {
+
+                                // Fetching city one by one
+                                while ( $city = mysqli_fetch_assoc($query_to_get_cities) ) { ?>
+                                  <option value="<?php echo $city['city_id']; ?>"><?php echo $city['city_text']; ?></option>
+                              <?php
+                                }
+                              } // Query ran properly END
+                              ?>
                             </select>
                           </div>
                         </div>
@@ -539,14 +656,21 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Pincode</label>
-                            <input id="edit_stup_pcode" type="text" value="" placeholder="Pincode" style="width:100%;">
+                            <input id="stup-pcode" type="text" value="<?php echo $startup->get_pincode ( $connection, $startup_id ); ?>" placeholder="Pincode" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Address</label>
-                            <input id="edit_stup_addr" type="text" value="" placeholder="Address" style="width:100%;">
+                            <input id="stup-addr" type="text" value="<?php echo $startup->get_address ( $connection, $startup_id ); ?>" placeholder="Address" style="width:100%;">
+                          </div>
+                        </div>
+
+                        <div class="group-action-input-wrap">
+                          <div class="group-action-input">
+                            <label>Contact Number</label>
+                            <input id="stup-cnct-num" type="text" value="<?php echo $startup->get_contact_number ( $connection, $startup_id ); ?>" placeholder="Contact Number" style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -567,7 +691,7 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Email ID</label>
-                            <input id="edit_stup_incbn_eml" type="text" value="" placeholder="Incubation Center Email ID" style="width:100%;">
+                            <input id="stup-icbctr" type="text" value="<?php echo $startup->get_ic_email ( $connection, $startup_id ); ?>" placeholder="Incubation Center Email ID" style="width:100%;">
                           </div>
                         </div>
 
@@ -575,14 +699,25 @@ include_once "../_includes/check_login_status.php";
                           <div class="group-action-input">
                             <label>Are your Hiring?</label>
                             <div class="disp-flex" style="height: 39px;">
-                              <div class="vert-center">
-                                <input type="radio" name="edit_hiring" style="margin-right: 8px; margin-left: 8px; margin-top: -1px; width: 13px; height: 13px;">
-                                <label style="font-size: 12px;">Yes</label>
-                              </div>
-                              <div class="vert-center" style="padding-left: 2em;">
-                                <input type="radio" name="edit_hiring" style="margin-right: 8px; margin-top: -1px; width: 13px; height: 13px;" checked> 
-                                <label style="font-size: 12px;">No</label>
-                              </div>
+                              <?php if ( $startup->get_hiring($connection, $startup_id) == 0 ) { ?>
+                                <div class="vert-center">
+                                  <input type="radio" name="hiring" style="margin-right: 8px; margin-left: 8px; margin-top: -1px; width: 13px; height: 13px;">
+                                  <label style="font-size: 12px;">Yes</label>
+                                </div>
+                                <div class="vert-center" style="padding-left: 2em;">
+                                  <input type="radio" name="hiring" style="margin-right: 8px; margin-top: -1px; width: 13px; height: 13px;" checked> 
+                                  <label style="font-size: 12px;">No</label>
+                                </div>
+                              <?php } else { ?>
+                                <div class="vert-center">
+                                  <input type="radio" name="hiring" style="margin-right: 8px; margin-left: 8px; margin-top: -1px; width: 13px; height: 13px;" checked>
+                                  <label style="font-size: 12px;">Yes</label>
+                                </div>
+                                <div class="vert-center" style="padding-left: 2em;">
+                                  <input type="radio" name="hiring" style="margin-right: 8px; margin-top: -1px; width: 13px; height: 13px;"> 
+                                  <label style="font-size: 12px;">No</label>
+                                </div>
+                              <?php } ?>
                             </div>
                           </div>
                         </div>
@@ -601,11 +736,11 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Startup Class</label>
-                            <select id="edit_stup_class" style="display: block;" title="Type of your Startup Registration">
+                            <select id="stup-class" style="display: block;" title="Type of your Startup Registration">
                               <option value="" selected disabled>Select Class</option>
-                              <option value="">Private Limited</option>
-                              <option value="">Proprietary</option>
-                              <option value="">Partnership</option>
+                              <option value="private_limited">Private Limited</option>
+                              <option value="proprietary">Proprietary</option>
+                              <option value="partnership">Partnership</option>
                             </select>
                           </div>
                         </div>
@@ -613,7 +748,7 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>CIN/PAN</label>
-                            <input id="edit_stup_cin_or_pan" type="text" value="" placeholder="Startup CIN or PAN" style="width:100%;">
+                            <input id="stup-cin" type="text" value="<?php echo $startup->get_cin_or_pan ( $connection, $startup_id ); ?>" placeholder="Startup CIN or PAN" style="width:100%;">
                           </div>
                         </div>
 
@@ -621,26 +756,48 @@ include_once "../_includes/check_login_status.php";
                           <div class="group-action-input">
                             <label>Date of Registration</label>
                             <div class="disp-flex">
-                              <select id="edit_stup_day" style="display: block; width: 39%; margin-right: 5px;">
+                              <select id="stup-day" style="display: block; width: 39%; margin-right: 5px;">
                                 <option value="" selected disabled>Day</option>
-                                <option value="">10</option>
-                                <option value="">11</option>
-                                <option value="">12</option>
-                                <option value="">13</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <!-- <option value="6">11</option>
+                                <option value="7">12</option>
+                                <option value="8">13</option>
+                                <option value="9">10</option>
+                                <option value="10">11</option>
+                                <option value="11">12</option>
+                                <option value="12">13</option>
+                                <option value="13">10</option>
+                                <option value="14">11</option>
+                                <option value="15">12</option>
+                                <option value="16">13</option>
+                                <option value="17">10</option> -->
                               </select>
-                              <select id="edit_stup_month" style="display: block; width: 39%; margin-right: 5px;">
+                              <select id="stup-month" style="display: block; width: 39%; margin-right: 5px;">
                                 <option value="" selected disabled>Month</option>
-                                <option value="">09</option>
-                                <option value="">10</option>
-                                <option value="">11</option>
-                                <option value="">12</option>
+                                <!-- <option value="01">January</option> -->
+                                <option value="02">February</option>
+                                <!-- <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option> -->
                               </select>
-                              <select id="edit_stup_year" style="display: block; width: 22%;">
+                              <select id="stup-year" style="display: block; width: 22%;">
                                 <option value="" selected disabled>Year</option>
-                                <option value="">2000</option>
-                                <option value="">2001</option>
-                                <option value="">2002</option>
-                                <option value="">2003</option>
+                                <option value="2015">2015</option>
+                                <option value="2016">2016</option>
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
                               </select>
                             </div>
                           </div>
@@ -660,28 +817,28 @@ include_once "../_includes/check_login_status.php";
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>LinkedIn</label>
-                            <input id="edit_stup_lkdin" type="text" value="" placeholder="LinkedIn URL" style="width:100%;">
+                            <input id="stup-lkdin" type="text" value="<?php echo $startup->get_linkedin ( $connection, $startup_id ); ?>" placeholder="LinkedIn URL" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Twitter</label>
-                            <input id="edit_stup_titter" type="text" value="" placeholder="Twitter URL" style="width:100%;">
+                            <input id="stup-twtr" type="text" value="<?php echo $startup->get_twitter ( $connection, $startup_id ); ?>" placeholder="Twitter URL" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Facebook</label>
-                            <input id="edit_stup_fb" type="text" value="" placeholder="Facebook URL" style="width:100%;">
+                            <input id="stup-fb" type="text" value="<?php echo $startup->get_facebook ( $connection, $startup_id ); ?>" placeholder="Facebook URL" style="width:100%;">
                           </div>
                         </div>
 
                         <div class="group-action-input-wrap">
                           <div class="group-action-input">
                             <label>Instagram</label>
-                            <input id="edit_stup_ig" type="text" value="" placeholder="Instagram URL" style="width:100%;">
+                            <input id="stup-gram" type="text" value="<?php echo $startup->get_instagram ( $connection, $startup_id ); ?>" placeholder="Instagram URL" style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -701,8 +858,9 @@ include_once "../_includes/check_login_status.php";
     </div>
   </div>
 
+  <?php if ( $user->check_if_user_has_startup($connection, $logged_in_user_id) == false ) { ?>
   <div class="list-startup-wrap">
-    <div class="list-startup-modal-wrap modal-wrapper" style="display:none;">
+    <div class="list-startup-modal-wrap modal-wrapper" style="display: none;">
       <div class="list-startup-modal modal">
         <div class="modal-title disp-flex">
           <h2 style="flex:1;">My Startup</h2>
@@ -732,7 +890,7 @@ include_once "../_includes/check_login_status.php";
 
                   <div class="phase-text-input-wrap">
                     <label>Vision</label>
-                    <input type="text" id="stup-vison" placeholder="Tell us about Vision of your Startup">
+                    <input type="text" id="stup-vision" placeholder="Tell us about Vision of your Startup">
                   </div>
 
                   <div class="phase-text-input-wrap">
@@ -753,11 +911,11 @@ include_once "../_includes/check_login_status.php";
                   <div class="phase-text-input-wrap" style="width:85%;">
                     <label>Category</label>
                     <select id="stup-cat" style="display: block;">
-                      <option value="" selected disabled>Select Startup Category</option>
-                      <option value="">Technology</option>
-                      <option value="">Food</option>
-                      <option value="">Education</option>
-                      <option value="">Entertainment</option>
+                      <option selected disabled>Startup Category</option>
+                      <option value="technology">Technology</option>
+                      <option value="food">Food</option>
+                      <option value="education">Education</option>
+                      <option value="entertainment">Entertainment</option>
                     </select>
                   </div>
                 </div>
@@ -765,10 +923,10 @@ include_once "../_includes/check_login_status.php";
                 <div class="gen-info-right-side">
                   <div class="phase-text-input-wrap">
                     <label style="margin-bottom: 7px; text-align: center; display: block;">Profile Picture</label>
-                    <img src="../../images/default_startup_icon_dark.png" width="202" height="202" style="display: block; margin: auto;">
+                    <img style="border-radius: 100px; display: block; margin: auto;" src="../../images/default_startup_icon_dark.png" width="202" height="202" style="display: block; margin: auto;">
                     <div class="gen-info-profile-pic-actions-wrap disp-flex">
                       <div class="change-pic">
-                        <a title="Change your Startup Profile Picture">Change</a>
+                        <a id="stup-profile-picture" title="Change your Startup Profile Picture">Change</a>
                       </div>
                     </div>
                   </div>
@@ -799,10 +957,22 @@ include_once "../_includes/check_login_status.php";
                     <label>State</label>
                     <select id="stup-state" style="display: block;" title="State in which your Startup resides">
                       <option value="" selected disabled>Startup State</option>
-                      <option value="">Karnataka</option>
-                      <option value="">Maharashtra</option>
-                      <option value="">Gujrat</option>
-                      <option value="">Haryana</option>
+                      <?php 
+                      // Getting states list
+                      $query_to_get_states = mysqli_query ( $connection, " SELECT state_id, state_text FROM states " );
+
+                      // Query ran properly
+                      if ( mysqli_num_rows($query_to_get_states) > 0 ) {
+
+                        // Fetching state one by one
+                        while ( $state = mysqli_fetch_assoc($query_to_get_states) ) {
+                          $state_id = $state['state_id'];
+                          $state_text = $state['state_text']; ?>
+                          <option value="<?php echo $state_id; ?>"><?php echo $state_text; ?></option>
+                      <?php
+                        } // Fetching state one by one END
+                      } // Checking if states are more than 0 END
+                      ?>
                     </select>
                   </div>
 
@@ -810,10 +980,23 @@ include_once "../_includes/check_login_status.php";
                     <label>City</label>
                     <select id="stup-city" style="display: block;" title="City in which your Startup resides">
                       <option value="" selected disabled>Startup City</option>
-                      <option value="">Belgaum</option>
-                      <option value="">Mumbai</option>
-                      <option value="">Ahemdabad</option>
-                      <option value="">Delhi</option>
+                      <?php
+                      // Getting cities list 
+                      $query_to_get_cities = mysqli_query (  
+                        $connection,
+                        " SELECT city_id, city_text FROM cities "
+                      );
+
+                      // Query ran properly
+                      if ( $query_to_get_cities ) {
+
+                        // Fetching city one by one
+                        while ( $city = mysqli_fetch_assoc($query_to_get_cities) ) { ?>
+                          <option value="<?php echo $city['city_id']; ?>"><?php echo $city['city_text']; ?></option>
+                      <?php
+                        }
+                      } // Query ran properly END
+                      ?>
                     </select>
                   </div>
 
@@ -901,7 +1084,7 @@ include_once "../_includes/check_login_status.php";
                         </g>
                       </svg>
                       <h3 style="margin-top: 0; margin-bottom: 5px; color: #515151;">Incubation Center</h3>
-                      <input type="text" placeholder="Incubation Center Email">
+                      <input type="text" id="stup-icbctr" placeholder="Incubation Center Email">
                     </div>
                   </div>
                 </div>
@@ -926,10 +1109,10 @@ include_once "../_includes/check_login_status.php";
                       <div class="disp-flex" style="height: 39px;">
                         <div class="vert-center" style="margin-left: auto;">
                           <label style="font-size: 12px;">Yes</label>
-                          <input type="radio" name="hiring" style="margin-right: 2em; margin-left: 8px; margin-top: -1px; width: 13px; height: 13px;">
+                          <input type="radio" value="yes" name="hiring" style="margin-right: 2em; margin-left: 8px; margin-top: -1px; width: 13px; height: 13px;">
                         </div>
                         <div class="vert-center" style="margin-right: auto; border-left: 1px solid #dadada; padding-left: 2em;">
-                          <input type="radio" name="hiring" style="margin-right: 8px; margin-top: -1px; width: 13px; height: 13px;" checked>
+                          <input type="radio" value="no" name="hiring" style="margin-right: 8px; margin-top: -1px; width: 13px; height: 13px;" checked>
                           <label style="font-size: 12px;">No</label>
                         </div>
                       </div>
@@ -964,14 +1147,14 @@ include_once "../_includes/check_login_status.php";
                   <div class="phase-text-input-wrap" style="width: 50%;">
                     <label>Startup Class</label>
                     <select id="stup-class" style="display: block;" title="Type of your Startup Registration">
-                      <option value="" selected disabled>Select Class</option>
-                      <option value="">Private Limited</option>
-                      <option value="">Proprietary</option>
-                      <option value="">Partnership</option>
+                      <option selected disabled>Select Class</option>
+                      <option value="private_limited">Private Limited</option>
+                      <option value="proprietary">Proprietary</option>
+                      <option value="partnership">Partnership</option>
                     </select>
                   </div>
 
-                  <div class="phase-text-input-wrap" style="width: 70%;" title="Corporate Identification Number">
+                  <div class="phase-text-input-wrap startup-uniq-num" style="width: 70%;" title="Corporate Identification Number">
                     <label>CIN</label>
                     <input type="text" id="stup-cin" placeholder="Startup CIN">
                   </div>
@@ -981,24 +1164,46 @@ include_once "../_includes/check_login_status.php";
                     <div class="disp-flex">
                       <select id="stup-day" style="display: block; width: 39%; margin-right: 5px;">
                         <option value="" selected disabled>Day</option>
-                        <option value="">10</option>
-                        <option value="">11</option>
-                        <option value="">12</option>
-                        <option value="">13</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <!-- <option value="6">11</option>
+                        <option value="7">12</option>
+                        <option value="8">13</option>
+                        <option value="9">10</option>
+                        <option value="10">11</option>
+                        <option value="11">12</option>
+                        <option value="12">13</option>
+                        <option value="13">10</option>
+                        <option value="14">11</option>
+                        <option value="15">12</option>
+                        <option value="16">13</option>
+                        <option value="17">10</option> -->
                       </select>
                       <select id="stup-month" style="display: block; width: 39%; margin-right: 5px;">
                         <option value="" selected disabled>Month</option>
-                        <option value="">09</option>
-                        <option value="">10</option>
-                        <option value="">11</option>
-                        <option value="">12</option>
+                        <!-- <option value="01">January</option> -->
+                        <option value="02">February</option>
+                        <!-- <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option> -->
                       </select>
                       <select id="stup-year" style="display: block; width: 22%;">
                         <option value="" selected disabled>Year</option>
-                        <option value="">2000</option>
-                        <option value="">2001</option>
-                        <option value="">2002</option>
-                        <option value="">2003</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
                       </select>
                     </div>
                   </div>
@@ -1114,9 +1319,11 @@ include_once "../_includes/check_login_status.php";
       </div>
     </div>
   </div>
+  <?php } ?>
 
   <?php include_once "../_includes/user_signed_in_actions.php"; ?>
-  <script src="../scripts/create_startup.js"></script>
+  <?php include_once "../../_includes/all_page_include.php"; ?>
+  <input type="file" id="profile_picture_file_selector" style="position:absolute; top: -100px;">
   <script src="../scripts/startup.js"></script>
 </body>
 </html>

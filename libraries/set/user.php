@@ -20,7 +20,7 @@ class user {
    *
    * @param String $connection
    * @param String $username
-   * @return void
+   * @return Boolean
    */
   public function check_if_username_exists ( 
     $connection,
@@ -139,6 +139,48 @@ class user {
       return true;
 
     // User is investor or
+    // Could not find user row, for some reason
+    return false;
+  }
+
+
+
+  /**
+   * Checks whether user is listed as investor for particular startup.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @param String $sid
+   * @return Boolean
+   */
+  function check_if_investor_for_startup (
+    $connection,
+    $user_id,
+    $sid
+  ) {
+
+    // Checking if user is investor or not
+    $query_to_check_if_user_is_investor_in_startup = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        startup_investor_details 
+      WHERE 
+        startup_investor_user_id = '$user_id' 
+      AND 
+        startup_investor_startup_id = '$sid'
+      LIMIT 
+        1 "
+    );
+
+    // User is investor
+    if ( mysqli_num_rows($query_to_check_if_user_is_investor_in_startup) === 1 )
+      return true;
+
     // Could not find user row, for some reason
     return false;
   }
@@ -554,6 +596,44 @@ class user {
     // Found user's startup ID
     if ( mysqli_num_rows($query_to_get_user_startup_id) === 1 )
       return mysqli_fetch_array ( $query_to_get_user_startup_id )['startup_id'];
+
+    // Could not find, for some reason
+    return NULL;
+  }
+
+
+
+  /**
+   * Get's User's Incubation Center ID
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $user_id
+   * @return String
+   */
+  function get_user_incubation_center_id (
+    $connection,
+    $user_id
+  ) {
+
+    // Getting inubation center id where user is working
+    $query_to_get_user_ic_id = mysqli_query (
+      $connection,
+      " SELECT 
+        incubation_center_id
+      FROM 
+        incubation_centers
+      WHERE 
+        incubation_center_user_id = '$user_id'
+      LIMIT 
+        1 "
+    );
+
+    // Found user's Incubation Center ID
+    if ( mysqli_num_rows($query_to_get_user_ic_id) === 1 )
+      return mysqli_fetch_array ( $query_to_get_user_ic_id )['incubation_center_id'];
 
     // Could not find, for some reason
     return NULL;
@@ -1136,6 +1216,51 @@ class user {
         return false;
     }
 
+    return false;
+  }
+
+
+
+  /**
+   * Adds new job request
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $uid
+   * @param String $sid
+   * @return Boolean
+   */
+  function add_job_request (
+    $connection,
+    $uid,
+    $sid
+  ) {
+
+    // Generating new job request id
+    $utility = new utility;
+    $job_request_id = $utility->generate_secure_string ( "jreqid_", 10 );
+
+    // Adding new job request
+    $query_to_add_new_job_request = mysqli_query (
+      $connection,
+      " INSERT INTO jobs_applied (
+          job_applied_id, 
+          job_applier_user_id, 
+          job_applied_startup_id
+        ) VALUES ( 
+          '$job_request_id', 
+          '$uid', 
+          '$sid' 
+        ) "
+    );
+
+    // Added new job request
+    if ( $query_to_add_new_job_request )
+      return true;
+
+    // Something went wrong
     return false;
   }
 
@@ -1745,7 +1870,7 @@ class user {
     $cv_id_to_remove = $this->get_cv_id($connection, $user_id);
 
     // CV is uploaded
-    if ( $cv_id_to_remove !== NULL ) {
+    if ( $cv_id_to_remove !== NULL && $cv_id_to_remove != "" ) {
       
       // CV to remove exists in file system
       if ( file_exists($cv_source . $cv_id_to_remove) ) {

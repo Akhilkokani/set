@@ -122,7 +122,7 @@ include_once "../../libraries/set/set.php";
                         <img style="margin: auto;" src="<?php echo $user_work_startup_profile_picture_source; ?>" style="border-radius: 100px;" width="125" height="125" alt="">
                       </div>
                     </div>
-                    <div class="vert-center" style="margin: 0 5em 0 0;">
+                    <div class="vert-center" style="margin: 0 5em 0 9px;">
                       <div class="work-startup-vertical-line"></div>
                     </div>
                     <div class="work-startup-details-wrap">
@@ -133,7 +133,7 @@ include_once "../../libraries/set/set.php";
                               <h2><?php echo $startup->get_name ( $connection, $user_work_startup_id ); ?></h2>
                             </div>
                           </div>
-                          <div class="work-startup-vision-wrap">
+                          <div class="work-startup-vision-wrap" style="max-width: 650px;">
                             <div class="work-startup-vision">
                               <p><?php echo $startup->get_vision ( $connection, $user_work_startup_id ); ?></p>
                             </div>

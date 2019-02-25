@@ -40,3 +40,27 @@ function activate_tab ( activate_tab_classname, tabs_wrap_classname, activate_ta
   document.querySelector ( "." + activate_tab_classname ).classList += " active";
   document.querySelector ( "#" +  activate_tab_content_id ).style.display = "block";
 }
+
+let view = {
+
+  collect: function() {}
+};
+
+// Used to collect regarding user visit of Startup
+view.collect = function (
+  _sid
+) {
+
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "./ajax/system",
+    data: {
+      action: "collect-startup-data",
+      sid: _sid
+    },
+    success: function ( data ) {
+      console.log ( data );
+    }
+  });
+}

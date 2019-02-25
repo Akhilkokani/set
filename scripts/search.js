@@ -54,6 +54,7 @@ search.build_search_result = function (
   img_startup_profile_picture.setAttribute ( "width", "32" );
   img_startup_profile_picture.setAttribute ( "height", "32" );
   img_startup_profile_picture.setAttribute ( "src", profile_picture_source );
+  img_startup_profile_picture.style.borderRadius = "100px";
 
   // <div class="startup-logo-wrap">
   var div_startup_logo_wrap = document.createElement ( "div" );

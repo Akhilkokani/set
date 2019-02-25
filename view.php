@@ -21,6 +21,7 @@ $profileToShow = NULL;
 if ( isset ($_GET['sid']) ) {
   $profileToShow = "startup";
   $startup_id = htmlspecialchars ( $_GET['sid'], ENT_QUOTES );
+  $profileName = $startup->get_name ( $connection, $startup_id );
 }
 
 // Incubation Center profile to be shown
@@ -245,8 +246,20 @@ session_start();
                 </div>
               </div>
 
+              <?php
+              // User Profile Picture
+              $user_profile_picture = $user->get_profile_picture_id ( $connection, $user->get_logged_in_user_id() );
+
+              // Default Profile Picture
+              if ( $user_profile_picture == "" || is_null($user_profile_picture) )
+                $user_profile_picture = "./images/default_user_profile_picture.png";
+              
+              // Rebuilding profile picture source, because, user has uploaded custom profile picture
+              else
+                $user_profile_picture = "./files/profile_pictures/" . $user_profile_picture;
+              ?>
               <div class="user-profile-pic-wrap vert-center">
-                <img src="./images/default_user_profile_picture.png" width="40" height="40" class="user-profile-pic">
+                <img style="border-radius: 100px;" src="<?php echo $user_profile_picture; ?>" width="40" height="40" class="user-profile-pic">
               </div>
             </div>
             <?php } ?>
@@ -272,25 +285,38 @@ session_start();
     <div class="profile startup-profile">
 
       <?php if ( $profileToShow == "startup" ) { ?>
-
+      <script>
+        // Collecting data regaring user visit
+        view.collect ( '<?php echo $_GET['sid']; ?>' );
+      </script>
       <!-- Profile Picture, Name, Description, Link -->
       <div class="profile-header-wrap">
         <div class="profile-header">
           <div class="profile-header-content-splitter disp-flex">
             <div class="profile-picture-wrap">
               <div class="profile-picture vert-center">
-                <img src="./images/default_startup_icon_dark.png" width="150" height="150" alt="Profile Picture">
+                <?php
+                // Default profile picture
+                $startup_profile_picture = "./images/default_startup_icon_dark.png";
+
+                // Custom profile picture
+                if ( $startup->get_profile_pic_id($connection, $startup_id) !== "" && $startup->get_profile_pic_id($connection, $startup_id) !== NULL ) {
+                  $startup_profile_picture = "./files/profile_pictures/" . $startup->get_profile_pic_id($connection, $startup_id);
+                }
+                ?>
+                <img src="<?php echo $startup_profile_picture; ?>" width="150" height="150" alt="Profile Picture">
               </div>
             </div>
             <div class="profile-name-desc-wrap">
               <div class="profile-name">
-                <h2>Profile Name</h2>
+                <h2><?php echo $startup->get_name ( $connection, $startup_id ); ?></h2>
               </div>
               <div class="profile-desc">
-                <p>Profile Description. Pasture he invited mr company shyness. But when shot real her. Chamber her observe visited removal six sending himself boy.</p>
+                <p><?php echo $startup->get_description ( $connection, $startup_id ); ?></p>
+                <!-- <p>Profile Description. Pasture he invited mr company shyness. But when shot real her. Chamber her observe visited removal six sending himself boy.</p> -->
               </div>
               <div class="profile-link">
-                <a href="./link" target="_blank">https://www.website.com</a>
+                <a href="https://<?php echo $startup->get_link ( $connection, $startup_id ); ?>" target="_blank"><?php echo $startup->get_link ( $connection, $startup_id ); ?></a>
               </div>
             </div>
           </div>
@@ -385,7 +411,8 @@ session_start();
                     <span>Our Vision</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>This is the startup vision. Far quitting dwelling graceful the likewise received building. An fact so to that show am shed sold cold.</p>
+                    <p><?php echo $startup->get_vision ( $connection, $startup_id ); ?></p>
+                    <!-- <p>This is the startup vision. Far quitting dwelling graceful the likewise received building. An fact so to that show am shed sold cold.</p> -->
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -393,9 +420,10 @@ session_start();
                     <span>Our Story</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>
+                    <p><?php echo htmlspecialchars_decode ( $startup->get_story($connection, $startup_id), ENT_QUOTES ); ?></p>
+                    <!-- <p>
                       This is the startup story. Far quitting dwelling graceful the likewise received building. An fact so to that show am shed sold cold. 
-                      <br><br>Unaffected remarkably get yet introduced excellence terminated led. Result either design saw she esteem and. On ashamed no inhabit ferrars it ye besides resolve. Own judgment directly few trifling. <br><br>Elderly as pursuit at regular do parlors. Rank what has into fond she. Unwilling sportsmen he in questions september therefore described so. Attacks may set few believe moments was. Reasonably how possession shy way introduced age inquietude. Missed he engage no exeter of. Still tried means we aware order among on. <br><br>Eldest father can design tastes did joy settle. Roused future he ye an marked. Arose mr rapid in so vexed words. Gay welcome led add lasting chiefly say looking.</p>
+                      <br><br>Unaffected remarkably get yet introduced excellence terminated led. Result either design saw she esteem and. On ashamed no inhabit ferrars it ye besides resolve. Own judgment directly few trifling. <br><br>Elderly as pursuit at regular do parlors. Rank what has into fond she. Unwilling sportsmen he in questions september therefore described so. Attacks may set few believe moments was. Reasonably how possession shy way introduced age inquietude. Missed he engage no exeter of. Still tried means we aware order among on. <br><br>Eldest father can design tastes did joy settle. Roused future he ye an marked. Arose mr rapid in so vexed words. Gay welcome led add lasting chiefly say looking.</p> -->
                   </div>
                 </div>
               </div>
@@ -405,7 +433,7 @@ session_start();
                     <span>Category</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>Technology</p>
+                    <p><?php echo $startup->get_category ( $connection, $startup_id ); ?></p>
                   </div>
                 </div>
 
@@ -414,7 +442,7 @@ session_start();
                     <span>Class</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>Private Limited</p>
+                    <p><?php echo $startup->get_class ( $connection, $startup_id ); ?></p>
                   </div>
                 </div>
 
@@ -423,19 +451,25 @@ session_start();
                     <span>Date of Birth</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>19 December, 2017</p>
+                    <p><?php echo $startup->get_date_of_birth ( $connection, $startup_id ); ?></p>
+                    <!-- <p>19 December, 2017</p> -->
                   </div>
                 </div>
-
-                <div class="tab-block-wrap">
-                  <div class="tab-title-wrap">
-                    <span>Incubated In</span>
+                
+                <?php 
+                // IC ID of where startup is incubated
+                $incubated_center = $incubation->get_ic_id_using_email_id ( $connection, $startup->get_ic_email($connection, $startup_id) );
+                if ( $incubated_center !== "" && $incubated_center !== NULL ) { ?>
+                  <div class="tab-block-wrap">
+                    <div class="tab-title-wrap">
+                      <span>Incubated In</span>
+                    </div>
+                    <div class="tab-para-wrap">
+                      <a href="./view?icid=<?php echo $incubated_center; ?>"><?php echo $incubation->get_name($connection, $incubated_center); ?></a>
+                    </div>
                   </div>
-                  <div class="tab-para-wrap">
-                    <!-- <p>Not Incubated</p> -->
-                    <a href="./view">Sandbox Startups</a>
-                  </div>
-                </div>
+                  <?php
+                } ?>
 
                 <div class="tab-block-wrap">
                   <div class="tab-title-wrap">
@@ -443,7 +477,7 @@ session_start();
                   </div>
                   <div class="tab-para-wrap">
                     <div class="disp-flex">
-                      <a class="social-icon-wrap" title="LinkedIn" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" href="https://www.linkedin.com/in/<?php echo $startup->get_linkedin ( $connection, $startup_id ); ?>" title="LinkedIn" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <g>
@@ -455,7 +489,7 @@ session_start();
                           </g>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Twitter" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Twitter" href="https://www.twitter.com/<?php echo $startup->get_twitter ( $connection, $startup_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <path d="M492,109.5c-17.4,7.7-36,12.9-55.6,15.3c20-12,35.4-31,42.6-53.6c-18.7,11.1-39.4,19.2-61.5,23.5
@@ -466,14 +500,14 @@ session_start();
                           C462.6,146,479,129,492,109.5z"/>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Facebook" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Facebook" href="https://www.facebook.com/<?php echo $startup->get_facebook ( $connection, $startup_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <path d="M288,192v-38.1c0-17.2,3.8-25.9,30.5-25.9H352V64h-55.9c-68.5,0-91.1,31.4-91.1,85.3V192h-45v64h45v192h83V256h56.4l7.6-64
 	                        H288z"/>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Instagram" href="https://www.linkedin.com" target="_blank">
+                      <a class="social-icon-wrap" title="Instagram" href="https://www.instagram.com/<?php echo $startup->get_instagram ( $connection, $startup_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <g>
@@ -500,60 +534,85 @@ session_start();
           <!-- Team Tab Content -->
           <div class="profile-tab-content about-tab-content" id="startup-team-tab" style="display:none;">
             <div class="disp-flex">
-              <div class="left-side-wrasp">
+              <div class="left-side-wrap">
                 <div class="tab-block-wrap startup-founders-wrap">
                   <div class="tab-title-wrap">
-                    <span>Founders</span>
+                    <span>Creator</span>
                   </div>
                   <div class="tab-grid-wrap">
-                    <a class="grid-item" href="./view">
+                    <?php 
+                    // ID of User who is owner of Startup
+                    $startup_owner_id = $startup->get_owner_id ( $connection, $startup_id );
+
+                    // Owners profile picture ID
+                    $startup_owner_profile_picture = $user->get_profile_picture_id ( $connection, $startup_owner_id );
+
+                    // Default profile picture
+                    if ( $startup_owner_profile_picture == "" || is_null($startup_owner_profile_picture) ) {
+                      $startup_owner_profile_picture = "./images/default_user_profile_picture.png";
+                    }
+                    // Custom profile picture
+                    else {
+                      $startup_owner_profile_picture = "./files/profile_pictures/" . $startup_owner_profile_picture;
+                    }
+                    ?>
+                    <a class="grid-item" href="./view?uid=<?php echo $user->get_user_username ( $connection, $startup_owner_id ); ?>">
                       <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
+                        <img style="border-radius: 100px;" src="<?php echo $startup_owner_profile_picture; ?>" width="64" height="64" alt="User Profile Picture">
                       </div>
                       <div class="tab-text-wrap">
-                        <span>Akhil Kokani</span>
-                      </div>
-                    </a>
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
+                        <span><?php echo $user->get_name ( $connection, $startup_owner_id ); ?></span>
                       </div>
                     </a>
                   </div>
                 </div>
-                <div class="tab-block-wrap startup-founders-wrap">
+                <div class="tab-block-wrap startup-team-wrap">
                   <div class="tab-title-wrap">
                     <span>Team</span>
                   </div>
                   <div class="tab-grid-wrap">
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Akhil Kokani</span>
-                      </div>
-                    </a>
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                    <?php
+                    $query_to_get_team_details = mysqli_query ( 
+                      $connection, 
+                      " SELECT 
+                        startup_team_member_user_id 
+                      FROM 
+                        startup_team_member_details 
+                      WHERE 
+                        startup_team_member_startup_id = '$startup_id' "
+                    );
 
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                    // Team members exist
+                    if ( mysqli_num_rows($query_to_get_team_details) > 0 ) {
+
+                      // Getting team member details one by one
+                      while ( $team_member = mysqli_fetch_assoc($query_to_get_team_details) ) {
+                        
+                        // Team member ID
+                        $team_member_id = $team_member['startup_team_member_user_id'];
+
+                        // Default profile picture
+                        if ( 
+                          $user->get_profile_picture_id($connection, $team_member_id) == ""  ||
+                          $user->get_profile_picture_id($connection, $team_member_id) == NULL
+                        ) {
+                          $team_member_profile_picture_id = "./images/default_user_profile_picture.png";
+                        }
+                        // Custom profile picture
+                        else {
+                          $team_member_profile_picture_id = "./files/profile_pictures/" . $user->get_profile_picture_id ( $connection, $team_member_id );
+                        } ?>
+                        <a class="grid-item" href="./view?uid=<?php echo $team_member_id; ?>">
+                          <div class="image-wrap">
+                            <img style="border-radius: 100px;" src="<?php echo $team_member_profile_picture_id; ?>" width="64" height="64" alt="User Profile Picture">
+                          </div>
+                          <div class="tab-text-wrap">
+                            <span><?php echo $user->get_name ( $connection, $team_member_id ); ?></span>
+                          </div>
+                        </a>
+                        <?php
+                      } // Getting team member details one by one END
+                    } // Team members exist END ?>
                   </div>
                 </div>
                 <div class="tab-block-wrap startup-investors-wrap">
@@ -561,49 +620,48 @@ session_start();
                     <span>Investor</span>
                   </div>
                   <div class="tab-grid-wrap">
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Akhil Kokani</span>
-                      </div>
-                    </a>
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                  <?php
+                    $query_to_get_investor_details = mysqli_query ( 
+                      $connection, 
+                      " SELECT 
+                        startup_investor_user_id 
+                      FROM 
+                        startup_investor_details 
+                      WHERE 
+                        startup_investor_startup_id = '$startup_id' "
+                    );
 
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                    // Investors exist
+                    if ( mysqli_num_rows($query_to_get_investor_details) > 0 ) {
 
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                      // Getting investor details one by one
+                      while ( $team_member = mysqli_fetch_assoc($query_to_get_investor_details) ) {
+                        
+                        // Investor ID
+                        $investor_id = $team_member['startup_investor_user_id'];
 
-                    <a class="grid-item" href="./view">
-                      <div class="image-wrap">
-                        <img src="./images/default_user_profile_picture.png" width="64" height="64" alt="User Profile Picture">
-                      </div>
-                      <div class="tab-text-wrap">
-                        <span>Shrusti</span>
-                      </div>
-                    </a>
+                        // Default profile picture
+                        if ( 
+                          $user->get_profile_picture_id($connection, $investor_id) == ""  ||
+                          $user->get_profile_picture_id($connection, $investor_id) == NULL
+                        ) {
+                          $investor_profile_picture_id = "./images/default_user_profile_picture.png";
+                        }
+                        // Custom profile picture
+                        else {
+                          $investor_profile_picture_id = "./files/profile_pictures/" . $user->get_profile_picture_id ( $connection, $investor_id );
+                        } ?>
+                        <a class="grid-item" href="./view?uid=<?php echo $user->get_user_username ( $connection, $investor_id ); ?>">
+                          <div class="image-wrap">
+                            <img style="border-radius: 100px;" src="<?php echo $investor_profile_picture_id; ?>" width="64" height="64" alt="Investor Profile Picture">
+                          </div>
+                          <div class="tab-text-wrap">
+                            <span><?php echo $user->get_name ( $connection, $investor_id ); ?></span>
+                          </div>
+                        </a>
+                        <?php
+                      } // Getting investor details one by one END
+                    } // Team members exist END ?>
                   </div>
                 </div>
               </div>
@@ -613,17 +671,76 @@ session_start();
                     <span>Are We Hiring?</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <!-- 
-                      4 Conditions to be considered
-                      :: Startup is not hiring
-                      :: Startup is hiring, but, user has not submitted his/her CV
-                      :: Startup is hiring, but, user has submitted his/her CV
-                      :: Startup is hiring, but, user has uploaded his/her CV to submit
-                     -->
-                    <p style="font-size:14px;">
-                      Yes
-                      <a style="font-size:12px; margin-left:5px;" title="Click to submit your CV directly to the Startup">Submit Your CV</a>
-                    </p>
+                    <?php
+                    if ( $startup->get_hiring($connection, $startup_id) == 1 ) { ?>        
+                      <?php 
+                      // User is logged in
+                      // User is viewing their own startup profile
+                      if ( 
+                        $user->check_if_user_is_logged_in() && 
+                        $user->get_user_startup_id (
+                          $connection, 
+                          $user->get_logged_in_user_id()
+                        ) == $startup_id
+                      ) { ?>
+                        <p style="font-size:14px; white-space:inherit;">
+                          Yes
+                        </p>
+                        <?php 
+                      } 
+                      // User is not logged 
+                      else if ( $user->check_if_user_is_logged_in() == false ) { ?>
+                        <p style="font-size:14px; white-space:inherit;">
+                          Yes
+                        </p>
+                        <?php 
+                      } else { ?>
+                        <script>
+                          function submit_cv () {
+                            set.show_system_notification ( "Working...", "", -1 );
+                            $.ajax({
+                              cache: false,
+                              type: "POST",
+                              url: "./ajax/system",
+                              data: {
+                                action: "submit_cv",
+                                sid: '<?php echo $startup_id; ?>'
+                              },
+                              success: function ( data ) {
+                                
+                                if ( data == "success" ) {
+                                  set.show_system_notification ( "Success!", "", 2500 );
+                                  return;
+                                }
+                                else if ( data == "already-sent-cv" ) {
+                                  set.show_system_notification ( "You have already sent your CV! No need to send again.", "", 2500 );
+                                  return;
+                                }
+                                else if ( data == "not-uploaded-cv" ) {
+                                  set.show_system_notification ( "It seems that you've not uploaded your CV yet.<br>Try uploading your CV first and then try sending your CV.", "danger", 5000 );
+                                  return;
+                                }
+                                else {
+                                  set.show_system_notification ( data, "danger", 2500 );
+                                  return;
+                                }
+                              }
+                            })
+                          }
+                        </script>
+                        <p style="font-size:14px; white-space:inherit;">
+                          Yes
+                          <a id="submit_cv" onclick="submit_cv();" style="font-size:12px; margin-left:5px;" title="Click to submit your CV directly to the Startup">Submit Your CV</a>
+                        </p>
+                      <?php } ?>
+                      
+                      <?php 
+                    } else { ?>
+                      <p style="font-size:14px; white-space: inherit;">
+                        No
+                      </p>
+                      <?php
+                    } // Startup is hiring END ?>
                   </div>
                 </div>
               </div>
@@ -639,7 +756,7 @@ session_start();
                     <span>Address</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>House No. 1590, Ramteerth Nagar 2nd Cross, Kanabargi Road.</p>
+                    <p><?php echo $startup->get_address ( $connection, $startup_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -647,7 +764,7 @@ session_start();
                     <span>Contact Number</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>0831-2442255</p>
+                    <p><?php echo $startup->get_contact_number ( $connection, $startup_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -655,7 +772,7 @@ session_start();
                     <span>State</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>Karnataka</p>
+                    <p><?php echo $startup->get_state ( $connection, $startup_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -663,7 +780,7 @@ session_start();
                     <span>City</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>Belagavi</p>
+                    <p><?php echo $startup->get_city ( $connection, $startup_id ); ?></p>
                   </div>
                 </div>
                 <div class="tab-block-wrap">
@@ -671,7 +788,7 @@ session_start();
                     <span>Pincode</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <p>590016</p>
+                    <p><?php echo $startup->get_pincode ( $connection, $startup_id ); ?></p>
                   </div>
                 </div>
               </div>
@@ -936,13 +1053,13 @@ session_start();
                         }
                         // Custom profile picture
                         else {
-                          $incubated_startup_profile_picture_source = "./files/profile_pictures/" . $startup_incubated['startup_id'];
+                          $incubated_startup_profile_picture_source = "./files/profile_pictures/" . $startup->get_profile_pic_id ( $connection, $startup_incubated['startup_id'] );
                         }
 
                         ?>
                         <a class="grid-item" href="./view?sid=<?php echo $startup_incubated['startup_id']; ?>">
                           <div class="image-wrap">
-                            <img src="<?php echo $incubated_startup_profile_picture_source; ?>" width="64" height="64" alt="User Profile Picture">
+                            <img style="border-radius: 100px;" src="<?php echo $incubated_startup_profile_picture_source; ?>" width="64" height="64" alt="User Profile Picture">
                           </div>
                           <div class="tab-text-wrap">
                             <span><?php echo $startup->get_name ( $connection, $startup_incubated['startup_id'] ) ?></span>
@@ -1084,7 +1201,7 @@ session_start();
                     <span>My Startup</span>
                   </div>
                   <div class="tab-para-wrap">
-                    <a href="./viewsid=<?php echo $user->get_user_startup_id ( $connection, $user_id ); ?>"><?php echo $startup->get_name ( $connection, $user->get_user_startup_id($connection, $user_id) ); ?></a>
+                    <a href="./view?sid=<?php echo $user->get_user_startup_id ( $connection, $user_id ); ?>"><?php echo $startup->get_name ( $connection, $user->get_user_startup_id($connection, $user_id) ); ?></a>
                   </div>
                 </div>
                 <?php } ?>
@@ -1134,7 +1251,7 @@ session_start();
 	                        H288z"/>
                         </svg>
                       </a>
-                      <a class="social-icon-wrap" title="Instagram" href="https://www.instagram.com<?php echo $user->get_user_instagram ( $connection, $user_id ); ?>" target="_blank">
+                      <a class="social-icon-wrap" title="Instagram" href="https://www.instagram.com/<?php echo $user->get_user_instagram ( $connection, $user_id ); ?>" target="_blank">
                         <svg version="1.1" class="social-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                           width="20px" height="20px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                           <g>

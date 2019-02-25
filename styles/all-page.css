@@ -97,6 +97,7 @@
 }
 
 .notification a {
+  cursor: pointer;
   font-size: 12.5px;
 }
 .notification a:hover {

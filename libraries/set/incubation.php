@@ -249,6 +249,84 @@ class incubation {
 
 
   /**
+   * Checks whether IC is incubator for startup
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @return Boolean
+   */
+  function check_if_incubator_for_startup (
+    $connection,
+    $ic_id,
+    $sid
+  ) {
+
+    // Checking
+    $query_to_check_if_incubator_for_startup = mysqli_query (
+      $connection,
+      " SELECT 
+        slno 
+      FROM 
+        startups_info 
+      WHERE 
+        startup_incubation_center_id = '$ic_id' 
+      AND 
+        startup_id = '$sid' 
+      LIMIT 
+        1 "
+    );
+
+    // IC is incubator for startup
+    if ( mysqli_num_rows($query_to_check_if_incubator_for_startup) > 0 )
+      return true;
+
+    // IC is not incubator
+    return false;
+  }
+
+
+
+  /**
+   * Get's IC ID using IC's Email ID.
+   *
+   *
+   * @package SET
+   *
+   * @param String $connection
+   * @param String $ic_email
+   * @return String
+   */
+  function get_ic_id_using_email_id (
+    $connection,
+    $ic_email
+  ) {
+
+    // Getting IC ID using Email ID
+    $query_to_get_ic_id_using_email_id = mysqli_query (
+      $connection,
+      " SELECT 
+        incubation_center_id 
+      FROM 
+        incubation_centers 
+      WHERE 
+        incubation_center_email_id = '$ic_email' 
+      LIMIT 
+        1 "
+    );
+
+    // Found IC ID
+    if ( mysqli_num_rows($query_to_get_ic_id_using_email_id) > 0 )
+      return mysqli_fetch_array ( $query_to_get_ic_id_using_email_id )['incubation_center_id'];
+
+    // Could not get
+    return NULL;
+  }
+
+
+
+  /**
    * Get's incubation center Id.
    *
    *
