@@ -209,8 +209,21 @@ include_once "./libraries/set/set.php";
                 </svg>
               </div>
             </div>
+
+            <?php
+            // User Profile Picture
+            $user_profile_picture = $user->get_profile_picture_id ( $connection, $user->get_logged_in_user_id() );
+
+            // Default Profile Picture
+            if ( $user_profile_picture == "" || is_null($user_profile_picture) )
+              $user_profile_picture = "./images/default_user_profile_picture.png";
+            
+            // Rebuilding profile picture source, because, user has uploaded custom profile picture
+            else
+              $user_profile_picture = "./files/profile_pictures/" . $user_profile_picture;
+            ?>
             <div class="user-profile-pic-wrap vert-center">
-              <img src="./images/default_user_profile_picture.png" width="40" height="40" class="user-profile-pic">
+              <img style="border-radius: 100px;" src="<?php echo $user_profile_picture; ?>" width="40" height="40" class="user-profile-pic">
             </div>
           </div>
 
@@ -245,6 +258,57 @@ include_once "./libraries/set/set.php";
 
   <div class="startups">
     <div class="startups-grid-wrap">
+      <?php 
+      // Getting startups
+      $query_to_get_startups = mysqli_query (
+        $connection,
+        " SELECT 
+          startup_id 
+        FROM 
+          startups 
+        LIMIT 
+          8 "
+      );
+
+      // More than 8 startups have registered 
+      // that means it is safe to display them on homepage
+      if ( mysqli_num_rows($query_to_get_startups) >= 8 ) { 
+        
+        // Fetching startup one by one
+        while ( $startup_data = mysqli_fetch_assoc($query_to_get_startups) ) {
+
+          // Default profile picture
+          if ( 
+            $startup->get_profile_picture_id ( $connection, $startup['startup_id'] ) == "" || 
+            is_null ( $startup->get_profile_picture_id($connection, $startup['startup_id']) )
+          ) {
+            $startup_profile_picture = "../../images/default_user_profile_picture.png";
+          }
+          // Custom profile picture
+          else {
+            $startup_profile_picture = "../../files/profile_pictures/" . $startup->get_profile_picture_id ( $connection, $startup['startup_id'] );
+          }
+          ?>
+          <div class="a-startup">
+            <div class="a-startup-content-wrap">
+              <div class="a-startup-logo-wrap">
+                <img src="./images/default_startup_icon.png" width="50" alt="">
+              </div>
+              <div class="a-startup-name-wrap">
+                <span><?php echo $startup->get_name ( $connection, $startup['startup_id'] ); ?></span>
+              </div>
+              <div class="a-startup-desc-wrap">
+                <span><?php echo $startup->get_vision ( $connection, $startup['startup_id'] ); ?></span>
+              </div>
+              <div class="a-startup-link-wrap">
+                <a href="./view?sid=<?php echo $startup['startup_id']; ?>" target="_blank">View Profile</a>
+              </div>
+            </div>
+          </div>
+          <?php 
+        } // Fetching startup one by one END
+      // Show some dummy data
+      } else { ?>
       <div class="a-startup">
         <div class="a-startup-content-wrap">
           <div class="a-startup-logo-wrap">
@@ -373,6 +437,7 @@ include_once "./libraries/set/set.php";
           </div>
         </div>
       </div>
+      <?php } ?>
     </div>
   </div>
 
