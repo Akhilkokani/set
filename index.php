@@ -188,10 +188,10 @@ include_once "./libraries/set/set.php";
         <div class="disp-flex">
           <span style="flex:1;"></span>
           <div class="header-action signin-action-wrap">
-            <button title="Sign In" class="prix-secondary-btn">Sign In</button>
+            <button title="Sign In" style="font-family: sans-serif;" class="prix-secondary-btn">Sign In</button>
           </div>
           <div class="header-action signup-action-wrap">
-            <button title="Sign Up">Sign Up</button>
+            <button style="font-family: sans-serif;" title="Sign Up">Sign Up</button>
           </div>
         </div>
         <?php } else { ?>
@@ -243,15 +243,31 @@ include_once "./libraries/set/set.php";
     </div>
   </div>
 
-  <div class="hero">
-    <div class="hero-text-wrap vert-center">
-      <div class="hero-content-wrap">
-        <div class="hero-title-wrap">
-          <h1>Startup Ecosystem Tracker</h1>
-        </div>
-        <div class="hero-brief-wrap">
-          <p>Carriage quitting securing be appetite it declared. High eyes kept so busy feel call in. Would day nor ask walls known. But preserved advantage are but and certainty earnestly enjoyment. Passage weather as up am exposed. And natural related man subject. Eagerness get situation his was delighted. </p>
-        </div>
+  <div class="categories-wrap">
+    <div class="categories disp-flex">
+      <div class="category active">
+        <span>All</span>
+      </div>
+      <div class="category">
+        <span>Food</span>
+      </div>
+      <div class="category">
+        <span>Technology</span>
+      </div>
+      <div class="category">
+        <span>Entertaiment</span>
+      </div>
+      <div class="category">
+        <span>Education</span>
+      </div>
+      <div class="category">
+        <span>E-Commerce</span>
+      </div>
+      <div class="category">
+        <span>Agriculture</span>
+      </div>
+      <div class="category">
+        <span>Finance</span>
       </div>
     </div>
   </div>
