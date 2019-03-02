@@ -23,6 +23,10 @@ function determin_appropriate_location ( $string ) {
 
 // User ID of who is currently logged in
 $logged_in_user_id = $user->get_logged_in_user_id();
+
+$count_of_team_joining_requests = 0;
+$count_of_investor_requests = 0;
+$count_of_ic_requests = 0;
 ?>
 
 

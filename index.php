@@ -250,7 +250,8 @@ include_once "./libraries/set/set.php";
           <h1>Startup Ecosystem Tracker</h1>
         </div>
         <div class="hero-brief-wrap">
-          <p>Carriage quitting securing be appetite it declared. High eyes kept so busy feel call in. Would day nor ask walls known. But preserved advantage are but and certainty earnestly enjoyment. Passage weather as up am exposed. And natural related man subject. Eagerness get situation his was delighted. </p>
+          <!-- <p>Carriage quitting securing be appetite it declared. High eyes kept so busy feel call in. Would day nor ask walls known. But preserved advantage are but and certainty earnestly enjoyment. Passage weather as up am exposed. And natural related man subject. Eagerness get situation his was delighted. </p> -->
+          <p>Startup Ecosystem Tracker is a online platform where you can showcase your Startup and tell your story to people across India, find Investors who suit to your Startups, and hire talented individuals right from your personalised dashboard, and even get profile insights which will help you make data-driven decisions for your growth.</p>
         </div>
       </div>
     </div>
