@@ -238,6 +238,8 @@ a.search-result:hover .startup-name-wrap {
 }
 
 .a-startup .a-startup-logo-wrap img {
+  border: 1px solid #e6e6e6;
+  border-radius: 100px;
   display: block;
   margin-left: auto;
   margin-right: auto;

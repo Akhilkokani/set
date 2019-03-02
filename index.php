@@ -279,7 +279,7 @@ include_once "./libraries/set/set.php";
 
           // Default profile picture
           if ( 
-            $startup->get_profile_picture_id ( $connection, $startup['startup_id'] ) == "" || 
+            $startup->get_profile_pic_id ( $connection, $startup['startup_id'] ) == "" || 
             is_null ( $startup->get_profile_picture_id($connection, $startup['startup_id']) )
           ) {
             $startup_profile_picture = "../../images/default_user_profile_picture.png";
