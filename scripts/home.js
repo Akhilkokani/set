@@ -94,3 +94,20 @@ function _open_signup_modal () {
 function _close_signup_modal () {
   document.querySelector ( ".signup-modal-wrapper" ).style.display = "none";
 }
+
+
+
+/** 
+ * Homepage Elements
+ * 
+ */
+var home = {
+
+  // Startups Container
+  startups_container: document.querySelector ( ".startups-grid-wrap" ),
+
+  // Builds A Startup DOM
+  build_startup: function (  ) {
+    
+  }
+};

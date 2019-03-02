@@ -188,10 +188,10 @@ include_once "./libraries/set/set.php";
         <div class="disp-flex">
           <span style="flex:1;"></span>
           <div class="header-action signin-action-wrap">
-            <button title="Sign In" class="prix-secondary-btn">Sign In</button>
+            <button title="Sign In" style="font-family: sans-serif;" class="prix-secondary-btn">Sign In</button>
           </div>
           <div class="header-action signup-action-wrap">
-            <button title="Sign Up">Sign Up</button>
+            <button style="font-family: sans-serif;" title="Sign Up">Sign Up</button>
           </div>
         </div>
         <?php } else { ?>
@@ -243,6 +243,7 @@ include_once "./libraries/set/set.php";
     </div>
   </div>
 
+<<<<<<< HEAD
   <div class="hero">
     <div class="hero-text-wrap vert-center">
       <div class="hero-content-wrap">
@@ -253,6 +254,33 @@ include_once "./libraries/set/set.php";
           <!-- <p>Carriage quitting securing be appetite it declared. High eyes kept so busy feel call in. Would day nor ask walls known. But preserved advantage are but and certainty earnestly enjoyment. Passage weather as up am exposed. And natural related man subject. Eagerness get situation his was delighted. </p> -->
           <p>Startup Ecosystem Tracker is a online platform where you can showcase your Startup and tell your story to people across India, find Investors who suit to your Startups, and hire talented individuals right from your personalised dashboard, and even get profile insights which will help you make data-driven decisions for your growth.</p>
         </div>
+=======
+  <div class="categories-wrap">
+    <div class="categories disp-flex">
+      <div class="category active">
+        <span>All</span>
+      </div>
+      <div class="category">
+        <span>Food</span>
+      </div>
+      <div class="category">
+        <span>Technology</span>
+      </div>
+      <div class="category">
+        <span>Entertaiment</span>
+      </div>
+      <div class="category">
+        <span>Education</span>
+      </div>
+      <div class="category">
+        <span>E-Commerce</span>
+      </div>
+      <div class="category">
+        <span>Agriculture</span>
+      </div>
+      <div class="category">
+        <span>Finance</span>
+>>>>>>> back-end
       </div>
     </div>
   </div>
