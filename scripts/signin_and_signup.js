@@ -243,7 +243,7 @@ signup_modal_elements.submit_button.click(function() {
   $.ajax({
     cache: false,
     type: "POST",
-    url: "./ajax/system.php",
+    url: "./ajax/system",
     data: {
       action: "signup",
       email: email,

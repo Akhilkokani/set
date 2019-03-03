@@ -227,7 +227,7 @@ include_once "./libraries/set/set.php";
               </div>
               <div class="market-share-data">
                 <div class="graph-container" style="width:100%; height:100%; position: relative;">
-                  <canvas id="market-share-graph" width="100%" height="100%"></canvas>
+                  <canvas id="market-share-graph" style="background: white;" width="100%" height="100%"></canvas>
                 </div>
               </div>
             </div>

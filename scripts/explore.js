@@ -57,9 +57,82 @@ var explore = {
   // Generates PDF and Downloads It
   generate_pdf: function() {
 
-    pdf.text ( 10, 10, 'Yay PDF!' );
+    // Setting Document Title
+    pdf.text ( 10, 10, 'Startup Ecosystem Tracker' );
 
-    pdf.open('asdsad.pdf');
+    // Scope
+    pdf.setFontSize ( 8 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 190, 10, document.querySelector ( ".scope-details > p#scope" ).innerText );
+
+    // Total Number of Startups TITLE
+    pdf.setFontSize ( 10 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 10, 25, 'Total Startups' );
+
+    // Total Number of Startups
+    pdf.setFontSize ( 40 );
+    pdf.setTextColor ( "#0b78de" );
+    pdf.text ( 10, 40, explore.total_number_of_startups.innerText );
+
+    // Total Number of ICS TITLE
+    pdf.setFontSize ( 10 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 60, 25, 'Total Incubation Centers' );
+
+    // Total Number of ICS
+    pdf.setFontSize ( 40 );
+    pdf.setTextColor ( "#8349ea" );
+    pdf.text ( 60, 40, explore.total_number_of_ics.innerText );
+
+    // Total Number of Jobs Created TITLE
+    pdf.setFontSize ( 10 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 120, 25, 'Total Jobs Created' );
+
+    // Total Number of Jobs Created
+    pdf.setFontSize ( 40 );
+    pdf.setTextColor ( "#1196a7" );
+    pdf.text ( 120, 40, explore.total_number_of_jobs_created.innerText );
+
+    // Market Share Graph TITLE
+    pdf.setFontSize ( 10 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 10, 55, 'Startups Categories Market Share' );
+
+    // Market Share Graph
+    var cv = document.getElementById ( "market-share-graph" ).toDataURL("image/png", 1.0);
+    pdf.addImage ( cv,'PNG', 10, 60, 60, 60 );
+
+    // Most Job Creating States TITLE
+    pdf.setFontSize ( 10 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 120, 55, 'Most Job Creating States' );
+
+    // Market Share Graph
+    var cv = document.getElementById ( "most-jobs-created-states-graph" ).toDataURL("image/png", 1.0);
+    pdf.addImage ( cv,'PNG', 120, 60, 60, 60 );
+
+    // Most Incubation Centers Are In TITLE
+    pdf.setFontSize ( 10 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 10, 140, 'Most Incubation Centers Are In' );
+
+    // Most Incubation Centers Are Graph
+    var cv = document.getElementById ( "most-ics-are-in-graph" ).toDataURL("image/png", 1.0);
+    pdf.addImage ( cv,'PNG', 10, 140, 60, 60 );
+
+    // Overall Platform Growth TITLE
+    pdf.setFontSize ( 10 );
+    pdf.setTextColor ( "#5d5d5d" );
+    pdf.text ( 125, 140, 'Overall Platform Growth' );
+
+    // Overall Platform Growth
+    var cv = document.getElementById ( "platform-growth-graph" ).toDataURL("image/png", 1.0);
+    pdf.addImage ( cv,'PNG', 125, 145, 50, 25 );
+
+    // Downloading PDF
+    pdf.save ( 'Startup Explore.pdf' );
   }
 };
 
