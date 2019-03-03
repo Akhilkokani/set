@@ -15,6 +15,7 @@ market_share_chart = "";
 jobs_created_chart = "";
 most_ics_are_in_chart = "";
 platform_growth_chart = "";
+const pdf = new jsPDF ( 'p', 'mm' );
 
 
 var explore = {
@@ -51,6 +52,14 @@ var explore = {
     if ( document.getElementById ( which_state ) ) {
       document.getElementById ( which_state ).classList += " active-state";
     }
+  },
+
+  // Generates PDF and Downloads It
+  generate_pdf: function() {
+
+    pdf.text ( 10, 10, 'Yay PDF!' );
+
+    pdf.open('asdsad.pdf');
   }
 };
 
@@ -567,6 +576,16 @@ var graphs = {
       }
     }
   }
+};
+
+
+
+/** 
+ * Downloading PDF
+ * 
+ */
+document.querySelector ( ".explore-download-as-pdf > a" ).onclick = function() {
+  explore.generate_pdf();
 };
 
 

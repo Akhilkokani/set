@@ -243,44 +243,36 @@ include_once "./libraries/set/set.php";
     </div>
   </div>
 
-<<<<<<< HEAD
-  <div class="hero">
-    <div class="hero-text-wrap vert-center">
-      <div class="hero-content-wrap">
-        <div class="hero-title-wrap">
-          <h1>Startup Ecosystem Tracker</h1>
-        </div>
-        <div class="hero-brief-wrap">
-          <!-- <p>Carriage quitting securing be appetite it declared. High eyes kept so busy feel call in. Would day nor ask walls known. But preserved advantage are but and certainty earnestly enjoyment. Passage weather as up am exposed. And natural related man subject. Eagerness get situation his was delighted. </p> -->
-          <p>Startup Ecosystem Tracker is a online platform where you can showcase your Startup and tell your story to people across India, find Investors who suit to your Startups, and hire talented individuals right from your personalised dashboard, and even get profile insights which will help you make data-driven decisions for your growth.</p>
-        </div>
-=======
   <div class="categories-wrap">
     <div class="categories disp-flex">
-      <div class="category active">
+      <div class="category active" id="initial_tab" onclick="activate(this);">
         <span>All</span>
       </div>
-      <div class="category">
+      <div class="category" onclick="activate(this);">
+        <span>Incubators</span>
+      </div>
+      <div class="category" onclick="activate(this);">
+        <span>Investors</span>
+      </div>
+      <div class="category" onclick="activate(this);">
         <span>Food</span>
       </div>
-      <div class="category">
+      <div class="category" onclick="activate(this);">
         <span>Technology</span>
       </div>
-      <div class="category">
-        <span>Entertaiment</span>
+      <div class="category" onclick="activate(this);">
+        <span>Entertainment</span>
       </div>
-      <div class="category">
+      <div class="category" onclick="activate(this);">
         <span>Education</span>
       </div>
-      <div class="category">
-        <span>E-Commerce</span>
-      </div>
-      <div class="category">
+      <div class="category" onclick="activate(this);">
         <span>Agriculture</span>
       </div>
-      <div class="category">
-        <span>Finance</span>
->>>>>>> back-end
+
+      <div style="flex: 1;"></div>
+      <div class="explore-btn" style="padding: 1em 3em;">
+        <a href="./explore" style="font-family: sans-serif; color: #fe9000;">Explore</a>
       </div>
     </div>
   </div>
@@ -290,7 +282,7 @@ include_once "./libraries/set/set.php";
       <?php 
       // Getting startups
       $query_to_get_startups = mysqli_query (
-        $connection,
+        $dipp_connection,
         " SELECT 
           startup_id 
         FROM 
@@ -301,21 +293,21 @@ include_once "./libraries/set/set.php";
 
       // More than 8 startups have registered 
       // that means it is safe to display them on homepage
-      if ( mysqli_num_rows($query_to_get_startups) >= 8 ) { 
+      if ( mysqli_num_rows($query_to_get_startups) >= 1 ) { 
         
         // Fetching startup one by one
         while ( $startup_data = mysqli_fetch_assoc($query_to_get_startups) ) {
 
           // Default profile picture
           if ( 
-            $startup->get_profile_pic_id ( $connection, $startup['startup_id'] ) == "" || 
-            is_null ( $startup->get_profile_picture_id($connection, $startup['startup_id']) )
+            $startup->get_profile_pic_id ( $dipp_connection, $startup_data['startup_id'] ) == "" || 
+            is_null ( $startup->get_profile_pic_id($dipp_connection, $startup_data['startup_id']) )
           ) {
             $startup_profile_picture = "../../images/default_user_profile_picture.png";
           }
           // Custom profile picture
           else {
-            $startup_profile_picture = "../../files/profile_pictures/" . $startup->get_profile_picture_id ( $connection, $startup['startup_id'] );
+            $startup_profile_picture = "../../files/profile_pictures/" . $startup->get_profile_pic_id ( $dipp_connection, $startup_data['startup_id'] );
           }
           ?>
           <div class="a-startup">
@@ -324,13 +316,14 @@ include_once "./libraries/set/set.php";
                 <img src="./images/default_startup_icon.png" width="50" alt="">
               </div>
               <div class="a-startup-name-wrap">
-                <span><?php echo $startup->get_name ( $connection, $startup['startup_id'] ); ?></span>
+                <span><?php echo $startup->get_name ( $dipp_connection, $startup_data['startup_id'] ); ?></span>
               </div>
               <div class="a-startup-desc-wrap">
-                <span><?php echo $startup->get_vision ( $connection, $startup['startup_id'] ); ?></span>
+                <span>Startup Mission. This is has been fetched from DIPP Database.</span>
+                <!-- <span><?php // echo $startup->get_vision ( $dipp_connection, $startup_data['startup_id'] ); ?></span> -->
               </div>
               <div class="a-startup-link-wrap">
-                <a href="./view?sid=<?php echo $startup['startup_id']; ?>" target="_blank">View Profile</a>
+                <a href="./view?sid=<?php echo $startup_data['startup_id']; ?>" target="_blank">View Profile</a>
               </div>
             </div>
           </div>
@@ -338,134 +331,134 @@ include_once "./libraries/set/set.php";
         } // Fetching startup one by one END
       // Show some dummy data
       } else { ?>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
-          </div>
-        </div>
-      </div>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
-          </div>
-        </div>
-      </div>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
-          </div>
-        </div>
-      </div>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
-          </div>
-        </div>
-      </div>
-      <div class="a-startup">
-        <div class="a-startup-content-wrap">
-          <div class="a-startup-logo-wrap">
-            <img src="./images/default_startup_icon.png" width="50" alt="">
-          </div>
-          <div class="a-startup-name-wrap">
-            <span>Startup Name</span>
-          </div>
-          <div class="a-startup-desc-wrap">
-            <span>Startup Mission. This is where two line startup mission goes.</span>
-          </div>
-          <div class="a-startup-link-wrap">
-            <a href="">View Profile</a>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
           </div>
         </div>
-      </div>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
+          </div>
+        </div>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
+          </div>
+        </div>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
+          </div>
+        </div>
+        <div class="a-startup">
+          <div class="a-startup-content-wrap">
+            <div class="a-startup-logo-wrap">
+              <img src="./images/default_startup_icon.png" width="50" alt="">
+            </div>
+            <div class="a-startup-name-wrap">
+              <span>Startup Name</span>
+            </div>
+            <div class="a-startup-desc-wrap">
+              <span>Startup Mission. This is where two line startup mission goes.</span>
+            </div>
+            <div class="a-startup-link-wrap">
+              <a href="">View Profile</a>
+            </div>
+          </div>
+        </div>
       <?php } ?>
     </div>
   </div>
@@ -599,6 +592,9 @@ include_once "./libraries/set/set.php";
   <script src="./scripts/signin_and_signup.js"></script>
   <script src="./scripts/home.js"></script>
   <script src="./scripts/search.js"></script>
+  <!-- <script>
+    document.getElementById ( "initial_tab" ).click();
+  </script> -->
   <script>
 
     // Initiating and adding event listeners for signed in actions

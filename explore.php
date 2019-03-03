@@ -33,6 +33,7 @@ include_once "./libraries/set/set.php";
   
   <script src="./scripts/jquery.js"></script>
   <script src="./scripts/chart.js"></script>
+  <script src="./scripts/jspdf.js"></script>
   <script src="./scripts/set.js"></script>
 
 </head>
@@ -105,8 +106,8 @@ include_once "./libraries/set/set.php";
   <div class="explore-wrap" style="opacity: 0; transition: opacity .50s ease-in;">
     <div class="explore">
       <div class="header-wrap">
-        <div class="header">
-          <div class="explore-map-title-wrap">
+        <div class="header disp-flex">
+          <div class="explore-map-title-wrap" style="flex: 1;">
             <div class="explore-map-title disp-flex">
               <svg style="display: block;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
                 <g>
@@ -151,6 +152,11 @@ include_once "./libraries/set/set.php";
               <div>
                 <h2>Explore Startup Ecosystem</h2>
               </div>
+            </div>
+          </div>
+          <div class="explore-download-actions-wrap" style="height: 26px;">
+            <div class="explore-download-as-pdf vert-center">
+              <a title="Click to download as PDF" style="cursor: pointer; font-size: 1.2em; font-family: sans-serif; color: #d6d6d6;">Download Report</a>
             </div>
           </div>
         </div>
@@ -258,6 +264,8 @@ include_once "./libraries/set/set.php";
                 </div>
               </div>
             </div>
+
+            <span style="margin-top: 6em; display: block; text-align: center; color: #5d5d5d; cursor: default;">Source: DIPP &amp; SET</span>
           </div>
         </div>
       </div>

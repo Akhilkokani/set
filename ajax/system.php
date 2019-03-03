@@ -282,14 +282,43 @@ if (
     die();
   }
 
-  // Getting Search Results
-  $query_to_get_search_results = mysqli_query ( $connection, " SELECT startup_id FROM startups WHERE startup_name LIKE '%$search_key%' LIMIT 5 " );
+  // Getting Search Results from DIPP
+  $query_to_get_search_results = mysqli_query ( $dipp_connection, " SELECT startup_id FROM startups WHERE startup_name LIKE '%$search_key%' LIMIT 5 " );
+
+  // To count number of search results fetched from DB
+  $dipp_search_results_count = mysqli_num_rows($query_to_get_search_results);
+  $set_search_results_count =  0;
 
   // Query Ran Properly
-  if ( $query_to_get_search_results && mysqli_num_rows($query_to_get_search_results) > 0 ) {
+  if ( $query_to_get_search_results ) {
     
     // Indicating Search Results Exists
     $search_results [ 'results_exists' ] = 'yes';
+
+    // Fetching Search Results One By One
+    while ( $search_result = mysqli_fetch_assoc($query_to_get_search_results) ) {
+
+      // Startup Name
+      $search_results [ $search_result['startup_id'] ]['name'] = $startup->get_name ( $dipp_connection, $search_result['startup_id'] );
+
+      // Getting Startup's Profile Picture ID
+      $search_result_startup_logo = $startup->get_profile_pic_id ( $dipp_connection, $search_result['startup_id'] );
+
+      // Startup Owner has not uploaded custom profile picture
+      if ( $search_result_startup_logo == "" || is_null($search_result_startup_logo) ) {
+        $search_result_startup_logo = "./images/default_startup_icon.png";
+      }
+      // Startup Owner has uploaded custom profile picture
+      else {
+        $search_result_startup_logo = "./files/profile_pictures/" . $search_result_startup_logo;
+      }
+
+      // Startup Logo
+      $search_results [ $search_result['startup_id'] ]['logo'] = $search_result_startup_logo;
+    }
+
+    // Getting Search Results from SET
+    $query_to_get_search_results = mysqli_query ( $connection, " SELECT startup_id FROM startups WHERE startup_name LIKE '%$search_key%' LIMIT 5 " );
 
     // Fetching Search Results One By One
     while ( $search_result = mysqli_fetch_assoc($query_to_get_search_results) ) {
@@ -317,7 +346,7 @@ if (
     echo json_encode ( $search_results );
     die();
   }
-  else {
+  else if ( $dipp_search_results_count == 0 && $set_search_results_count == 0 ) {
     $search_results [ 'results_exists' ] = 'no';
     echo json_encode ( $search_results );
     die();
@@ -346,7 +375,7 @@ if (
   $username = htmlspecialchars ( $_POST['uname'] );
   $password = htmlspecialchars ( $_POST['pwd'] );
 
-  // Checking whether both username and password exists in DB
+  // Checking whether both username and password exists in SET DB
   $query_to_check_username_and_password_exists = mysqli_query (
     $connection, 
     " SELECT 
@@ -361,7 +390,7 @@ if (
       1 "
   ) or die ( mysqli_error($connection) );
 
-  // User exists in DB
+  // User exists in SET DB
   if ( 
     $query_to_check_username_and_password_exists && 
     mysqli_num_rows ( $query_to_check_username_and_password_exists ) === 1
@@ -373,11 +402,40 @@ if (
     echo "success";
     die();
   }
-  // User does not exists in DB
+  // User does not exists in SET DB
   else {
 
-    echo "invalid_data";
-    die();
+    // Checking whether both username and password exists in DIPP DB
+    $query_to_check_username_and_password_exists = mysqli_query (
+      $dipp_connection, 
+      " SELECT 
+        slno 
+      FROM 
+        users 
+      WHERE 
+        user_username = '$username' 
+      AND 
+        user_password = '$password' 
+      LIMIT 
+        1 "
+    );
+
+    if ( 
+      $query_to_check_username_and_password_exists && 
+      mysqli_num_rows ( $query_to_check_username_and_password_exists ) === 1
+    ) {
+
+      // Setting Session Variables
+      $_SESSION['logged_in'] = true;
+      $_SESSION['user_id'] = $user->get_user_id_using_username ( $dipp_connection, $username );
+      echo "success";
+      die();
+    }
+    else {
+
+      echo "invalid_data";
+      die();
+    }
   }
 
   echo "unknown";
